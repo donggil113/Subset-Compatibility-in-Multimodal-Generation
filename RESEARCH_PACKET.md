@@ -171,3 +171,137 @@ variance 1.5) are missed, the checker is invalid and must not be used on models.
   verdict; P5-E8-CALIB replaces it with a replicate-based calibration criterion.
 - Seed-design flaw: seeds omit the joint name, so same-named conditions on
   the two joints share noise (see STATUS.md, Known issue 1).
+
+## 6. Statistical audit of the v1 checker (2026-09-26; post hoc, v1 verdicts unchanged)
+
+Scope: the v1 estimator, test and gate as committed in 51ed9f6 / 0f38af4.
+Numerical checks below come from `scripts/reanalyse_v1.py`
+(`results/reanalysis_v1/`), which reads only committed raw results and
+regenerates the v1 test rows from their seed (digest-checked). They are
+EXPLORATORY, because the v1 results had already been seen, and they are
+numerical checks, not proofs.
+
+### 6.1 Unit and dependence structure
+
+- **Independent unit:** the conditioning example (one test-split row).
+  Rows are i.i.d. and seeded per example. Generated samples, sign flips and
+  permutations are not units.
+- **Within an example:** the reference sets A, B and the compared set C are
+  independent. Inside each set, samples are i.i.d.:
+  - a fresh intermediate ŷ_j is drawn for every sequential sample;
+  - every PF-ODE sample has its own initial noise.
+- **Common random numbers across conditions:**
+  - A, B (and the joint references A_J, B_J) are shared by all conditions of
+    a run;
+  - the P5-E5 sets at different M are nested prefixes.
+  - So p-values across conditions are dependent. This is not a validity
+    problem for any single test.
+- **Shared noise across joints:** v1 seeds omit the joint and experiment
+  names. `exact_sequential` and `chain_drop_x` on `nonmarkov` and `markov`
+  therefore reuse identical noise. The two exact-null rejections
+  (p = 0.026 and 0.015; studentised z = 2.00 and 2.16) are one event, not
+  two.
+- **Target and joint tests of one condition** share C, so they are
+  dependent.
+- **P5-E1-NULL-REPS replicates** share the same 200 rows and differ only in
+  sampling seeds. Their rejection rate is conditional on the rows. This is
+  valid under H0 because the per-example null holds at every x.
+
+### 6.2 Estimands and estimators
+
+- **V-statistic.** For M samples per set,
+  E[ED_V(P_M, Q_M)] = D(P,Q) + (E|X−X'| + E|Y−Y'|)/M. So the v1 contrast has
+  E[d] = D + (E|C−C'| − E|B−B'|)/M.
+  - It is exactly 0 under H0.
+  - It is biased under alternatives whose spread differs from the
+    reference, and the bias is negative for under-dispersed C.
+  - Closed-form predictions match the observed mean d within about 2 SE
+    for all 37 non-degenerate cells. Examples: var_ratio_0.8 predicted
+    0.0029 vs population D 0.0033; collapse_intermediate predicted 0.0216
+    vs D 0.0228.
+- **U-statistic.** ED_U(A,C) is unbiased for D with null mean 0 and needs no
+  B set. It cannot be recomputed from v1 raw because samples were not
+  stored: NOT_RUN for v1.
+- **Studentisation.** The v1 decision used the sign-flip p-value of the
+  *unstudentised* sum of d_i. z = mean/SE with a normal reference was only
+  reported. Direct check of the reference: the sign-flip distribution of the
+  studentised mean, given the observed |d_i|, has sd 0.985–1.014 and 95%
+  quantile 1.61–1.69 (normal: 1.645) in all 7 v1 null cells, although d_i has
+  kurtosis 4.3–7.6. At N = 200 the normal reference is adequate *given |d|*.
+  The replicate z sd of 1.33 (χ² 95% CI [1.01, 1.95], R = 20) is weak
+  evidence that cannot be separated from chance at this R.
+
+### 6.3 Validity of the v1 test versus the v1 gate
+
+- **The test.** Under H0, C_i and B_i are independent i.i.d. sets from the
+  same law and independent of A_i. So (A_i, B_i, C_i) and (A_i, C_i, B_i)
+  have the same distribution, d_i is symmetric about 0, and the rows are
+  independent. The sign-flip test (a whole-set swap of B and C, two
+  allocations per example) is therefore exact under these assumptions; this
+  is standard randomisation logic, not a new result.
+  - The single rejection at p = 0.026 does not show invalidity.
+  - Nor do 2/20 replicate rejections (Clopper–Pearson 95% [0.012, 0.317]).
+  - Its weaknesses are resolution and power: it spends a third sample set B,
+    whose noise enters d, and it has only two allocations per example.
+- **The gate (EH1)** was mis-specified independently of the test:
+  - It required one α-level test not to reject, which fails with
+    probability α even for an exact test.
+  - It asked a 20-replicate FPR interval to "contain 0.05 or lie below it".
+  - It had no power requirement, so an always-accept detector passes EH1.
+  - **EH1 FAIL and the model-stage STOP remain recorded as issued.** They are
+    not reinterpreted as PASS.
+
+### 6.4 Target vs joint vs factorisation consistency
+
+- Δ_T tests the compatibility of the triple (q(y|x), q(z|x,y), q_d(z|x))
+  (Prop. 1).
+- Δ_J compares the sequential pair (ŷ, z) with a *direct joint sampler*
+  q_d(y,z|x).
+- Factorisation consistency across orders, q(y|x)q(z|x,y) vs
+  q(z|x)q(y|x,z), is a third estimand (C2 of arXiv 2608.06004). It is not
+  measured here: NOT_RUN.
+- None of these checks establishes that one global joint exists for all
+  conditionals of an any-to-any model. Each checks one relation.
+
+### 6.5 Numerical components isolated analytically (EXPLORATORY)
+
+With exact scores, the PF-ODE (Euler or Heun, with or without CFG) is affine
+in its inputs, so its output law is Gaussian and known in closed form
+(`analytic.py`). Monte-Carlo-free population gaps on the standardised
+scale:
+
+- **Discretisation.** Direct vs sequential D is 0.00075, 0.00247 and 0.00026
+  at Euler 2, 4 and 8 steps. From 16 to 64 steps it is 0.00016–0.00017.
+- **Prior mismatch at σ_max.** The continuous-time limit with the standard
+  N(0, σ_max²) initialisation gives D = 0.00017. This explains the 16–64
+  step plateau: a third numerical component, not discretisation.
+- **CFG.** D = 0.031 / 0.155 / 0.677 / 1.909 at w = 0.5 / 1 / 2 / 4.
+- **Observed v1 d values** agree with these predictions (|z| ≤ 1.84).
+- **"Not detected" is not "consistent."** At Euler ≥ 8 steps the population
+  gap is nonzero but about 10× below the v1 detection resolution (SE of mean
+  d ≈ 0.0006–0.0008).
+
+### 6.6 Revised test (P5-E8)
+
+- **Stratification:** labels are relabelled within each example; the 2M
+  pooled samples are exchangeable under H0_i if both branches are i.i.d.
+  inside and independent.
+- **Statistic:** T = mean_i ED_V(a_i, c_i).
+  - For equal group sizes, the V- and U-versions give identical
+    permutation p-values. Proof: given the pooled multiset,
+    S_aa + S_cc + S_ac is fixed, so both are increasing affine functions of
+    S_ac, with slopes that depend only on M.
+  - Vectors (y, z) are relabelled as units.
+- **p-values:**
+  - Monte Carlo: p = (1 + #{T_b ≥ T_obs − tol})/(B + 1), which is never 0.
+  - Ties count as extreme.
+  - Exact enumeration of the product group is used for small designs.
+- **Invalid designs (not used):**
+  - shared intermediates across target samples;
+  - common random numbers between the branches;
+  - relabelling across examples.
+- **Pre-registration:**
+  - `configs/p5_e8_exact_v1.json`: small exact verification, run in this
+    session.
+  - `configs/p5_e8_calib_v2.json`: realistic calibration and power, NOT_RUN.
+  - Both were committed before any E8 result.

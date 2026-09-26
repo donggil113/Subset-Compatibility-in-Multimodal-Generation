@@ -1,0 +1,182 @@
+[
+ {
+  "exp": "P5-E6-SOLVER",
+  "cond": "euler_2_seq",
+  "n_steps": 2,
+  "solver": "euler",
+  "guidance": 0.0,
+  "kind": "diffusion_sequential",
+  "pop_D_compared_vs_reference": 0.0007514675856415424,
+  "pop_D_reference_vs_exact": 0.4564829842091171
+ },
+ {
+  "exp": "P5-E6-SOLVER",
+  "cond": "euler_4_seq",
+  "n_steps": 4,
+  "solver": "euler",
+  "guidance": 0.0,
+  "kind": "diffusion_sequential",
+  "pop_D_compared_vs_reference": 0.0024718826678154014,
+  "pop_D_reference_vs_exact": 0.08099699201827683
+ },
+ {
+  "exp": "P5-E6-SOLVER",
+  "cond": "euler_8_seq",
+  "n_steps": 8,
+  "solver": "euler",
+  "guidance": 0.0,
+  "kind": "diffusion_sequential",
+  "pop_D_compared_vs_reference": 0.0002627450910365914,
+  "pop_D_reference_vs_exact": 0.037759515024047945
+ },
+ {
+  "exp": "P5-E6-SOLVER",
+  "cond": "euler_16_seq",
+  "n_steps": 16,
+  "solver": "euler",
+  "guidance": 0.0,
+  "kind": "diffusion_sequential",
+  "pop_D_compared_vs_reference": 0.00016187405586638671,
+  "pop_D_reference_vs_exact": 0.009461246475419256
+ },
+ {
+  "exp": "P5-E6-SOLVER",
+  "cond": "euler_32_seq",
+  "n_steps": 32,
+  "solver": "euler",
+  "guidance": 0.0,
+  "kind": "diffusion_sequential",
+  "pop_D_compared_vs_reference": 0.000161951227161361,
+  "pop_D_reference_vs_exact": 0.0025770581550897155
+ },
+ {
+  "exp": "P5-E6-SOLVER",
+  "cond": "euler_64_seq",
+  "n_steps": 64,
+  "solver": "euler",
+  "guidance": 0.0,
+  "kind": "diffusion_sequential",
+  "pop_D_compared_vs_reference": 0.00016612107258143994,
+  "pop_D_reference_vs_exact": 0.0008936092690598584
+ },
+ {
+  "exp": "P5-E6-SOLVER",
+  "cond": "heun_4_seq",
+  "n_steps": 4,
+  "solver": "heun",
+  "guidance": 0.0,
+  "kind": "diffusion_sequential",
+  "pop_D_compared_vs_reference": 0.0417788985130635,
+  "pop_D_reference_vs_exact": 1.093842752572553
+ },
+ {
+  "exp": "P5-E6-SOLVER",
+  "cond": "heun_16_seq",
+  "n_steps": 16,
+  "solver": "heun",
+  "guidance": 0.0,
+  "kind": "diffusion_sequential",
+  "pop_D_compared_vs_reference": 0.00019614395273682473,
+  "pop_D_reference_vs_exact": 0.0018154590976458484
+ },
+ {
+  "exp": "P5-E6-SOLVER",
+  "cond": "euler_4_direct_vs_exact",
+  "n_steps": 4,
+  "solver": "euler",
+  "guidance": 0.0,
+  "kind": "diffusion_direct_vs_exact",
+  "pop_D_compared_vs_reference": 0.08099699201827683,
+  "pop_D_reference_vs_exact": 0.0
+ },
+ {
+  "exp": "P5-E6-SOLVER",
+  "cond": "euler_16_direct_vs_exact",
+  "n_steps": 16,
+  "solver": "euler",
+  "guidance": 0.0,
+  "kind": "diffusion_direct_vs_exact",
+  "pop_D_compared_vs_reference": 0.009461246475419256,
+  "pop_D_reference_vs_exact": 0.0
+ },
+ {
+  "exp": "P5-E6-SOLVER",
+  "cond": "euler_64_direct_vs_exact",
+  "n_steps": 64,
+  "solver": "euler",
+  "guidance": 0.0,
+  "kind": "diffusion_direct_vs_exact",
+  "pop_D_compared_vs_reference": 0.0008936092690598584,
+  "pop_D_reference_vs_exact": 0.0
+ },
+ {
+  "exp": "P5-E7-CFG",
+  "cond": "cfg_0.5_seq",
+  "n_steps": 64,
+  "solver": "euler",
+  "guidance": 0.5,
+  "kind": "diffusion_sequential",
+  "pop_D_compared_vs_reference": 0.0306199244055316,
+  "pop_D_reference_vs_exact": 0.0021102374525026678
+ },
+ {
+  "exp": "P5-E7-CFG",
+  "cond": "cfg_1_seq",
+  "n_steps": 64,
+  "solver": "euler",
+  "guidance": 1.0,
+  "kind": "diffusion_sequential",
+  "pop_D_compared_vs_reference": 0.15505843270645728,
+  "pop_D_reference_vs_exact": 0.005759989317228094
+ },
+ {
+  "exp": "P5-E7-CFG",
+  "cond": "cfg_2_seq",
+  "n_steps": 64,
+  "solver": "euler",
+  "guidance": 2.0,
+  "kind": "diffusion_sequential",
+  "pop_D_compared_vs_reference": 0.6766000924978368,
+  "pop_D_reference_vs_exact": 0.020240044730026597
+ },
+ {
+  "exp": "P5-E7-CFG",
+  "cond": "cfg_4_seq",
+  "n_steps": 64,
+  "solver": "euler",
+  "guidance": 4.0,
+  "kind": "diffusion_sequential",
+  "pop_D_compared_vs_reference": 1.9088635705730366,
+  "pop_D_reference_vs_exact": 0.07668875746468154
+ },
+ {
+  "exp": "P5-E7-CFG",
+  "cond": "cfg_1_direct_vs_exact",
+  "n_steps": 64,
+  "solver": "euler",
+  "guidance": 1.0,
+  "kind": "diffusion_direct_vs_exact",
+  "pop_D_compared_vs_reference": 0.005759989317228094,
+  "pop_D_reference_vs_exact": 0.0
+ },
+ {
+  "exp": "P5-E7-CFG",
+  "cond": "cfg_4_direct_vs_exact",
+  "n_steps": 64,
+  "solver": "euler",
+  "guidance": 4.0,
+  "kind": "diffusion_direct_vs_exact",
+  "pop_D_compared_vs_reference": 0.07668875746468154,
+  "pop_D_reference_vs_exact": 0.0
+ },
+ {
+  "exp": "analytic",
+  "cond": "exact_flow_limit",
+  "n_steps": "inf",
+  "solver": "exact",
+  "guidance": 0.0,
+  "kind": "diffusion_sequential",
+  "pop_D_compared_vs_reference": 0.00017301824003205458,
+  "pop_D_reference_vs_exact": 0.000353721548650463
+ }
+]

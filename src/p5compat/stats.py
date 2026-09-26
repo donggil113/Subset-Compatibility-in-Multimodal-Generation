@@ -53,3 +53,47 @@ def wilson_ci(k: int, n: int, level: float = 0.95) -> Dict[str, float]:
     centre = (p + zq ** 2 / (2 * n)) / den
     half = zq * math.sqrt(p * (1 - p) / n + zq ** 2 / (4 * n * n)) / den
     return {"k": k, "n": n, "rate": p, "lo": max(0.0, centre - half), "hi": min(1.0, centre + half)}
+
+
+def _binom_cdf(k: int, n: int, p: float) -> float:
+    if p <= 0.0:
+        return 1.0
+    if p >= 1.0:
+        return 1.0 if k >= n else 0.0
+    lp, lq = math.log(p), math.log1p(-p)
+    tot = 0.0
+    for j in range(0, k + 1):
+        tot += math.exp(math.lgamma(n + 1) - math.lgamma(j + 1) - math.lgamma(n - j + 1) + j * lp + (n - j) * lq)
+    return min(tot, 1.0)
+
+
+def _bisect(f, lo: float, hi: float, iters: int = 80) -> float:
+    for _ in range(iters):
+        mid = 0.5 * (lo + hi)
+        if f(mid):
+            hi = mid
+        else:
+            lo = mid
+    return 0.5 * (lo + hi)
+
+
+def clopper_pearson(k: int, n: int, level: float = 0.95, sided: str = "two") -> Dict[str, float]:
+    """Exact binomial CI. sided='two' (equal tails), 'upper' (one-sided upper bound
+    at `level`), or 'lower' (one-sided lower bound at `level`)."""
+    if n == 0:
+        return {"k": k, "n": n, "rate": None, "lo": None, "hi": None}
+    tail = (1.0 - level) / 2.0 if sided == "two" else (1.0 - level)
+    # upper: smallest p with P(X <= k | p) <= tail
+    hi = 1.0 if k == n else _bisect(lambda p: _binom_cdf(k, n, p) <= tail, k / n, 1.0)
+    # lower: largest p with P(X >= k | p) <= tail
+    lo = 0.0 if k == 0 else _bisect(lambda p: 1.0 - _binom_cdf(k - 1, n, p) > tail, 0.0, k / n)
+    out = {"k": k, "n": n, "rate": k / n, "level": level, "sided": sided}
+    if sided == "two":
+        out.update({"lo": lo, "hi": hi})
+    elif sided == "upper":
+        out.update({"lo": 0.0, "hi": hi})
+    elif sided == "lower":
+        out.update({"lo": lo, "hi": 1.0})
+    else:
+        raise ValueError(sided)
+    return out

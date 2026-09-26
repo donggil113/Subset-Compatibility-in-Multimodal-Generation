@@ -1,0 +1,129 @@
+{
+ "per_condition": [
+  {
+   "exp": "P5-E1-NULL",
+   "cond": "exact_sequential",
+   "n": 200,
+   "skew_d": 0.4613695449457183,
+   "kurtosis_d": 5.024725608905443,
+   "t_obs": 2.0017968792569487,
+   "signflip_t_sd": 0.9850428746543719,
+   "signflip_t_q95": 1.6121515593466638,
+   "normal_q95": 1.6449,
+   "p_signflip_studentised": 0.019,
+   "p_v1_reported": 0.026
+  },
+  {
+   "exp": "P5-E4-MARKOV",
+   "cond": "exact_sequential",
+   "n": 200,
+   "skew_d": 0.29910339644576583,
+   "kurtosis_d": 4.280538823091703,
+   "t_obs": 2.1616177580132883,
+   "signflip_t_sd": 1.0141825974276935,
+   "signflip_t_q95": 1.643862507010276,
+   "normal_q95": 1.6449,
+   "p_signflip_studentised": 0.0172,
+   "p_v1_reported": 0.015
+  },
+  {
+   "exp": "P5-E4-MARKOV",
+   "cond": "chain_drop_x",
+   "n": 200,
+   "skew_d": -0.12604768508006703,
+   "kurtosis_d": 4.999354342228701,
+   "t_obs": -0.4020142864855299,
+   "signflip_t_sd": 1.0141471202046966,
+   "signflip_t_q95": 1.6341083305057817,
+   "normal_q95": 1.6449,
+   "p_signflip_studentised": 0.6572,
+   "p_v1_reported": 0.667
+  },
+  {
+   "exp": "P5-E5-MC",
+   "cond": "null_m32",
+   "n": 200,
+   "skew_d": -0.7754945847273815,
+   "kurtosis_d": 7.583733743493633,
+   "t_obs": 1.0324181216945227,
+   "signflip_t_sd": 1.005402442244061,
+   "signflip_t_q95": 1.6861969011863072,
+   "normal_q95": 1.6449,
+   "p_signflip_studentised": 0.1436,
+   "p_v1_reported": 0.147
+  },
+  {
+   "exp": "P5-E5-MC",
+   "cond": "null_m64",
+   "n": 200,
+   "skew_d": -0.04010895535143031,
+   "kurtosis_d": 5.577873125647437,
+   "t_obs": 0.10020261129337575,
+   "signflip_t_sd": 1.0001174016973284,
+   "signflip_t_q95": 1.6407877873701648,
+   "normal_q95": 1.6449,
+   "p_signflip_studentised": 0.4636,
+   "p_v1_reported": 0.458
+  },
+  {
+   "exp": "P5-E5-MC",
+   "cond": "null_m128",
+   "n": 200,
+   "skew_d": 0.24682843669638996,
+   "kurtosis_d": 4.474250394345782,
+   "t_obs": 0.5643470333548273,
+   "signflip_t_sd": 1.0016977958252782,
+   "signflip_t_q95": 1.6202949594151719,
+   "normal_q95": 1.6449,
+   "p_signflip_studentised": 0.2904,
+   "p_v1_reported": 0.268
+  },
+  {
+   "exp": "P5-E5-MC",
+   "cond": "null_m512",
+   "n": 200,
+   "skew_d": 0.0772093839855048,
+   "kurtosis_d": 5.871742974583546,
+   "t_obs": -0.3959851894859344,
+   "signflip_t_sd": 0.9954200723442501,
+   "signflip_t_q95": 1.6366037379465785,
+   "normal_q95": 1.6449,
+   "p_signflip_studentised": 0.6544,
+   "p_v1_reported": 0.663
+  }
+ ],
+ "replicates": {
+  "R": 20,
+  "sd_z_target": 1.3335241852127224,
+  "sd_z_joint": 0.876265256859234,
+  "sd_ci_target": [
+   1.0141327480641336,
+   1.9477094031720528
+  ],
+  "sd_ci_joint": [
+   0.666391583164292,
+   1.2798493641009228
+  ],
+  "rejections_target": 2,
+  "rejections_joint": 1,
+  "cp_two_sided_target": {
+   "k": 2,
+   "n": 20,
+   "rate": 0.1,
+   "level": 0.95,
+   "sided": "two",
+   "lo": 0.012348527170294797,
+   "hi": 0.3169827140190823
+  },
+  "cp_two_sided_joint": {
+   "k": 1,
+   "n": 20,
+   "rate": 0.05,
+   "level": 0.95,
+   "sided": "two",
+   "lo": 0.0012650894979498077,
+   "hi": 0.24873276277202772
+  },
+  "note": "replicates share the same 200 conditioning rows; only sampling seeds differ"
+ }
+}
