@@ -1,0 +1,139 @@
+{
+  "run_name": "p5_first_run_v1",
+  "description": "P5 FIRST RUN: exact 3-variable Gaussian probe of direct vs intermediate-then-target compatibility. Fixed before the test split was run.",
+  "seed": 20260926,
+  "split_seeds": {"train": 1, "dev": 2, "test": 3},
+  "n_train": 2000,
+  "n_dev": 40,
+  "n_test": 200,
+  "evaluation_unit": "conditioning example (x_i, y_obs_i, z_obs_i); M generated samples per branch per example are NOT independent units",
+  "alpha": 0.05,
+  "test": "one-sided sign-flip randomisation test over examples on d_i = ED(A_i,C_i) - ED(A_i,B_i); B = second independent reference sample set (noise floor)",
+  "n_sign_flips": 999,
+  "joint_slices": 8,
+  "standardisation": "y and z divided by their train-split sample sd before computing ED / sliced ED / CRPS",
+  "budget": {"max_seconds": 120, "cpu_threads": 2, "gpu": false, "downloads": false},
+  "joints": {
+    "nonmarkov": {
+      "mean": [0.5, -1.0, 2.0],
+      "sd": [1.0, 2.0, 0.5],
+      "corr": [[1.0, 0.6, 0.1], [0.6, 1.0, 0.6], [0.1, 0.6, 1.0]],
+      "note": "z not independent of x given y (partial corr ~ -0.41); chain z|y is incompatible"
+    },
+    "markov": {
+      "mean": [0.5, -1.0, 2.0],
+      "sd": [1.0, 2.0, 0.5],
+      "corr": [[1.0, 0.6, 0.36], [0.6, 1.0, 0.6], [0.36, 0.6, 1.0]],
+      "note": "x -> y -> z Markov chain (rho_xz = rho_xy * rho_yz); chain z|y is compatible"
+    }
+  },
+  "experiments": [
+    {
+      "id": "P5-E1-NULL",
+      "purpose": "exact direct vs exact sequential (generated intermediate); noise floor from two independent direct sets",
+      "type": "conditions", "joint": "nonmarkov", "m": 256,
+      "conditions": [
+        {"id": "exact_sequential", "kind": "exact_sequential", "expect": {"target": "no_detect", "joint": "no_detect"}}
+      ]
+    },
+    {
+      "id": "P5-E2-CHECKER",
+      "purpose": "positive controls: deliberately broken conditionals (mean / variance / correlation)",
+      "type": "conditions", "joint": "nonmarkov", "m": 256,
+      "conditions": [
+        {"id": "mean_shift_0.05", "kind": "stage2_mean_shift", "param": 0.05, "expect": {"target": "report", "joint": "report"}},
+        {"id": "mean_shift_0.1", "kind": "stage2_mean_shift", "param": 0.1, "expect": {"target": "detect", "joint": "report"}},
+        {"id": "mean_shift_0.2", "kind": "stage2_mean_shift", "param": 0.2, "expect": {"target": "detect", "joint": "detect"}},
+        {"id": "mean_shift_0.5", "kind": "stage2_mean_shift", "param": 0.5, "expect": {"target": "detect", "joint": "detect"}},
+        {"id": "var_ratio_0.8", "kind": "stage2_target_var_ratio", "param": 0.8, "expect": {"target": "detect", "joint": "report"}},
+        {"id": "var_ratio_1.1", "kind": "stage2_target_var_ratio", "param": 1.1, "expect": {"target": "report", "joint": "report"}},
+        {"id": "var_ratio_1.25", "kind": "stage2_target_var_ratio", "param": 1.25, "expect": {"target": "detect", "joint": "report"}},
+        {"id": "var_ratio_1.5", "kind": "stage2_target_var_ratio", "param": 1.5, "expect": {"target": "detect", "joint": "detect"}},
+        {"id": "corr_scale_-1", "kind": "stage2_corr_scale", "param": -1.0, "expect": {"target": "no_detect", "joint": "detect"}},
+        {"id": "corr_scale_0", "kind": "stage2_corr_scale", "param": 0.0, "expect": {"target": "no_detect", "joint": "detect"}},
+        {"id": "corr_scale_0.5", "kind": "stage2_corr_scale", "param": 0.5, "expect": {"target": "no_detect", "joint": "detect"}},
+        {"id": "stage1_mean_shift_0.5", "kind": "stage1_mean_shift", "param": 0.5, "expect": {"target": "detect", "joint": "detect"}}
+      ]
+    },
+    {
+      "id": "P5-E3-COLLAPSE",
+      "purpose": "collapse controls: consistency alone must not certify quality; paired-index MSE rewards collapse",
+      "type": "conditions", "joint": "nonmarkov", "m": 256,
+      "conditions": [
+        {"id": "collapse_both", "kind": "collapse_both", "expect": {"target": "no_detect", "joint": "no_detect"}},
+        {"id": "collapse_intermediate", "kind": "collapse_intermediate", "expect": {"target": "detect", "joint": "detect"}}
+      ]
+    },
+    {
+      "id": "P5-E4-INTERMEDIATE",
+      "purpose": "observed vs generated intermediate; chain (x dropped at stage 2) under non-Markov joint",
+      "type": "conditions", "joint": "nonmarkov", "m": 256,
+      "conditions": [
+        {"id": "observed_intermediate", "kind": "observed_intermediate", "expect": {"target": "detect"}},
+        {"id": "chain_drop_x", "kind": "chain_drop_x", "expect": {"target": "detect", "joint": "detect"}}
+      ]
+    },
+    {
+      "id": "P5-E4-MARKOV",
+      "purpose": "same checks under a Markov joint where the chain is exactly compatible",
+      "type": "conditions", "joint": "markov", "m": 256,
+      "conditions": [
+        {"id": "exact_sequential", "kind": "exact_sequential", "expect": {"target": "no_detect", "joint": "no_detect"}},
+        {"id": "chain_drop_x", "kind": "chain_drop_x", "expect": {"target": "no_detect", "joint": "no_detect"}}
+      ]
+    },
+    {
+      "id": "P5-E6-SOLVER",
+      "purpose": "numerical-solver effect with exact scores: PF-ODE Euler step grid (+2 Heun points), no guidance",
+      "type": "conditions", "joint": "nonmarkov", "m": 256, "n_examples": 100,
+      "diffusion": {"sigma_min": 0.002, "sigma_max": 80.0, "rho": 7.0, "solver": "euler", "n_steps": 64, "guidance": 0.0},
+      "conditions": [
+        {"id": "euler_2_seq", "kind": "diffusion_sequential", "diffusion": {"n_steps": 2}, "expect": {"target": "report"}},
+        {"id": "euler_4_seq", "kind": "diffusion_sequential", "diffusion": {"n_steps": 4}, "expect": {"target": "report"}},
+        {"id": "euler_8_seq", "kind": "diffusion_sequential", "diffusion": {"n_steps": 8}, "expect": {"target": "report"}},
+        {"id": "euler_16_seq", "kind": "diffusion_sequential", "diffusion": {"n_steps": 16}, "expect": {"target": "report"}},
+        {"id": "euler_32_seq", "kind": "diffusion_sequential", "diffusion": {"n_steps": 32}, "expect": {"target": "report"}},
+        {"id": "euler_64_seq", "kind": "diffusion_sequential", "diffusion": {"n_steps": 64}, "expect": {"target": "report"}},
+        {"id": "heun_4_seq", "kind": "diffusion_sequential", "diffusion": {"n_steps": 4, "solver": "heun"}, "expect": {"target": "report"}},
+        {"id": "heun_16_seq", "kind": "diffusion_sequential", "diffusion": {"n_steps": 16, "solver": "heun"}, "expect": {"target": "report"}},
+        {"id": "euler_4_direct_vs_exact", "kind": "diffusion_direct_vs_exact", "diffusion": {"n_steps": 4}, "expect": {"target": "report"}},
+        {"id": "euler_16_direct_vs_exact", "kind": "diffusion_direct_vs_exact", "diffusion": {"n_steps": 16}, "expect": {"target": "report"}},
+        {"id": "euler_64_direct_vs_exact", "kind": "diffusion_direct_vs_exact", "diffusion": {"n_steps": 64}, "expect": {"target": "report"}}
+      ]
+    },
+    {
+      "id": "P5-E7-CFG",
+      "purpose": "guidance effect with exact scores: CFG weight grid at Euler 64 steps; unconditional = target marginal",
+      "type": "conditions", "joint": "nonmarkov", "m": 256, "n_examples": 100,
+      "diffusion": {"sigma_min": 0.002, "sigma_max": 80.0, "rho": 7.0, "solver": "euler", "n_steps": 64, "guidance": 0.0},
+      "conditions": [
+        {"id": "cfg_0.5_seq", "kind": "diffusion_sequential", "diffusion": {"guidance": 0.5}, "expect": {"target": "report"}},
+        {"id": "cfg_1_seq", "kind": "diffusion_sequential", "diffusion": {"guidance": 1.0}, "expect": {"target": "report"}},
+        {"id": "cfg_2_seq", "kind": "diffusion_sequential", "diffusion": {"guidance": 2.0}, "expect": {"target": "report"}},
+        {"id": "cfg_4_seq", "kind": "diffusion_sequential", "diffusion": {"guidance": 4.0}, "expect": {"target": "report"}},
+        {"id": "cfg_1_direct_vs_exact", "kind": "diffusion_direct_vs_exact", "diffusion": {"guidance": 1.0}, "expect": {"target": "report"}},
+        {"id": "cfg_4_direct_vs_exact", "kind": "diffusion_direct_vs_exact", "diffusion": {"guidance": 4.0}, "expect": {"target": "report"}}
+      ]
+    },
+    {
+      "id": "P5-E5-MC",
+      "purpose": "Monte Carlo error: noise floor and power vs samples per example M (N fixed)",
+      "type": "conditions", "joint": "nonmarkov", "m": 256,
+      "conditions": [
+        {"id": "null_m32", "kind": "exact_sequential", "m": 32, "expect": {"target": "no_detect", "joint": "no_detect"}},
+        {"id": "null_m64", "kind": "exact_sequential", "m": 64, "expect": {"target": "no_detect", "joint": "no_detect"}},
+        {"id": "null_m128", "kind": "exact_sequential", "m": 128, "expect": {"target": "no_detect", "joint": "no_detect"}},
+        {"id": "null_m512", "kind": "exact_sequential", "m": 512, "expect": {"target": "no_detect", "joint": "no_detect"}},
+        {"id": "mean_shift_0.1_m32", "kind": "stage2_mean_shift", "param": 0.1, "m": 32, "expect": {"target": "report", "joint": "report"}},
+        {"id": "mean_shift_0.1_m64", "kind": "stage2_mean_shift", "param": 0.1, "m": 64, "expect": {"target": "report", "joint": "report"}},
+        {"id": "mean_shift_0.1_m128", "kind": "stage2_mean_shift", "param": 0.1, "m": 128, "expect": {"target": "report", "joint": "report"}},
+        {"id": "mean_shift_0.1_m512", "kind": "stage2_mean_shift", "param": 0.1, "m": 512, "expect": {"target": "report", "joint": "report"}}
+      ]
+    },
+    {
+      "id": "P5-E1-NULL-REPS",
+      "purpose": "false-positive-rate calibration of the aggregate test: independent replicate seeds of the exact null",
+      "type": "null_replicates", "joint": "nonmarkov", "m": 256, "replicates": 20
+    }
+  ]
+}

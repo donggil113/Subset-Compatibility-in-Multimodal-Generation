@@ -1,0 +1,98 @@
+# RELATED_WORK — P5
+
+Check date: 2026-09-26. Method: web search and page fetches (read-only), no
+file downloads on purpose. One side effect: while fetching the Kuo & Wang PDF,
+the fetch tool cached the binary under the session's tool-results folder
+outside this repo. It was not opened or used.
+
+Access levels, most to least direct:
+
+- **ABSTRACT_ONLY (verified)**: I fetched the arXiv abstract page myself and
+  checked the title, authors, date and abstract.
+- **SUMMARY_FULL_TEXT (subagent)**: a delegated search agent fetched the
+  full-text HTML and got a tool-written summary. Nobody read the paper line by
+  line, so treat its details as unverified until the paper is read.
+- **ABSTRACT_ONLY (subagent)**: the subagent saw only the abstract.
+- **SNIPPET_ONLY**: only a search-result snippet was seen.
+
+**No paper here was read in full.** The column "Direct-vs-seq test?" asks
+whether the paper measures whether direct and intermediate-then-target
+generation give the same *distribution*.
+
+## A. Closest prior work (the direct-vs-marginalised diagnostic already exists)
+
+| Work | Access | What it establishes | Direct-vs-seq test? | Remaining difference to P5 |
+|---|---|---|---|---|
+| Klötergens, Yalavarthi, Schmidt-Thieme, Hanika. *Do Tabular Foundation Models Agree with Themselves?* arXiv 2608.06004 (6 Aug 2026) | ABSTRACT_ONLY (verified); distance measure and model list from SUMMARY_FULL_TEXT (subagent) | Defines *marginalization consistency* (marginalised conditionals must equal directly predicted marginals) and *factorization consistency*. Every TFM they evaluate violates both. | **YES**, for tabular predictors. The subagent's summary says total-variation distance on TabPFN / TabICL / TabDPT / TabFM; this is not verified. | Tabular prediction, not multimodal generation. Per the summary it is diagnostic only, with no fix proposed. **P5's definition of Δ_T is essentially their C1**: we cannot claim the diagnostic itself. |
+| Kim. *Path-Dependent Denoising: A Non-Conservative Field Perspective on Order Collapse in Diffusion Language Models.* arXiv 2605.09303 (10 May 2026) | ABSTRACT_ONLY (verified) | Order-induced pseudo-joints, and a local "circulation" that is zero under compatible conditionals, for diffusion LMs. | Order dependence, not direct-vs-intermediate. | Text only. The subagent reported a proposed regularizer; the abstract does not mention one, so this is UNVERIFIED. |
+| Téllez et al. *Path-independent Flow Matching for Multi-parameter Generative Dynamics.* arXiv 2605.13487 | SUMMARY_FULL_TEXT (subagent) | In multi-parameter flows the final distribution can depend on integration order. Measured with W2 and reduced with a commutativity regularizer. | No, it concerns path order. | Not about multimodal conditionals. |
+| Liu, Ramadge, Adams. *Generative Marginalization Models.* ICML 2024, arXiv 2310.12920 | SUMMARY_FULL_TEXT (subagent) | A marginalization self-consistency loss (squared log-space) for discrete models. | Partial: it checks marginal estimates, not sampling-based direct-vs-chain. | Discrete data. The closest prior *loss* for P5's method candidate. |
+
+## B. Any-to-any / multimodal diffusion
+
+| Work | Access | What it establishes | Direct-vs-seq test? | Remaining difference |
+|---|---|---|---|---|
+| Bao et al. *One Transformer Fits All Distributions in Multi-Modal Diffusion at Scale* (UniDiffuser). ICML 2023, arXiv 2303.06555 | SUMMARY_FULL_TEXT (subagent) | Predicts the noise of all modalities with a separate timestep per modality. Marginal, conditional and joint are special cases of the timesteps. | NO. Chained / Gibbs-like sampling is shown qualitatively; the metrics are FID and CLIP. | This is the natural **shared-joint baseline**. Its conditionals come from one network, but they are not guaranteed to be mutually compatible. |
+| Bounoua, Franzese, Michiardi. *Multi-modal Latent Diffusion.* arXiv 2306.04445 (Entropy 2024 venue UNVERIFIED) | SUMMARY_FULL_TEXT (subagent) | Frozen deterministic per-modality autoencoders plus a masked multi-time latent score model. Coherence is judged by classifiers. | NO. Only single-step subset→missing generation is evaluated. | Closest to the P5 model template (frozen enc/dec + small latent generator). |
+| Li et al. *OmniFlow.* CVPR 2025, arXiv 2412.01169 | SUMMARY_FULL_TEXT (subagent) | Multi-modal rectified flow with one time per modality. | NO | — |
+| Rojas et al. *Diffuse Everything.* ICML 2025, arXiv 2506.07903 | ABSTRACT_ONLY (subagent) | A noise schedule per modality. | NO | — |
+| Mizrahi et al. *4M.* NeurIPS 2023, arXiv 2312.06647 | SUMMARY_FULL_TEXT (subagent) | Chained generation: finished modalities are fed back in as conditions for "self-consistency". | NO, qualitative only. | Chaining is used, not tested distributionally. |
+| Ye et al. *MODUS: Decoder-Only Any-to-Any Modeling of Diverse Modalities.* arXiv 2607.25948 (28 Jul 2026) | ABSTRACT_ONLY (verified); numbers from SUMMARY_FULL_TEXT (subagent) | Supports chained generation through intermediate modalities. The subagent reports NYUv2 surface-normal error for chained vs independent generation. | NO. Task quality only, not distributional equality. | Evidence that chaining changes outputs. Not a compatibility test. |
+| Chung et al. *Are Any-to-Any Models More Consistent Across Modality Transfers Than Specialists?* ACL 2025, arXiv 2505.24211 | ABSTRACT_ONLY (verified) | Three criteria: cyclic consistency, forward equivariance and conjugated equivariance. Per-sample, VQA-based. | NO. Round-trip and equivariance, per sample. | Not distributional, not direct-vs-intermediate. |
+| CoDi (arXiv 2305.11846), NExT-GPT (arXiv 2309.05519), Versatile Diffusion (arXiv 2211.08332) | ABSTRACT_ONLY (subagent) | Any-to-any systems. | No evidence of such a test. | — |
+
+## C. Classical conditional compatibility / pseudo-Gibbs
+
+| Work | Access | Known result |
+|---|---|---|
+| Arnold & Press. *Compatible conditional distributions.* JASA 84(405):152–156, 1989 | SNIPPET_ONLY | Necessary and sufficient conditions for a joint to exist with the given conditionals, and KL-based measures of incompatibility. |
+| Arnold, Castillo, Sarabia. *Conditional Specification of Statistical Models.* Springer 1999 | SNIPPET_ONLY | Book-length treatment, including Gaussian conditional specification. |
+| Hobert & Casella. JCGS 7(1):42–60, 1998 | SNIPPET_ONLY | Compatible conditionals can imply an improper joint, and then Gibbs sampling has no proper stationary law. |
+| Heckerman et al. *Dependency networks.* JMLR 1, 2000 | SUMMARY_FULL_TEXT (subagent; two sections) | Learned local conditionals are generally inconsistent, and pseudo-Gibbs sampling is used as a heuristic. |
+| Chen & Ip. J. Stat. Comput. Simul. 85:3266–3275, 2015 | SUMMARY_FULL_TEXT (subagent) | With incompatible conditionals, the stationary law of pseudo-Gibbs depends on the scan order. |
+| Liu, Gelman, Hill, Su, Kropko. Biometrika 101(1):155–173, 2014 (arXiv 1012.2902) | ABSTRACT_ONLY (subagent) | Stationary distribution of iterative imputation (MICE) under compatible and incompatible models. |
+| Wang & Kuo, JMVA 2010; Kuo & Wang, AISM 71:93–105, 2019 | SNIPPET_ONLY / ABSTRACT_ONLY (subagent) | Compatibility checks for discrete conditionals, and pseudo-Gibbs convergence. |
+| Young et al. *Inconsistencies in Masked Language Models.* arXiv 2301.00068 | SUMMARY_FULL_TEXT (subagent) | MLM conditionals from different masks cannot all come from one joint. |
+
+## D. Multimodal VAEs (coherence = classifier agreement)
+
+These are MVAE (arXiv 1802.05335), MMVAE (arXiv 1911.03393), MoPoE (ICLR 2021,
+arXiv 2105.02470) and Daunhawer et al. (ICLR 2022, arXiv 2110.04121). Access
+was SNIPPET_ONLY or ABSTRACT_ONLY (subagent). In all of them, coherence means
+that a classifier gives the same label to the generated and the conditioning
+modality. This is a per-sample semantic check, not a distributional
+direct-vs-seq test.
+
+## E. Guidance confound
+
+| Work | Access | Relevance |
+|---|---|---|
+| Chidambaram et al. *What does guidance do?* NeurIPS 2024, arXiv 2409.13074 | ABSTRACT_ONLY (subagent) | Guidance does not sample the tilted distribution. |
+| Bradley & Nakkiran. *Classifier-Free Guidance is a Predictor-Corrector.* arXiv 2408.09000 (venue UNVERIFIED) | ABSTRACT_ONLY (subagent) | Under CFG, neither DDPM nor DDIM yields p(x\|c)^γ p(x)^{1−γ}. |
+
+So a direct-vs-seq gap measured with guidance on cannot be attributed to the
+model. P5-E7 measures this confound with exact scores.
+
+## Gap assessment (cautious; the search was not exhaustive)
+
+**Already known:**
+
+- compatibility as a concept
+- incompatibility of learned conditionals
+- the direct-vs-marginalised diagnostic itself (tabular: 2608.06004)
+- consistency / commutativity regularisers as an idea
+- chaining used in any-to-any models
+- CFG distortion
+
+**Not found in this check:**
+
+- A distributional test of q_d(z|x) against ∫q(z|x,y)q(y|x)dy for continuous
+  any-to-any multimodal diffusion or flow generators (UniDiffuser, MLD,
+  OmniFlow, 4M-style) that controls the solver, guidance and Monte Carlo
+  error, and uses the conditioning example as the unit.
+- A method that reduces such a gap, with proper score, fidelity and diversity
+  reported alongside it, against shared-joint and extra-compute baselines.
+
+Any novelty claim for P5 must be restricted to these two points. It stays
+provisional until the closest papers (2608.06004, UniDiffuser, MLD, GMM) are
+read in full.
