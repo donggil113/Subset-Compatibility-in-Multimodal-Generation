@@ -1,0 +1,615 @@
+{"component": "A", "level": "target", "design": [1, 4], "cond": "exact_sequential", "rep": 0, "G": 70, "all_ok": true, "p_exact": 0.4857142857142857, "counts": {"0.01": 0, "0.05": 2, "0.1": 6, "0.2": 14, "0.5": 34}}
+{"component": "A", "level": "target", "design": [1, 4], "cond": "exact_sequential", "rep": 1, "G": 70, "all_ok": true, "p_exact": 1.0, "counts": {"0.01": 0, "0.05": 2, "0.1": 6, "0.2": 12, "0.5": 30}}
+{"component": "A", "level": "target", "design": [1, 4], "cond": "exact_sequential", "rep": 2, "G": 70, "all_ok": true, "p_exact": 0.3142857142857143, "counts": {"0.01": 0, "0.05": 2, "0.1": 6, "0.2": 12, "0.5": 34}}
+{"component": "A", "level": "target", "design": [1, 4], "cond": "exact_sequential", "rep": 3, "G": 70, "all_ok": true, "p_exact": 0.6571428571428571, "counts": {"0.01": 0, "0.05": 2, "0.1": 6, "0.2": 12, "0.5": 30}}
+{"component": "A", "level": "target", "design": [1, 4], "cond": "exact_sequential", "rep": 4, "G": 70, "all_ok": true, "p_exact": 1.0, "counts": {"0.01": 0, "0.05": 2, "0.1": 6, "0.2": 14, "0.5": 34}}
+{"component": "A", "level": "target", "design": [1, 4], "cond": "exact_sequential", "rep": 5, "G": 70, "all_ok": true, "p_exact": 0.17142857142857143, "counts": {"0.01": 0, "0.05": 2, "0.1": 6, "0.2": 14, "0.5": 30}}
+{"component": "A", "level": "target", "design": [1, 4], "cond": "exact_sequential", "rep": 6, "G": 70, "all_ok": true, "p_exact": 0.42857142857142855, "counts": {"0.01": 0, "0.05": 2, "0.1": 6, "0.2": 14, "0.5": 34}}
+{"component": "A", "level": "target", "design": [1, 4], "cond": "exact_sequential", "rep": 7, "G": 70, "all_ok": true, "p_exact": 0.6571428571428571, "counts": {"0.01": 0, "0.05": 2, "0.1": 6, "0.2": 14, "0.5": 34}}
+{"component": "A", "level": "target", "design": [1, 4], "cond": "exact_sequential", "rep": 8, "G": 70, "all_ok": true, "p_exact": 0.5428571428571428, "counts": {"0.01": 0, "0.05": 2, "0.1": 6, "0.2": 12, "0.5": 30}}
+{"component": "A", "level": "target", "design": [1, 4], "cond": "exact_sequential", "rep": 9, "G": 70, "all_ok": true, "p_exact": 0.3142857142857143, "counts": {"0.01": 0, "0.05": 2, "0.1": 6, "0.2": 14, "0.5": 34}}
+{"component": "A", "level": "target", "design": [1, 4], "cond": "collapse_both", "rep": 0, "G": 70, "all_ok": true, "p_exact": 1.0, "counts": {"0.01": 0, "0.05": 0, "0.1": 0, "0.2": 0, "0.5": 0}}
+{"component": "A", "level": "target", "design": [2, 3], "cond": "exact_sequential", "rep": 0, "G": 400, "all_ok": true, "p_exact": 0.76, "counts": {"0.01": 4, "0.05": 20, "0.1": 36, "0.2": 80, "0.5": 192}}
+{"component": "A", "level": "target", "design": [2, 3], "cond": "exact_sequential", "rep": 1, "G": 400, "all_ok": true, "p_exact": 0.4, "counts": {"0.01": 4, "0.05": 20, "0.1": 40, "0.2": 80, "0.5": 192}}
+{"component": "A", "level": "target", "design": [2, 3], "cond": "exact_sequential", "rep": 2, "G": 400, "all_ok": true, "p_exact": 0.38, "counts": {"0.01": 4, "0.05": 16, "0.1": 40, "0.2": 80, "0.5": 192}}
+{"component": "A", "level": "target", "design": [2, 3], "cond": "exact_sequential", "rep": 3, "G": 400, "all_ok": true, "p_exact": 0.76, "counts": {"0.01": 4, "0.05": 16, "0.1": 40, "0.2": 72, "0.5": 192}}
+{"component": "A", "level": "target", "design": [2, 3], "cond": "exact_sequential", "rep": 4, "G": 400, "all_ok": true, "p_exact": 0.68, "counts": {"0.01": 4, "0.05": 16, "0.1": 40, "0.2": 80, "0.5": 192}}
+{"component": "A", "level": "target", "design": [2, 3], "cond": "exact_sequential", "rep": 5, "G": 400, "all_ok": true, "p_exact": 0.84, "counts": {"0.01": 4, "0.05": 20, "0.1": 40, "0.2": 72, "0.5": 176}}
+{"component": "A", "level": "target", "design": [2, 3], "cond": "exact_sequential", "rep": 6, "G": 400, "all_ok": true, "p_exact": 0.2, "counts": {"0.01": 4, "0.05": 16, "0.1": 40, "0.2": 80, "0.5": 192}}
+{"component": "A", "level": "target", "design": [2, 3], "cond": "exact_sequential", "rep": 7, "G": 400, "all_ok": true, "p_exact": 0.06, "counts": {"0.01": 4, "0.05": 16, "0.1": 40, "0.2": 80, "0.5": 192}}
+{"component": "A", "level": "target", "design": [2, 3], "cond": "exact_sequential", "rep": 8, "G": 400, "all_ok": true, "p_exact": 1.0, "counts": {"0.01": 4, "0.05": 20, "0.1": 40, "0.2": 80, "0.5": 192}}
+{"component": "A", "level": "target", "design": [2, 3], "cond": "exact_sequential", "rep": 9, "G": 400, "all_ok": true, "p_exact": 0.14, "counts": {"0.01": 4, "0.05": 20, "0.1": 40, "0.2": 72, "0.5": 192}}
+{"component": "A", "level": "target", "design": [2, 3], "cond": "collapse_both", "rep": 0, "G": 400, "all_ok": true, "p_exact": 1.0, "counts": {"0.01": 0, "0.05": 0, "0.1": 0, "0.2": 0, "0.5": 0}}
+{"component": "A", "level": "target", "design": [3, 2], "cond": "exact_sequential", "rep": 0, "G": 216, "all_ok": true, "p_exact": 1.0, "counts": {"0.01": 0, "0.05": 8, "0.1": 8, "0.2": 40, "0.5": 88}}
+{"component": "A", "level": "target", "design": [3, 2], "cond": "exact_sequential", "rep": 1, "G": 216, "all_ok": true, "p_exact": 0.3333333333333333, "counts": {"0.01": 0, "0.05": 8, "0.1": 8, "0.2": 40, "0.5": 88}}
+{"component": "A", "level": "target", "design": [3, 2], "cond": "exact_sequential", "rep": 2, "G": 216, "all_ok": true, "p_exact": 0.1111111111111111, "counts": {"0.01": 0, "0.05": 8, "0.1": 8, "0.2": 40, "0.5": 88}}
+{"component": "A", "level": "target", "design": [3, 2], "cond": "exact_sequential", "rep": 3, "G": 216, "all_ok": true, "p_exact": 0.3333333333333333, "counts": {"0.01": 0, "0.05": 8, "0.1": 8, "0.2": 40, "0.5": 88}}
+{"component": "A", "level": "target", "design": [3, 2], "cond": "exact_sequential", "rep": 4, "G": 216, "all_ok": true, "p_exact": 0.4074074074074074, "counts": {"0.01": 0, "0.05": 8, "0.1": 8, "0.2": 40, "0.5": 88}}
+{"component": "A", "level": "target", "design": [3, 2], "cond": "exact_sequential", "rep": 5, "G": 216, "all_ok": true, "p_exact": 0.5555555555555556, "counts": {"0.01": 0, "0.05": 8, "0.1": 8, "0.2": 40, "0.5": 88}}
+{"component": "A", "level": "target", "design": [3, 2], "cond": "exact_sequential", "rep": 6, "G": 216, "all_ok": true, "p_exact": 1.0, "counts": {"0.01": 0, "0.05": 8, "0.1": 8, "0.2": 40, "0.5": 88}}
+{"component": "A", "level": "target", "design": [3, 2], "cond": "exact_sequential", "rep": 7, "G": 216, "all_ok": true, "p_exact": 0.3333333333333333, "counts": {"0.01": 0, "0.05": 8, "0.1": 8, "0.2": 40, "0.5": 88}}
+{"component": "A", "level": "target", "design": [3, 2], "cond": "exact_sequential", "rep": 8, "G": 216, "all_ok": true, "p_exact": 0.5555555555555556, "counts": {"0.01": 0, "0.05": 8, "0.1": 8, "0.2": 40, "0.5": 88}}
+{"component": "A", "level": "target", "design": [3, 2], "cond": "exact_sequential", "rep": 9, "G": 216, "all_ok": true, "p_exact": 1.0, "counts": {"0.01": 0, "0.05": 8, "0.1": 8, "0.2": 40, "0.5": 88}}
+{"component": "A", "level": "target", "design": [3, 2], "cond": "collapse_both", "rep": 0, "G": 216, "all_ok": true, "p_exact": 1.0, "counts": {"0.01": 0, "0.05": 0, "0.1": 0, "0.2": 0, "0.5": 0}}
+{"component": "A", "level": "target", "design": [2, 4], "cond": "exact_sequential", "rep": 0, "G": 4900, "all_ok": true, "p_exact": 0.6930612244897959, "counts": {"0.01": 44, "0.05": 236, "0.1": 488, "0.2": 980, "0.5": 2388}}
+{"component": "A", "level": "target", "design": [2, 4], "cond": "exact_sequential", "rep": 1, "G": 4900, "all_ok": true, "p_exact": 1.0, "counts": {"0.01": 48, "0.05": 244, "0.1": 484, "0.2": 980, "0.5": 2404}}
+{"component": "A", "level": "target", "design": [2, 4], "cond": "exact_sequential", "rep": 2, "G": 4900, "all_ok": true, "p_exact": 0.3110204081632653, "counts": {"0.01": 48, "0.05": 244, "0.1": 488, "0.2": 980, "0.5": 2388}}
+{"component": "A", "level": "target", "design": [2, 4], "cond": "exact_sequential", "rep": 3, "G": 4900, "all_ok": true, "p_exact": 0.2587755102040816, "counts": {"0.01": 48, "0.05": 244, "0.1": 488, "0.2": 980, "0.5": 2436}}
+{"component": "A", "level": "target", "design": [2, 4], "cond": "exact_sequential", "rep": 4, "G": 4900, "all_ok": true, "p_exact": 0.8955102040816326, "counts": {"0.01": 44, "0.05": 240, "0.1": 484, "0.2": 976, "0.5": 2420}}
+{"component": "A", "level": "target", "design": [2, 4], "cond": "exact_sequential", "rep": 5, "G": 4900, "all_ok": true, "p_exact": 0.46775510204081633, "counts": {"0.01": 44, "0.05": 240, "0.1": 488, "0.2": 972, "0.5": 2420}}
+{"component": "A", "level": "target", "design": [2, 4], "cond": "exact_sequential", "rep": 6, "G": 4900, "all_ok": true, "p_exact": 0.5885714285714285, "counts": {"0.01": 48, "0.05": 220, "0.1": 488, "0.2": 972, "0.5": 2404}}
+{"component": "A", "level": "target", "design": [2, 4], "cond": "exact_sequential", "rep": 7, "G": 4900, "all_ok": true, "p_exact": 0.1306122448979592, "counts": {"0.01": 48, "0.05": 236, "0.1": 484, "0.2": 964, "0.5": 2436}}
+{"component": "A", "level": "target", "design": [2, 4], "cond": "exact_sequential", "rep": 8, "G": 4900, "all_ok": true, "p_exact": 0.022857142857142857, "counts": {"0.01": 48, "0.05": 244, "0.1": 476, "0.2": 972, "0.5": 2436}}
+{"component": "A", "level": "target", "design": [2, 4], "cond": "exact_sequential", "rep": 9, "G": 4900, "all_ok": true, "p_exact": 0.4530612244897959, "counts": {"0.01": 44, "0.05": 240, "0.1": 484, "0.2": 956, "0.5": 2436}}
+{"component": "A", "level": "target", "design": [2, 4], "cond": "collapse_both", "rep": 0, "G": 4900, "all_ok": true, "p_exact": 1.0, "counts": {"0.01": 0, "0.05": 0, "0.1": 0, "0.2": 0, "0.5": 0}}
+{"component": "A", "level": "joint", "design": [2, 3], "cond": "exact_sequential", "rep": 0, "G": 400, "all_ok": true, "p_exact": 0.02, "counts": {"0.01": 4, "0.05": 20, "0.1": 40, "0.2": 80, "0.5": 200}}
+{"component": "A", "level": "joint", "design": [2, 3], "cond": "exact_sequential", "rep": 1, "G": 400, "all_ok": true, "p_exact": 0.17, "counts": {"0.01": 4, "0.05": 20, "0.1": 40, "0.2": 80, "0.5": 200}}
+{"component": "A", "level": "joint", "design": [2, 3], "cond": "exact_sequential", "rep": 2, "G": 400, "all_ok": true, "p_exact": 0.26, "counts": {"0.01": 4, "0.05": 20, "0.1": 40, "0.2": 80, "0.5": 200}}
+{"component": "A", "level": "joint", "design": [2, 3], "cond": "exact_sequential", "rep": 3, "G": 400, "all_ok": true, "p_exact": 0.67, "counts": {"0.01": 4, "0.05": 20, "0.1": 40, "0.2": 80, "0.5": 200}}
+{"component": "A", "level": "joint", "design": [2, 3], "cond": "exact_sequential", "rep": 4, "G": 400, "all_ok": true, "p_exact": 0.41, "counts": {"0.01": 4, "0.05": 20, "0.1": 40, "0.2": 80, "0.5": 200}}
+{"component": "A", "level": "joint", "design": [2, 3], "cond": "exact_sequential", "rep": 5, "G": 400, "all_ok": true, "p_exact": 0.95, "counts": {"0.01": 4, "0.05": 20, "0.1": 40, "0.2": 80, "0.5": 200}}
+{"component": "A", "level": "joint", "design": [2, 3], "cond": "exact_sequential", "rep": 6, "G": 400, "all_ok": true, "p_exact": 0.3, "counts": {"0.01": 4, "0.05": 20, "0.1": 40, "0.2": 80, "0.5": 200}}
+{"component": "A", "level": "joint", "design": [2, 3], "cond": "exact_sequential", "rep": 7, "G": 400, "all_ok": true, "p_exact": 0.14, "counts": {"0.01": 4, "0.05": 20, "0.1": 40, "0.2": 80, "0.5": 200}}
+{"component": "A", "level": "joint", "design": [2, 3], "cond": "exact_sequential", "rep": 8, "G": 400, "all_ok": true, "p_exact": 0.55, "counts": {"0.01": 4, "0.05": 20, "0.1": 40, "0.2": 80, "0.5": 200}}
+{"component": "A", "level": "joint", "design": [2, 3], "cond": "exact_sequential", "rep": 9, "G": 400, "all_ok": true, "p_exact": 0.2, "counts": {"0.01": 4, "0.05": 20, "0.1": 40, "0.2": 80, "0.5": 200}}
+{"component": "A", "level": "joint", "design": [2, 3], "cond": "collapse_both", "rep": 0, "G": 400, "all_ok": true, "p_exact": 1.0, "counts": {"0.01": 0, "0.05": 0, "0.1": 0, "0.2": 0, "0.5": 0}}
+{"component": "B", "cond": "exact_sequential", "rep": 0, "p_exact": 0.830204081632653, "p_mc": 0.8175, "tol": 0.03408157405162971, "ok": true}
+{"component": "B", "cond": "exact_sequential", "rep": 1, "p_exact": 0.3510204081632653, "p_mc": 0.347, "tol": 0.04319005328796486, "ok": true}
+{"component": "B", "cond": "exact_sequential", "rep": 2, "p_exact": 0.2816326530612245, "p_mc": 0.253, "tol": 0.04073090372247886, "ok": true}
+{"component": "B", "cond": "exact_sequential", "rep": 3, "p_exact": 0.9477551020408164, "p_mc": 0.9465, "tol": 0.020402837706501677, "ok": true}
+{"component": "B", "cond": "exact_sequential", "rep": 4, "p_exact": 0.843265306122449, "p_mc": 0.8475, "tol": 0.03301694076787193, "ok": true}
+{"component": "B", "cond": "mean_shift_1.0", "rep": 0, "p_exact": 0.17877551020408164, "p_mc": 0.169, "tol": 0.03477125059350498, "ok": true}
+{"component": "B", "cond": "mean_shift_1.0", "rep": 1, "p_exact": 0.03510204081632653, "p_mc": 0.0335, "tol": 0.01696083534863416, "ok": true}
+{"component": "B", "cond": "mean_shift_1.0", "rep": 2, "p_exact": 0.10938775510204081, "p_mc": 0.1135, "tol": 0.0284173170825245, "ok": true}
+{"component": "B", "cond": "mean_shift_1.0", "rep": 3, "p_exact": 0.004897959183673469, "p_mc": 0.0025, "tol": 0.006744337709963187, "ok": true}
+{"component": "B", "cond": "mean_shift_1.0", "rep": 4, "p_exact": 0.5951020408163266, "p_mc": 0.59, "tol": 0.04440495205168271, "ok": true}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 0, "p_exact": 0.118}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 1, "p_exact": 0.872}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 2, "p_exact": 0.624}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 3, "p_exact": 0.904}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 4, "p_exact": 0.268}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 5, "p_exact": 0.728}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 6, "p_exact": 0.556}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 7, "p_exact": 0.904}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 8, "p_exact": 0.776}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 9, "p_exact": 0.344}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 10, "p_exact": 0.196}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 11, "p_exact": 0.424}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 12, "p_exact": 0.326}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 13, "p_exact": 0.648}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 14, "p_exact": 0.808}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 15, "p_exact": 0.5}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 16, "p_exact": 0.284}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 17, "p_exact": 0.84}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 18, "p_exact": 0.856}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 19, "p_exact": 0.576}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 20, "p_exact": 0.856}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 21, "p_exact": 0.824}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 22, "p_exact": 0.712}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 23, "p_exact": 1.0}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 24, "p_exact": 0.123}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 25, "p_exact": 0.808}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 26, "p_exact": 0.113}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 27, "p_exact": 0.524}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 28, "p_exact": 0.158}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 29, "p_exact": 0.936}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 30, "p_exact": 0.16}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 31, "p_exact": 0.392}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 32, "p_exact": 0.696}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 33, "p_exact": 0.904}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 34, "p_exact": 0.492}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 35, "p_exact": 0.672}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 36, "p_exact": 0.474}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 37, "p_exact": 1.0}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 38, "p_exact": 0.704}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 39, "p_exact": 0.584}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 40, "p_exact": 0.752}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 41, "p_exact": 0.092}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 42, "p_exact": 0.488}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 43, "p_exact": 1.0}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 44, "p_exact": 0.376}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 45, "p_exact": 0.016}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 46, "p_exact": 0.004}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 47, "p_exact": 1.0}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 48, "p_exact": 0.472}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 49, "p_exact": 0.648}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 50, "p_exact": 0.936}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 51, "p_exact": 0.58}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 52, "p_exact": 0.392}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 53, "p_exact": 0.464}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 54, "p_exact": 0.736}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 55, "p_exact": 0.904}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 56, "p_exact": 0.588}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 57, "p_exact": 0.576}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 58, "p_exact": 0.64}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 59, "p_exact": 0.556}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 60, "p_exact": 0.04}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 61, "p_exact": 0.284}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 62, "p_exact": 0.418}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 63, "p_exact": 0.145}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 64, "p_exact": 0.2}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 65, "p_exact": 0.484}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 66, "p_exact": 0.632}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 67, "p_exact": 0.784}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 68, "p_exact": 0.904}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 69, "p_exact": 0.224}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 70, "p_exact": 0.672}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 71, "p_exact": 0.252}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 72, "p_exact": 0.736}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 73, "p_exact": 0.272}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 74, "p_exact": 0.448}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 75, "p_exact": 0.328}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 76, "p_exact": 0.28}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 77, "p_exact": 0.904}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 78, "p_exact": 0.536}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 79, "p_exact": 0.64}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 80, "p_exact": 1.0}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 81, "p_exact": 0.824}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 82, "p_exact": 0.028}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 83, "p_exact": 0.688}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 84, "p_exact": 0.936}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 85, "p_exact": 0.238}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 86, "p_exact": 0.584}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 87, "p_exact": 0.904}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 88, "p_exact": 0.304}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 89, "p_exact": 0.444}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 90, "p_exact": 0.22}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 91, "p_exact": 0.736}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 92, "p_exact": 0.744}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 93, "p_exact": 0.84}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 94, "p_exact": 0.464}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 95, "p_exact": 0.332}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 96, "p_exact": 0.127}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 97, "p_exact": 0.298}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 98, "p_exact": 0.19}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 99, "p_exact": 0.352}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 100, "p_exact": 0.404}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 101, "p_exact": 0.824}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 102, "p_exact": 0.168}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 103, "p_exact": 0.608}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 104, "p_exact": 0.266}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 105, "p_exact": 0.624}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 106, "p_exact": 0.608}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 107, "p_exact": 0.712}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 108, "p_exact": 0.318}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 109, "p_exact": 0.856}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 110, "p_exact": 0.192}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 111, "p_exact": 0.12}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 112, "p_exact": 0.296}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 113, "p_exact": 0.648}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 114, "p_exact": 0.856}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 115, "p_exact": 0.035}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 116, "p_exact": 0.082}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 117, "p_exact": 0.06}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 118, "p_exact": 0.532}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 119, "p_exact": 0.824}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 120, "p_exact": 0.824}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 121, "p_exact": 0.152}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 122, "p_exact": 1.0}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 123, "p_exact": 0.071}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 124, "p_exact": 0.061}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 125, "p_exact": 0.824}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 126, "p_exact": 0.608}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 127, "p_exact": 1.0}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 128, "p_exact": 0.058}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 129, "p_exact": 0.46}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 130, "p_exact": 0.066}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 131, "p_exact": 1.0}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 132, "p_exact": 0.792}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 133, "p_exact": 0.752}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 134, "p_exact": 0.214}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 135, "p_exact": 0.22}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 136, "p_exact": 0.42}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 137, "p_exact": 0.52}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 138, "p_exact": 0.164}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 139, "p_exact": 0.76}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 140, "p_exact": 0.444}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 141, "p_exact": 0.616}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 142, "p_exact": 0.512}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 143, "p_exact": 0.239}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 144, "p_exact": 0.132}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 145, "p_exact": 0.1}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 146, "p_exact": 0.776}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 147, "p_exact": 0.064}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 148, "p_exact": 0.12}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 149, "p_exact": 0.4}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 150, "p_exact": 0.496}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 151, "p_exact": 0.46}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 152, "p_exact": 0.074}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 153, "p_exact": 0.904}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 154, "p_exact": 0.904}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 155, "p_exact": 0.131}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 156, "p_exact": 0.366}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 157, "p_exact": 0.041}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 158, "p_exact": 0.6}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 159, "p_exact": 0.792}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 160, "p_exact": 0.222}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 161, "p_exact": 0.049}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 162, "p_exact": 0.296}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 163, "p_exact": 0.72}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 164, "p_exact": 0.022}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 165, "p_exact": 0.34}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 166, "p_exact": 0.098}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 167, "p_exact": 0.059}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 168, "p_exact": 0.516}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 169, "p_exact": 0.856}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 170, "p_exact": 0.145}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 171, "p_exact": 0.085}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 172, "p_exact": 0.792}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 173, "p_exact": 0.936}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 174, "p_exact": 0.352}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 175, "p_exact": 0.182}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 176, "p_exact": 0.45}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 177, "p_exact": 0.14}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 178, "p_exact": 0.688}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 179, "p_exact": 1.0}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 180, "p_exact": 0.496}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 181, "p_exact": 0.054}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 182, "p_exact": 0.02}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 183, "p_exact": 0.64}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 184, "p_exact": 0.254}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 185, "p_exact": 0.6}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 186, "p_exact": 0.308}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 187, "p_exact": 0.784}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 188, "p_exact": 0.544}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 189, "p_exact": 0.824}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 190, "p_exact": 0.142}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 191, "p_exact": 1.0}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 192, "p_exact": 0.376}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 193, "p_exact": 0.904}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 194, "p_exact": 0.792}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 195, "p_exact": 0.055}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 196, "p_exact": 0.4}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 197, "p_exact": 0.84}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 198, "p_exact": 0.256}
+{"component": "C", "cond": "exact_sequential", "level": "target", "rep": 199, "p_exact": 0.72}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 0, "p_exact": 0.348}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 1, "p_exact": 1.0}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 2, "p_exact": 0.66}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 3, "p_exact": 0.274}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 4, "p_exact": 0.616}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 5, "p_exact": 0.632}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 6, "p_exact": 0.178}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 7, "p_exact": 0.656}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 8, "p_exact": 1.0}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 9, "p_exact": 0.6}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 10, "p_exact": 0.244}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 11, "p_exact": 1.0}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 12, "p_exact": 0.904}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 13, "p_exact": 0.476}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 14, "p_exact": 0.4}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 15, "p_exact": 0.664}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 16, "p_exact": 0.856}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 17, "p_exact": 0.195}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 18, "p_exact": 0.164}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 19, "p_exact": 0.64}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 20, "p_exact": 0.404}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 21, "p_exact": 0.488}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 22, "p_exact": 0.432}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 23, "p_exact": 0.466}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 24, "p_exact": 0.352}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 25, "p_exact": 0.792}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 26, "p_exact": 0.744}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 27, "p_exact": 0.344}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 28, "p_exact": 0.792}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 29, "p_exact": 0.856}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 30, "p_exact": 0.432}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 31, "p_exact": 0.856}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 32, "p_exact": 0.544}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 33, "p_exact": 0.792}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 34, "p_exact": 0.504}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 35, "p_exact": 0.352}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 36, "p_exact": 0.21}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 37, "p_exact": 0.182}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 38, "p_exact": 0.528}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 39, "p_exact": 0.412}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 40, "p_exact": 0.392}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 41, "p_exact": 0.08}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 42, "p_exact": 0.408}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 43, "p_exact": 0.504}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 44, "p_exact": 0.656}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 45, "p_exact": 0.146}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 46, "p_exact": 0.404}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 47, "p_exact": 0.58}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 48, "p_exact": 0.121}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 49, "p_exact": 0.648}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 50, "p_exact": 0.528}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 51, "p_exact": 0.584}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 52, "p_exact": 0.824}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 53, "p_exact": 0.144}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 54, "p_exact": 0.544}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 55, "p_exact": 0.504}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 56, "p_exact": 0.616}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 57, "p_exact": 0.676}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 58, "p_exact": 0.172}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 59, "p_exact": 1.0}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 60, "p_exact": 0.384}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 61, "p_exact": 0.784}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 62, "p_exact": 0.656}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 63, "p_exact": 0.76}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 64, "p_exact": 0.144}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 65, "p_exact": 0.022}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 66, "p_exact": 0.936}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 67, "p_exact": 0.025}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 68, "p_exact": 0.344}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 69, "p_exact": 0.808}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 70, "p_exact": 0.544}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 71, "p_exact": 0.416}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 72, "p_exact": 0.147}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 73, "p_exact": 0.936}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 74, "p_exact": 0.696}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 75, "p_exact": 1.0}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 76, "p_exact": 0.286}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 77, "p_exact": 0.728}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 78, "p_exact": 0.086}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 79, "p_exact": 0.824}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 80, "p_exact": 0.007}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 81, "p_exact": 0.624}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 82, "p_exact": 0.242}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 83, "p_exact": 0.408}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 84, "p_exact": 0.68}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 85, "p_exact": 0.648}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 86, "p_exact": 0.01}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 87, "p_exact": 0.54}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 88, "p_exact": 0.68}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 89, "p_exact": 0.18}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 90, "p_exact": 0.936}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 91, "p_exact": 0.824}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 92, "p_exact": 0.282}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 93, "p_exact": 0.152}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 94, "p_exact": 0.392}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 95, "p_exact": 0.217}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 96, "p_exact": 0.664}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 97, "p_exact": 0.358}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 98, "p_exact": 0.76}
+{"component": "C", "cond": "corr_scale_-1", "level": "target", "rep": 99, "p_exact": 0.824}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 0, "p_exact": 0.175}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 1, "p_exact": 0.272}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 2, "p_exact": 0.578}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 3, "p_exact": 0.956}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 4, "p_exact": 0.471}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 5, "p_exact": 0.885}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 6, "p_exact": 0.316}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 7, "p_exact": 0.89}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 8, "p_exact": 0.451}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 9, "p_exact": 0.689}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 10, "p_exact": 0.214}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 11, "p_exact": 0.096}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 12, "p_exact": 0.952}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 13, "p_exact": 0.384}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 14, "p_exact": 0.981}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 15, "p_exact": 0.159}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 16, "p_exact": 0.284}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 17, "p_exact": 0.854}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 18, "p_exact": 0.714}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 19, "p_exact": 0.204}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 20, "p_exact": 0.919}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 21, "p_exact": 0.918}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 22, "p_exact": 0.447}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 23, "p_exact": 0.778}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 24, "p_exact": 0.662}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 25, "p_exact": 0.717}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 26, "p_exact": 0.313}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 27, "p_exact": 0.724}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 28, "p_exact": 0.637}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 29, "p_exact": 0.778}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 30, "p_exact": 0.223}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 31, "p_exact": 0.65}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 32, "p_exact": 0.909}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 33, "p_exact": 0.461}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 34, "p_exact": 0.258}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 35, "p_exact": 0.547}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 36, "p_exact": 0.329}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 37, "p_exact": 0.581}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 38, "p_exact": 0.824}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 39, "p_exact": 0.805}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 40, "p_exact": 0.376}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 41, "p_exact": 0.185}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 42, "p_exact": 0.5}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 43, "p_exact": 0.701}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 44, "p_exact": 0.978}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 45, "p_exact": 0.052}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 46, "p_exact": 0.005}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 47, "p_exact": 0.992}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 48, "p_exact": 0.608}
+{"component": "C", "cond": "exact_sequential", "level": "joint", "rep": 49, "p_exact": 0.43}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 0, "p_exact": 0.001}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 1, "p_exact": 0.002}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 2, "p_exact": 0.002}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 3, "p_exact": 0.012}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 4, "p_exact": 0.057}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 5, "p_exact": 0.001}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 6, "p_exact": 0.001}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 7, "p_exact": 0.027}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 8, "p_exact": 0.002}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 9, "p_exact": 0.156}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 10, "p_exact": 0.01}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 11, "p_exact": 0.001}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 12, "p_exact": 0.014}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 13, "p_exact": 0.008}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 14, "p_exact": 0.007}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 15, "p_exact": 0.03}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 16, "p_exact": 0.001}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 17, "p_exact": 0.084}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 18, "p_exact": 0.146}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 19, "p_exact": 0.025}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 20, "p_exact": 0.005}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 21, "p_exact": 0.001}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 22, "p_exact": 0.012}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 23, "p_exact": 0.004}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 24, "p_exact": 0.003}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 25, "p_exact": 0.004}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 26, "p_exact": 0.002}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 27, "p_exact": 0.031}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 28, "p_exact": 0.022}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 29, "p_exact": 0.104}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 30, "p_exact": 0.001}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 31, "p_exact": 0.002}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 32, "p_exact": 0.161}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 33, "p_exact": 0.002}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 34, "p_exact": 0.008}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 35, "p_exact": 0.002}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 36, "p_exact": 0.002}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 37, "p_exact": 0.004}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 38, "p_exact": 0.009}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 39, "p_exact": 0.004}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 40, "p_exact": 0.068}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 41, "p_exact": 0.006}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 42, "p_exact": 0.008}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 43, "p_exact": 0.001}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 44, "p_exact": 0.006}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 45, "p_exact": 0.008}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 46, "p_exact": 0.116}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 47, "p_exact": 0.011}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 48, "p_exact": 0.002}
+{"component": "C", "cond": "mean_shift_2.0", "level": "target", "rep": 49, "p_exact": 0.001}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 0, "p_exact": 0.041}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 1, "p_exact": 1.0}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 2, "p_exact": 0.032}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 3, "p_exact": 0.064}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 4, "p_exact": 0.54}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 5, "p_exact": 0.468}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 6, "p_exact": 0.552}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 7, "p_exact": 0.157}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 8, "p_exact": 0.856}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 9, "p_exact": 0.432}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 10, "p_exact": 0.4}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 11, "p_exact": 0.648}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 12, "p_exact": 0.448}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 13, "p_exact": 0.142}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 14, "p_exact": 0.087}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 15, "p_exact": 0.408}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 16, "p_exact": 0.246}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 17, "p_exact": 0.784}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 18, "p_exact": 0.556}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 19, "p_exact": 0.062}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 20, "p_exact": 0.23}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 21, "p_exact": 0.544}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 22, "p_exact": 0.44}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 23, "p_exact": 0.046}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 24, "p_exact": 0.824}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 25, "p_exact": 1.0}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 26, "p_exact": 0.632}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 27, "p_exact": 0.077}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 28, "p_exact": 0.604}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 29, "p_exact": 0.384}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 30, "p_exact": 0.252}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 31, "p_exact": 0.015}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 32, "p_exact": 0.84}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 33, "p_exact": 0.512}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 34, "p_exact": 0.19}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 35, "p_exact": 1.0}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 36, "p_exact": 0.936}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 37, "p_exact": 0.52}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 38, "p_exact": 0.776}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 39, "p_exact": 0.416}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 40, "p_exact": 0.17}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 41, "p_exact": 0.088}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 42, "p_exact": 0.218}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 43, "p_exact": 0.776}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 44, "p_exact": 0.16}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 45, "p_exact": 0.68}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 46, "p_exact": 0.332}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 47, "p_exact": 0.016}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 48, "p_exact": 0.14}
+{"component": "C", "cond": "var_ratio_4.0", "level": "target", "rep": 49, "p_exact": 0.556}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 0, "p_exact": 0.27}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 1, "p_exact": 0.216}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 2, "p_exact": 0.055}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 3, "p_exact": 0.663}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 4, "p_exact": 0.235}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 5, "p_exact": 0.671}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 6, "p_exact": 0.203}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 7, "p_exact": 0.603}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 8, "p_exact": 0.699}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 9, "p_exact": 0.357}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 10, "p_exact": 0.252}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 11, "p_exact": 0.381}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 12, "p_exact": 0.996}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 13, "p_exact": 0.646}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 14, "p_exact": 0.331}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 15, "p_exact": 0.564}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 16, "p_exact": 0.413}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 17, "p_exact": 0.534}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 18, "p_exact": 0.221}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 19, "p_exact": 0.61}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 20, "p_exact": 0.187}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 21, "p_exact": 0.258}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 22, "p_exact": 0.021}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 23, "p_exact": 0.318}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 24, "p_exact": 0.874}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 25, "p_exact": 0.648}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 26, "p_exact": 0.764}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 27, "p_exact": 0.156}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 28, "p_exact": 0.369}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 29, "p_exact": 0.566}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 30, "p_exact": 0.987}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 31, "p_exact": 0.601}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 32, "p_exact": 0.772}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 33, "p_exact": 0.266}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 34, "p_exact": 0.547}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 35, "p_exact": 0.357}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 36, "p_exact": 0.118}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 37, "p_exact": 0.638}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 38, "p_exact": 0.151}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 39, "p_exact": 0.433}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 40, "p_exact": 0.6}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 41, "p_exact": 0.031}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 42, "p_exact": 0.071}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 43, "p_exact": 0.027}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 44, "p_exact": 0.045}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 45, "p_exact": 0.376}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 46, "p_exact": 0.52}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 47, "p_exact": 0.123}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 48, "p_exact": 0.204}
+{"component": "C", "cond": "corr_scale_-1", "level": "joint", "rep": 49, "p_exact": 0.34}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 0, "p_exact": 1.0}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 1, "p_exact": 0.904}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 2, "p_exact": 0.616}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 3, "p_exact": 0.576}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 4, "p_exact": 0.202}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 5, "p_exact": 0.19}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 6, "p_exact": 0.872}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 7, "p_exact": 0.126}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 8, "p_exact": 0.392}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 9, "p_exact": 0.4}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 10, "p_exact": 0.448}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 11, "p_exact": 0.344}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 12, "p_exact": 0.672}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 13, "p_exact": 0.792}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 14, "p_exact": 0.872}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 15, "p_exact": 0.1}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 16, "p_exact": 0.272}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 17, "p_exact": 0.4}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 18, "p_exact": 0.146}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 19, "p_exact": 0.672}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 20, "p_exact": 0.116}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 21, "p_exact": 0.824}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 22, "p_exact": 0.004}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 23, "p_exact": 0.2}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 24, "p_exact": 0.856}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 25, "p_exact": 0.516}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 26, "p_exact": 0.308}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 27, "p_exact": 0.792}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 28, "p_exact": 0.136}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 29, "p_exact": 0.046}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 30, "p_exact": 0.696}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 31, "p_exact": 0.632}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 32, "p_exact": 0.712}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 33, "p_exact": 0.288}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 34, "p_exact": 0.46}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 35, "p_exact": 0.768}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 36, "p_exact": 0.406}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 37, "p_exact": 0.258}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 38, "p_exact": 0.696}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 39, "p_exact": 0.552}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 40, "p_exact": 0.68}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 41, "p_exact": 0.268}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 42, "p_exact": 0.406}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 43, "p_exact": 0.936}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 44, "p_exact": 0.18}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 45, "p_exact": 0.146}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 46, "p_exact": 0.728}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 47, "p_exact": 0.464}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 48, "p_exact": 0.856}
+{"component": "C", "cond": "collapse_intermediate", "level": "target", "rep": 49, "p_exact": 0.856}

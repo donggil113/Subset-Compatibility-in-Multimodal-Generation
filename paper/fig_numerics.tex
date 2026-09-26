@@ -1,0 +1,65 @@
+% Figure layout (data come from paper/generated/*.dat, written by scripts/make_paper_assets.py).
+% Palette: two categorical slots validated with the dataviz validator (light mode, all checks pass).
+\definecolor{seriesA}{HTML}{2A78D6}
+\definecolor{seriesB}{HTML}{EB6834}
+\definecolor{refgray}{HTML}{52514E}
+\pgfplotsset{p5axis/.style={
+  width=\linewidth, height=0.82\linewidth,
+  tick label style={font=\scriptsize}, label style={font=\scriptsize},
+  title style={font=\scriptsize}, legend style={font=\tiny, draw=none, fill=none},
+  grid=major, major grid style={draw=black!10}, axis line style={draw=black!45}}}
+\begin{figure*}[t]
+\centering
+\begin{minipage}[t]{0.32\textwidth}
+\begin{tikzpicture}
+\begin{loglogaxis}[p5axis, title={(a) Monte Carlo noise floor},
+  xlabel={samples per branch $M$}, ylabel={$\overline{\mathrm{ED}_V(A,B)}$ (standardised)},
+  log basis x=2, xtick={32,64,128,256,512}, xticklabels={32,64,128,256,512},
+  legend pos=north east]
+\addplot[seriesA, thick, dashed] table[x=M, y=theory] {generated/fig_mc.dat};
+\addlegendentry{$2\,\mathbb{E}|X-X'|/M$}
+\addplot[seriesA, only marks, mark=*, mark size=1.6pt,
+  error bars/.cd, y dir=both, y explicit]
+  table[x=M, y=floor, y error plus expr=\thisrow{hi}-\thisrow{floor},
+        y error minus expr=\thisrow{floor}-\thisrow{lo}] {generated/fig_mc.dat};
+\addlegendentry{observed, 95\% CI}
+\end{loglogaxis}
+\end{tikzpicture}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.32\textwidth}
+\begin{tikzpicture}
+\begin{loglogaxis}[p5axis, title={(b) Euler PF-ODE, exact scores, $w=0$},
+  xlabel={solver steps $N$}, ylabel={population $D$ (standardised)},
+  log basis x=2, xtick={2,4,8,16,32,64,128,256}, xticklabels={2,4,8,16,32,64,128,256},
+  legend pos=north east]
+\addplot[seriesB, thick] table[x=steps, y=euler_bias] {generated/fig_solver_closed.dat};
+\addlegendentry{direct vs.\ exact law}
+\addplot[seriesA, thick] table[x=steps, y=euler_seq] {generated/fig_solver_closed.dat};
+\addlegendentry{direct vs.\ sequential}
+\addplot[refgray, dashed] table[x=x, y=y] {generated/fig_res_steps.dat};
+\addlegendentry{detection resolution}
+\end{loglogaxis}
+\end{tikzpicture}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.32\textwidth}
+\begin{tikzpicture}
+\begin{semilogyaxis}[p5axis, title={(c) CFG, Euler 64 steps, exact scores},
+  xlabel={guidance weight $w$}, ylabel={population $D$ / observed $\bar d$},
+  xmin=0, xmax=4, legend pos=south east]
+\addplot[seriesA, thick] table[x=w, y=seq] {generated/fig_cfg_closed.dat};
+\addlegendentry{direct vs.\ sequential}
+\addplot[seriesB, thick] table[x=w, y=bias] {generated/fig_cfg_closed.dat};
+\addlegendentry{direct vs.\ exact law}
+\addplot[seriesA, only marks, mark=*, mark size=1.6pt,
+  error bars/.cd, y dir=both, y explicit]
+  table[x=x, y=d, y error plus expr=\thisrow{hi}-\thisrow{d},
+        y error minus expr=\thisrow{d}-\thisrow{lo}] {generated/fig_cfg_obs.dat};
+\addlegendentry{observed $\bar d$, 95\% CI}
+\addplot[refgray, dashed] table[x=x, y=y] {generated/fig_res_w.dat};
+\addlegendentry{detection resolution}
+\end{semilogyaxis}
+\end{tikzpicture}
+\end{minipage}
+\caption{Separating numerical components on the Gaussian probe. (a) The Monte Carlo floor of the V-statistic energy distance between two independent sets follows $2\,\mathbb{E}|X-X'|/M$ (P5-E5, $N=200$). (b) With exact scores and no guidance, the closed-form gap between the direct and sequential PF-ODE laws falls below the one-sided 5\% detection resolution of the v1 design ($N=100$, $M=256$) from about 6 steps on, and plateaus at the prior-mismatch value, although the sampler remains biased relative to the exact law. (c) Guidance alone creates direct-vs-sequential gaps far above the resolution; the observed means (P5-E7) match the closed form. Closed-form curves are computed from the affine output law (\cref{prop:affine}); no Monte Carlo is involved in them.}
+\label{fig:numerics}
+\end{figure*}

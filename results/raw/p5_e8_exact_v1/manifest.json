@@ -1,0 +1,18 @@
+{
+ "run_id": "p5_e8_exact_v1",
+ "experiment_id": "P5-E8-EXACT",
+ "config_path": "configs/p5_e8_exact_v1.json",
+ "started_utc": "2026-09-26T22:01:27Z",
+ "git_commit_at_run": "4b635f93a8830028ddc160d7abea977fb4fa40dd",
+ "code_dirty_at_run": false,
+ "total_seconds": 1.1079237461090088,
+ "budget_seconds": 30,
+ "status": {
+  "A": "PASS",
+  "B": "PASS",
+  "C": "COMPLETED",
+  "D": "COMPLETED"
+ },
+ "python": "3.11.15",
+ "note": "pure Python, single process"
+}

@@ -1,0 +1,560 @@
+%% =====================================================================
+%% P5 manuscript v1
+%%   TARGET_YEAR      = 2027  (intended venue: ICML 2027)
+%%   TEMPLATE_YEAR    = 2026  (official ICML 2026 style, anonymous review mode;
+%%                             no official ICML 2027 style was found on 2026-09-26)
+%%   SUBMISSION_READY = false
+%%   COMPILE_STATUS   = COMPILE_NOT_RUN (no LaTeX toolchain in the build environment)
+%% The style files are NOT vendored in this repository. To build, place the
+%% official files from https://media.icml.cc/Conferences/ICML2026/Styles/icml2026.zip
+%% (icml2026.sty, icml2026.bst, algorithm.sty, algorithmic.sty, fancyhdr.sty)
+%% next to this file and run: pdflatex main; bibtex main; pdflatex main; pdflatex main.
+%% Margins, fonts and spacing of the style are not modified.
+%% All numbers in the text come from generated/numbers.tex, which
+%% scripts/make_paper_assets.py writes from committed raw results.
+%% Unrun evidence is marked \todo{EXPERIMENT_ID: required evidence}.
+%% =====================================================================
+\documentclass{article}
+
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+% Initial blind version for review:
+\usepackage{icml2026}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage[capitalize,noabbrev]{cleveref}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{[TODO: #1]}}}
+\newcommand{\notrun}{\textsc{not run}}
+\newcommand{\ED}{\mathrm{ED}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\qd}{q_{\mathrm{d}}}
+\newcommand{\qs}{q_{\mathrm{s}}}
+
+\input{generated/numbers}
+
+\icmltitlerunning{Separating Sampling Error from Conditional Incompatibility}
+
+\begin{document}
+
+\twocolumn[
+  \icmltitle{Separating Sampling Error from Conditional Incompatibility\\
+             in Generative Models}
+
+  \icmlsetsymbol{equal}{*}
+
+  \begin{icmlauthorlist}
+    \icmlauthor{Firstname1 Lastname1}{yyy}
+  \end{icmlauthorlist}
+
+  \icmlaffiliation{yyy}{Department of XXX, University of YYY, Location, Country}
+
+  \icmlcorrespondingauthor{Firstname1 Lastname1}{first1.last1@xxx.edu}
+
+  \icmlkeywords{conditional compatibility, marginalization consistency, any-to-any generation, two-sample testing, diffusion models, classifier-free guidance}
+
+  \vskip 0.3in
+]
+
+\printAffiliationsAndNotice{}
+
+\begin{abstract}
+Any-to-any generative models expose conditionals for many subsets of modalities from one network, and users compose them: an intermediate modality is generated first and the target second.
+If the conditionals come from one joint distribution, direct generation $q(z\mid x)$ and intermediate-then-target generation $\int q(z\mid x,y)\,q(y\mid x)\,dy$ agree.
+This marginalization-consistency condition is not new; it has been measured without sampling for tabular foundation models whose predictive densities are explicit.
+Diffusion and flow generators expose samples only, and a sampled direct-versus-sequential discrepancy then mixes Monte Carlo error, solver discretization, initialization mismatch, classifier-free guidance and evaluation-design errors with any genuine incompatibility.
+We describe a conditional sampling design that uses the conditioning example as the independent unit and relabels samples only within an example, and a Gaussian probe in which the output law of every sampler, including a guided probability-flow ODE, is available in closed form.
+On the probe, deliberately broken conditionals are detected; a correlation break that preserves the target marginal is invisible at the target level, as it must be; collapse passes the consistency check while its CRPS is \numCRPScollapsePct\% worse; and guidance with exact scores alone creates population gaps up to \numGapCFGFour{} (standardized) against a Monte Carlo floor of \numFloorM.
+Our pre-registered null-calibration gate failed. We report the failure, an audit that attributes it to the gate design rather than to the estimator, and exact small-sample checks of a revised permutation test.
+Calibration at realistic size and all measurements on learned generators remain to be done.
+\end{abstract}
+
+% ---------------------------------------------------------------------
+\section{Introduction}
+\label{sec:intro}
+
+Any-to-any generators such as UniDiffuser~\citep{bao2023unidiffuser}, Multi-modal Latent Diffusion~\citep{bounoua2023mld}, OmniFlow~\citep{li2025omniflow}, 4M~\citep{mizrahi2023fourm}, CoDi~\citep{tang2023codi} and MODUS~\citep{ye2026modus} expose conditionals for many subsets of modalities.
+These conditionals are routinely composed.
+UniDiffuser produces image variations by generating a caption and then an image from it, and runs blocked Gibbs sampling between modalities~\citep[Sec.~6.3]{bao2023unidiffuser}; 4M and MODUS generate chains of intermediate modalities~\citep{mizrahi2023fourm,ye2026modus}.
+If all conditionals were induced by one joint distribution, the route would not matter in distribution: for an observation $x$, an intermediate $y$ and a target $z$,
+\begin{equation}
+  \qd(z\mid x) \;=\; \int q(z\mid x,y)\,q(y\mid x)\,dy \;=:\; \qs(z\mid x).
+  \label{eq:identity}
+\end{equation}
+Equation~\eqref{eq:identity} is the law of total probability.
+Whether a family of conditionals is compatible with some joint is a classical question~\citep{arnold1989compatible}.
+For learned predictors, \citet{klotergens2026tabular} call \eqref{eq:identity} \emph{marginalization consistency} and show that tabular foundation models violate it.
+None of this is our contribution.
+
+What changes for diffusion and flow generators is \emph{how} \eqref{eq:identity} can be checked.
+\citet{klotergens2026tabular} evaluate total variation from the models' predictive heads by exact sums or deterministic quadrature, with ``no sampling anywhere in the pipeline''.
+A diffusion model exposes neither density, only a sampler.
+A sampled discrepancy between the two routes then contains, besides any incompatibility of the learned conditionals, five other things:
+(i)~Monte Carlo error;
+(ii)~discretization error of the ODE or SDE solver;
+(iii)~mismatch between the initial distribution and the noised data law;
+(iv)~classifier-free guidance, which does not sample the intended conditional~\citep{chidambaram2024guidance,bradley2024cfg};
+(v)~errors of evaluation design, such as feeding observed rather than generated intermediates, pairing samples by index, or counting generated samples as independent units.
+Unless these are separated, a measured gap says little about the model.
+
+This paper is about that separation.
+We report no results on learned generators; they are the next experiment (\todo{P5-REAL-01: direct-vs-sequential gaps of a learned latent any-to-any generator at $w=0$, converged solver, large $M$, with shared-joint and equal-compute baselines}).
+Our contributions are limited to the following, and each is either a design, a closed-form computation on a toy probe, or a reported failure.
+\begin{itemize}
+  \item A \textbf{conditional sampling design} (\cref{sec:design}) that fixes the estimand, uses the conditioning example as the independent unit, and states which dependence structures invalidate label exchange: shared intermediates, common random numbers across branches, and pooling across examples.
+  \item A \textbf{Gaussian probe with closed-form laws} (\cref{sec:decomp}) for exact samplers and for a probability-flow ODE with exact, optionally guided scores. It predicts the expectation of the estimator for every condition and attributes sampled gaps to Monte Carlo error, discretization, prior mismatch and guidance.
+  \item \textbf{Toy evidence} (\cref{sec:exp}). Controls behave as predicted. Guidance dominates the numerical gap. Moderate solver error is below the detection resolution even though the sampler is biased relative to the exact law. Collapse passes the consistency check. Observed intermediates leak information.
+  \item A \textbf{reported failure and audit} (\cref{sec:calib}). The pre-registered null-calibration gate of our first checker failed. We separate the gate's design error from the validity of the estimator, keep the failure on record, and verify a revised within-example permutation test by exact enumeration on small designs. Calibration at realistic size is not yet run.
+\end{itemize}
+We do not claim as new: the identity~\eqref{eq:identity}; the consistency and compatibility definitions; the fact that marginal-level consistency does not imply joint-level consistency, which is Proposition~2 of \citet{klotergens2026tabular}; guidance distortion; permutation-test validity~\citep{ernst2004permutation,lehmann2005testing}; or energy statistics~\citep{szekely2013energy,baringhaus2004twosample}.
+
+% ---------------------------------------------------------------------
+\section{Related Work}
+\label{sec:related}
+
+\paragraph{Compatibility of conditionals.}
+\citet{arnold1989compatible} give conditions under which given conditionals admit a joint distribution. \citet{hobert1998functional} show that compatible conditionals may still imply an improper joint, so that Gibbs sampling has no proper limit.
+Dependency networks combine separately learned conditionals by pseudo-Gibbs sampling without a coherence guarantee~\citep{heckerman2000dependency}. With incompatible conditionals, the limit of pseudo-Gibbs sampling depends on the scan order~\citep{chen2015gibbs}. \citet{liu2014imputation} study the stationary distribution of iterative imputation.
+We use none of this machinery beyond the definition. Our question is how to measure one compatibility relation when only samples are available.
+
+\paragraph{Self-consistency of learned models.}
+Masked language models produce conditionals that no single joint can explain~\citep{young2023mlm}. Any-order autoregressive models define the same distribution in redundant ways~\citep{shih2022aoarm}.
+Generative marginalization models add a squared log-space penalty on single-step marginalization constraints for discrete data with explicit likelihoods~\citep{liu2024gmm}. This is the closest prior training-time consistency loss.
+For diffusion language models, \citet{kim2026pathdependent} relate order dependence to incompatible denoising conditionals.
+Closest to our estimand, \citet{klotergens2026tabular} define marginalization consistency (C1) and factorization consistency (C2) and prove that C2 implies C1 but not conversely. They measure both by total variation from the explicit predictive heads of tabular foundation models and find violations for every model and dataset.
+We adopt their C1 as our target-level estimand. We add nothing to the definitions; our setting differs only in that the generator exposes samples.
+
+\paragraph{Any-to-any generation and coherence.}
+UniDiffuser trains one joint noise-prediction network with independent per-modality timesteps. Setting a timestep to its maximum yields a marginal, and the same device supplies the unconditional model for guidance~\citep{bao2023unidiffuser}.
+Multi-modal Latent Diffusion concatenates the latents of frozen unimodal autoencoders and trains a masked multi-time score network over random conditioning subsets~\citep{bounoua2023mld}. Its coherence is measured with pre-trained classifiers, as in the multimodal VAE literature~\citep{wu2018mvae,shi2019mmvae,sutter2021mopoe,daunhawer2022limitations}.
+\citet{chung2025anytoany} evaluate cyclic consistency and equivariance of any-to-any models with per-sample criteria.
+None of these works tests \eqref{eq:identity} as an equality of distributions.
+
+\paragraph{Guidance, solvers and testing.}
+Classifier-free guidance~\citep{ho2022cfg} does not sample the guided target it is often described by~\citep{chidambaram2024guidance,bradley2024cfg}. We therefore treat it as a confound to be measured, not as model error.
+We use the probability-flow ODE~\citep{song2021sde} with the step schedule of \citet{karras2022edm}.
+For testing we use energy distances~\citep{szekely2013energy,baringhaus2004twosample}; kernel tests~\citep{gretton2012kernel} would serve equally well.
+We use permutation p-values with the $+1$ correction~\citep{phipson2010permutation,ernst2004permutation} and the continuous ranked probability score (CRPS) as a strictly proper score~\citep{gneiting2007proper}.
+
+% ---------------------------------------------------------------------
+\section{Problem Setup}
+\label{sec:setup}
+
+A generator provides samplers for $\qd(z\mid x)$, $q(y\mid x)$ and $q(z\mid x,y)$, and possibly a direct joint sampler $\qd(y,z\mid x)$.
+Here $x$ is observed, $y$ is an intermediate modality and $z$ is the target. Conditioning examples $x_1,\dots,x_N$ are drawn i.i.d.\ from a test split.
+
+\begin{definition}[Target- and joint-level gaps]
+For a distance $D$ between distributions, the \emph{target-level gap} is $\Delta_T(x) = D\big(\qd(\cdot\mid x),\,\qs(\cdot\mid x)\big)$ with $\qs$ as in \eqref{eq:identity}.
+When a direct joint sampler exists, the \emph{joint-level gap} is $\Delta_J(x) = D\big(\qd(\cdot,\cdot\mid x),\,q(y\mid x)\,q(z\mid x,y)\big)$.
+\end{definition}
+
+$\Delta_T\equiv 0$ is C1 of \citet{klotergens2026tabular}.
+$\Delta_J$ compares the sequential pair with a direct joint sampler. It is not their factorization consistency (C2), which compares the two chain-rule orders; we do not measure C2.
+Neither check establishes a global joint for all conditionals of an any-to-any model. Each tests one relation.
+
+\begin{proposition}[Target-level equality is compatibility of the triple]
+\label{prop:triple}
+There is a joint $r(y,z\mid x)$ whose $y\mid x$ marginal is $q(y\mid x)$, whose $z\mid x,y$ conditional is $q(z\mid x,y)$, and whose $z\mid x$ marginal is $\qd(z\mid x)$, if and only if $\qs(\cdot\mid x)=\qd(\cdot\mid x)$.
+\end{proposition}
+
+The proof is two lines (\cref{app:proofs}).
+Because the first two properties force $r=q(y\mid x)\,q(z\mid x,y)$, target-level equality does not constrain the model's \emph{direct joint} sampler.
+
+\begin{remark}[Target level does not determine the joint]
+\label{rem:joint}
+In a Gaussian model, replace the coefficient $b$ of $y-m_{y\mid x}(x)$ in $\E[z\mid x,y]$ by $cb$ and the residual variance by $\tau^2-c^2b^2v_y$, where $\tau^2=\mathrm{Var}(z\mid x)$ and $v_y=\mathrm{Var}(y\mid x)$.
+Then $\qs(z\mid x)=p(z\mid x)$ for every $c$, while $\mathrm{Cov}(y,z\mid x)$ changes from $bv_y$ to $cbv_y$.
+This is a continuous instance of the separation in Proposition~2 of \citet{klotergens2026tabular}, not a new result. We use it as a control that a target-level check must \emph{not} detect.
+\end{remark}
+
+\begin{proposition}[Collapse passes consistency]
+\label{prop:collapse}
+If every branch returns the conditional mean deterministically, then $\qd$ and $\qs$ are the same point mass and $\Delta_T=\Delta_J=0$.
+For a Gaussian truth $\mathcal N(m,\sigma^2)$, the expected CRPS of that point mass is $\sigma\sqrt{2/\pi}$, against $\sigma/\sqrt{\pi}$ for the true conditional: $\sqrt2-1\approx\numCRPScollapseTheoryPct\%$ worse.
+\end{proposition}
+
+\begin{proposition}[Observed intermediates leak]
+\label{prop:leak}
+Let $(y^{\mathrm{obs}},z^{\mathrm{obs}})$ be drawn jointly given $x$, and let $S$ be a strictly proper, negatively oriented score.
+Then $\E\,S\big(p(\cdot\mid x,y^{\mathrm{obs}}),z^{\mathrm{obs}}\big)\le\E\,S\big(p(\cdot\mid x),z^{\mathrm{obs}}\big)$.
+\end{proposition}
+
+This follows from propriety applied conditionally on $(x,y^{\mathrm{obs}})$ (\cref{app:proofs}).
+So a ``sequential'' branch fed with the observed intermediate scores better than the direct branch while answering a different question. It must not be used to test \eqref{eq:identity}.
+Chain generation $z\sim q(z\mid y)$, which drops $x$ at the second stage, agrees with $p(z\mid x)$ only if $z\perp x\mid y$. A mismatch there is expected and is not evidence of incompatibility.
+
+% ---------------------------------------------------------------------
+\section{Sampling Design, Tests and Error Decomposition}
+\label{sec:method}
+
+\subsection{Conditional sampling design}
+\label{sec:design}
+
+For each conditioning example $i$ we draw $A_i$, $M$ i.i.d.\ samples from the direct branch, and $C_i$, $M$ i.i.d.\ samples from the sequential branch.
+Every sequential sample uses a fresh intermediate $\hat y_{ij}\sim q(y\mid x_i)$ followed by $z_{ij}\sim q(z\mid x_i,\hat y_{ij})$.
+The first design (v1) also draws a second direct set $B_i$ to measure the Monte Carlo floor. For joint-level tests, a sample is the vector $(\hat y_{ij},z_{ij})$.
+The assumptions behind every test below are:
+\begin{assumption}
+\label{ass:design}
+(A1)~Examples are independent. (A2)~Within each example and branch, samples are i.i.d.\ given $x_i$. (A3)~The branches of an example are generated with independent randomness.
+\end{assumption}
+Three common shortcuts break these assumptions.
+Generating several targets from one intermediate draw violates (A2): target samples then share a latent and are not exchangeable with direct samples.
+Reusing initial noise across branches, i.e.\ common random numbers, violates (A3).
+Pooling or relabelling samples across examples mixes different null distributions.
+Generated samples, sign flips and permutations are never counted as independent units; only the $N$ examples are.
+
+\subsection{Energy-distance estimators}
+\label{sec:ed}
+
+For samples $a_{1:n}$, $c_{1:m}$, the V-statistic energy distance is $\ED_V=\frac{2}{nm}\sum_{j,k}|a_j-c_k|-\frac{1}{n^2}\sum_{j,k}|a_j-a_k|-\frac{1}{m^2}\sum_{j,k}|c_j-c_k|$. The U-statistic $\ED_U$ divides the within-sample sums by $n(n-1)$ and $m(m-1)$ instead.
+In one dimension both are computed exactly in $O((n+m)\log(n+m))$ time from sorted samples.
+\begin{lemma}[standard]
+\label{lem:vbias}
+If $a$ is drawn i.i.d.\ from $P$ and $c$ i.i.d.\ from $Q$, then $\E\,\ED_U=D(P,Q)$ and $\E\,\ED_V=D(P,Q)+\E_P|X-X'|/n+\E_Q|Y-Y'|/m$, where $D$ is the population energy distance.
+\end{lemma}
+The v1 checker used the noise-floor-subtracted contrast $d_i=\ED_V(A_i,C_i)-\ED_V(A_i,B_i)$.
+By \cref{lem:vbias}, $\E d_i=D+(\E|C-C'|-\E|B-B'|)/M$. This is exactly $0$ under $H_0$ and biased under alternatives whose spread differs from the reference; the bias is negative for under-dispersed $C$.
+$\ED_U(A_i,C_i)$ is unbiased for $D$ and needs no third set.
+We report effect sizes on a scale standardized by the training-split standard deviation of each coordinate.
+
+\subsection{Two randomization tests}
+\label{sec:tests}
+
+\paragraph{Test S (v1): sign flips of $d_i$.}
+Under $H_0$ and \cref{ass:design}, $B_i$ and $C_i$ are exchangeable given $A_i$, so $d_i$ is symmetric about $0$ and independent across $i$.
+The one-sided sign-flip test of $\sum_i d_i$ is therefore exact up to Monte Carlo error in the flips.
+This is standard randomization logic. Each flip swaps the whole sets $B_i$ and $C_i$, so there are only two allocations per example and the noise of $B_i$ enters $d_i$.
+
+\paragraph{Test P (revised): relabelling within examples.}
+Under $H_0$ and \cref{ass:design}, the $2M$ pooled samples of example $i$ are exchangeable.
+We reassign branch labels uniformly over all $\binom{2M}{M}$ allocations independently in every example, never across examples, and relabel vectors as units.
+The pre-specified statistic is $T=\frac1N\sum_i\ED_V(a_i,c_i)$ in the upper tail.
+The Monte Carlo p-value is $(1+\#\{b:T_b\ge T_{\mathrm{obs}}\})/(B+1)$, with ties counted as extreme, so it is never zero~\citep{phipson2010permutation}. On small designs the product group is enumerated exactly.
+\begin{proposition}[V and U give the same permutation test]
+\label{prop:vu}
+With equal group sizes, the permutation p-values of $T$ built from $\ED_V$ and from $\ED_U$ coincide.
+\end{proposition}
+Given the pooled multiset of an example, the within- and cross-sums add to a constant, so both statistics are increasing affine functions of the cross-sum with slopes depending only on $M$ (\cref{app:proofs}).
+The choice between V and U thus matters for effect sizes, not for the test.
+
+\subsection{Error decomposition on a Gaussian probe}
+\label{sec:decomp}
+
+Energy distances do not add, so we define components operationally: each is the gap that remains when all other sources are switched off in a probe where every law is computable.
+\begin{itemize}
+\item Monte Carlo error vanishes as $M\to\infty$ (\cref{lem:vbias}).
+\item Discretization vanishes as the number of solver steps $N_s\to\infty$.
+\item Prior mismatch is the residual gap of the exact flow started from $\mathcal N(0,\sigma_{\max}^2)$ rather than from the noised data law.
+\item Guidance vanishes at $w=0$.
+\item Model incompatibility is whatever remains in a learned model.
+\end{itemize}
+
+\begin{proposition}[Guided PF-ODE on Gaussian conditionals is affine]
+\label{prop:affine}
+Let the target be $\mathcal N(m_c,v_c)$ and the unconditional law $\mathcal N(m_u,v_u)$. Use exact noised scores in the variance-exploding parameterization, guided score $(1+w)s_c-ws_u$, initialization $x_0\sim\mathcal N(0,\sigma_{\max}^2)$, and Euler or Heun steps on any schedule.
+Then the output is $x_N=g\,x_0+h_c m_c+h_u m_u$, with $(g,h_c,h_u)$ depending only on $(v_c,v_u,w)$ and the schedule.
+\end{proposition}
+
+The velocity $\sigma\big[(1+w)\frac{x-m_c}{v_c+\sigma^2}-w\frac{x-m_u}{v_u+\sigma^2}\big]$ is affine in $(x,m_c,m_u)$, and so is each Euler or Heun step.
+Composing the two stages of the sequential branch keeps the output Gaussian, so both branch laws are available per example in closed form. We verify this against the sampler to $10^{-8}$ in unit tests; that is a numerical check, and the proof is the affinity argument itself.
+The continuous-time limit is also closed-form: the exact flow keeps $(x-m)/\sqrt{v+\sigma^2}$ invariant.
+
+\subsection{Quality metrics}
+Consistency is reported with three other quantities, because \cref{prop:collapse} shows that consistency can be satisfied by a useless generator:
+\begin{itemize}
+\item the fair ensemble CRPS against the held-out $z^{\mathrm{obs}}$, a strictly proper score;
+\item an oracle \emph{fidelity}, the mean true log density of the samples, which collapse maximizes;
+\item an oracle \emph{diversity}, the sample standard deviation over the true conditional one.
+\end{itemize}
+Same-index paired MSE between branches equals $2\,\mathrm{Var}$ for independent exact samplers and $0$ for collapsed ones. It is reported only to show that it is not a compatibility metric.
+
+% ---------------------------------------------------------------------
+\section{Experiments}
+\label{sec:exp}
+
+\subsection{Probe and protocol}
+The probe has three scalar variables $(x,y,z)$ with means $(0.5,-1,2)$ and standard deviations $(1,2,0.5)$. There are two correlation structures:
+\begin{itemize}
+\item \emph{non-Markov}: $\rho_{xy}=\rho_{yz}=0.6$, $\rho_{xz}=0.1$, giving $\rho_{xz\cdot y}\approx-0.41$;
+\item \emph{Markov}: $\rho_{xz}=0.36$, so that $z\perp x\mid y$.
+\end{itemize}
+Splits are independent draws: train ($n=2000$) is used only for standardization, dev ($n=40$) only for a pipeline smoke run, and test ($n=200$) for all reported results. Diffusion experiments use the first $100$ test rows.
+We use $M=256$ samples per branch and example.
+The v1 hypotheses, statistic and stop rule were committed before the test split was run (\cref{app:prereg}). The v1 test run took \numRuntimeVone\,s in single-process pure Python.
+Everything in \cref{sec:exp-estimator,sec:exp-numerics} marked \emph{closed form} was computed after the v1 results were seen and is exploratory. All $p$-values in \cref{tab:controls,tab:numerics} are from Test~S with 999 flips, so $0.001$ is the smallest attainable value.
+
+\begin{table*}[t]
+\centering
+\caption{Controls on the non-Markov probe (last row: Markov), Test~S, $N=200$ examples, $M=256$. $\bar d$ and $\bar d_J$ are the mean target- and joint-level contrasts $\times10^3$. $\Delta$CRPS is the mean paired difference in CRPS between the compared and the reference branch $\times10^3$; $^\dagger$ marks the difference against the exact direct sampler, re-aggregated from raw. The sd ratio is the oracle sample sd over the true conditional sd. Every pre-registered detect / no-detect expectation in this table was met except for the exact null in the first row. The exact null on the Markov joint (not shown, $p=\numMarkovNullP$) also rejected; it reused the same noise (\cref{sec:calib}). Rows for $0.05\tau$ and variance ratio $1.1$ were pre-registered as descriptive.}
+\label{tab:controls}
+\small
+\input{generated/tab_controls}
+\end{table*}
+
+\subsection{Controls behave as predicted}
+\label{sec:exp-controls}
+\Cref{tab:controls} summarizes the pre-registered controls; these are engineering checks of the checker, not scientific findings.
+Mean shifts of at least $0.1\tau$ and variance ratios of $0.8$, $1.25$ and $1.5$ are detected at the target level. A $0.05\tau$ shift is also detected ($p=0.006$; descriptive).
+A variance ratio of $1.1$ is not detected at the target level ($p=0.162$) but is detected at the joint level.
+The correlation breaks of \cref{rem:joint} leave the target marginal exact. They are not detected at the target level ($p=\numCorrPmin$ to $\numCorrPmax$) and are detected at the joint level ($p=0.001$).
+Collapsing both branches gives $\bar d=0$ exactly and $p=1$, so the consistency check passes. Its CRPS is worse than the exact sampler's by \numCollapseVsExactCRPS{} ($\numCRPScollapse$ vs.\ $\numCRPSexact$, \numCRPScollapsePct\% against the theoretical \numCRPScollapseTheoryPct\%), and its paired-index MSE is $0$ against \numExactMSE{} for exact samplers.
+Collapsing only the intermediate is detected ($\bar d=\numCollIntD$) and yields sd ratio \numCollIntDiv; the invalid paired-index MSE ``improves'' to \numCollIntMSE.
+Feeding the observed intermediate is detected, and its CRPS is \emph{better} than the direct branch's by \numObsIntCRPS, the leakage predicted by \cref{prop:leak}.
+Chain generation is detected under the non-Markov joint and not under the Markov joint.
+
+\subsection{The estimator matches its closed form}
+\label{sec:exp-estimator}
+For every exact-Gaussian and PF-ODE condition, the closed form of \cref{lem:vbias,prop:affine} predicts $\E\bar d$ from the laws of the branches alone.
+Across \numPredCellsT{} non-degenerate target-level cells, the observed means lie within $|z|\le\numPredZmaxT$ of the prediction, and across \numPredCellsJ{} joint-level cells within $|z|\le\numPredZmaxJ$ (\cref{app:reanalysis}).
+The two target-level cells with $|z|>2$ are the exact nulls on the two joints, which share their random numbers; see \cref{sec:calib}.
+The spread term of \cref{lem:vbias} is visible where it should be. For variance ratio $0.8$ the population $D$ is $3.3\times10^{-3}$, while $\E\bar d=2.9\times10^{-3}$.
+
+\input{fig_numerics}
+
+\subsection{Where sampled gaps come from}
+\label{sec:exp-numerics}
+
+\begin{table}[t]
+\centering
+\caption{Numerical components with exact scores ($N=100$, $M=256$, Test~S). $D_{\mathrm{pop}}$ is the closed-form population gap between the direct and sequential sampler laws, and $\E[d]$ is the closed-form expectation of the v1 contrast. All values $\times10^3$, standardized.}
+\label{tab:numerics}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\input{generated/tab_numerics}
+\end{table}
+
+\paragraph{Monte Carlo.}
+The floor $\overline{\ED_V(A,B)}$ follows $2\,\E|X-X'|/M$ from $M=32$ to $512$ (\cref{fig:numerics}a).
+A $0.1\tau$ mean shift is detected at every $M$ in that range with $N=200$. At $M=512$, $\bar d$ is $5.1\times10^{-3}$ against a population value of $5.6\times10^{-3}$.
+
+\paragraph{Discretization and prior mismatch.}
+With exact scores and $w=0$, the Euler direct-vs-sequential gap is $\numGapEulerFour$ at $4$ steps and is detected ($p=0.014$).
+From about $6$ steps on it is below the one-sided detection resolution of this design, $\numResolution$ (\cref{fig:numerics}b). It plateaus at $\numGapEulerSixtyFour$ at $64$ steps, which equals the closed-form continuous-time limit, $\numGapPrior$. The plateau is therefore prior mismatch at $\sigma_{\max}=80$, not discretization.
+Over the same range the direct sampler itself stays biased relative to the exact law. At $16$ steps its gap to the exact law is $\numBiasEulerSixteen$, which is detected, and its sd ratio is $0.83$.
+Solver error is thus largely common to the two branches and cancels in the comparison: \emph{passing the consistency check does not certify a correct sampler}, and ``not detected'' is not ``zero''.
+Heun with $4$ steps is unstable on this schedule (sd ratio $4.35$).
+
+\paragraph{Guidance.}
+Guidance alone produces population gaps of $\numGapCFGHalf$, $\numGapCFGOne$, $\numGapCFGTwo$ and $\numGapCFGFour$ at $w=0.5,1,2,4$, against a floor of about $0.008$ (\cref{fig:numerics}c). The observed means agree with the closed form.
+The guided direct sampler stays close to the exact law: $D=\numBiasCFGOne$ at $w=1$ and $\numBiasCFGFour$ at $w=4$. Because $\sqrt{D}$ is a metric~\citep{szekely2013energy}, most of the direct-vs-sequential gap must come from the sequential branch, which applies guidance at both stages.
+Under our pre-registered decision rule, a direct-vs-sequential gap measured with guidance on is not attributed to the model.
+This agrees with prior analyses of guidance~\citep{chidambaram2024guidance,bradley2024cfg}. The magnitudes are specific to this probe.
+
+\subsection{Null calibration: a failed gate, an audit and a revised test}
+\label{sec:calib}
+
+\paragraph{The failure.}
+The v1 pre-registration required that the exact null not be detected and that a 20-replicate false-positive rate be compatible with $0.05$.
+The single null test rejected at $p=\numNullP$ (joint level $p=\numNullPjoint$), so the gate \emph{failed}, and by our stop rule the v1 checker was not cleared for use on models.
+We keep this verdict.
+The replicates rejected \numRepRejT{} times at the target level (Clopper--Pearson 95\% [\numRepCPlo, \numRepCPhi]) and \numRepRejJ{} at the joint level. The replicate $z$ statistics had standard deviation \numRepZsd{} ($\chi^2$ 95\% CI [\numRepZsdLo, \numRepZsdHi]).
+
+\paragraph{The audit.}
+Three findings separate the gate from the estimator.
+\begin{enumerate}
+\item The gate was mis-specified. An exact $\alpha$-level test rejects a single null with probability $\alpha$. ``Compatible with $0.05$'' over 20 replicates carries little information. The gate had no power requirement, so an always-accept rule would have passed it.
+\item The v1 seeds omitted the joint and experiment names. The exact-null rejection on the Markov joint ($p=\numMarkovNullP$) reused the same noise as the non-Markov one and is not independent evidence.
+\item Test~S is exact under \cref{ass:design} (\cref{sec:tests}), and the normal reference used for the reported $z$ is adequate. Given the observed $|d_i|$ of each of the seven v1 null cells, the sign-flip distribution of the studentized mean has standard deviation \numZflipSdMin--\numZflipSdMax{} and 95\% quantile \numZflipQmin--\numZflipQmax{} (normal: $1.645$), although $d_i$ has kurtosis \numKurtMin--\numKurtMax{} (\cref{app:znull}).
+\end{enumerate}
+None of this shows that the checker is calibrated. It shows that the evidence does not demonstrate invalidity, and that the gate could not have established validity.
+
+\paragraph{The revised test, checked exactly.}
+We replaced Test~S by Test~P, introduced v2 seeds that hash every design factor, and pre-registered a small exact verification (P5-E8-EXACT) and a separate realistic calibration (P5-E8-CALIB) before running either.
+
+\begin{table}[t]
+\centering
+\caption{P5-E8-EXACT, Test~P with exact enumeration of the product permutation group ($N=3$ examples, $M=3$, $|G|=20^3$), nominal $\alpha=0.05$, one-sided 95\% Clopper--Pearson bounds on the rejection rate over independent datasets. ``Excess flagged'' means the lower bound exceeds $\alpha$; ``powered'' means the lower bound exceeds $\alpha$ under an alternative. Two negative-control rules are evaluated with the same criteria.}
+\label{tab:e8}
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\input{generated/tab_e8}
+\end{table}
+
+\begin{enumerate}
+\item \textbf{Conditional size.} For all \numEeightAdatasets{} small datasets, including tied data from collapsed samplers, full enumeration confirms that the fraction of allocations with $p\le\alpha$ is at most $\alpha$ for $\alpha\in\{0.01,0.05,0.1,0.2,0.5\}$.
+\item \textbf{Monte Carlo agreement.} For \numEeightBdatasets{} datasets, the Monte Carlo p-value with $B=1999$ agrees with the exact one within tolerance and is never below $1/(B+1)$; the smallest observed is $\numEeightBminP$.
+\item \textbf{Size and power (\cref{tab:e8}).} The exact null rejects \numEeightNullK{} (one-sided bounds [\numEeightNullLo, \numEeightNullHi]), and the target-level correlation null and the joint-level null show no excess. A $2\tau$ mean shift is powered (\numEeightShiftK). Variance, correlation and collapse alternatives are \emph{not} powered at this tiny size, as recorded without adjustment.
+\item \textbf{Negative controls.} The always-accept rule fails the power criterion, and the always-reject rule is flagged for excess.
+\end{enumerate}
+These are implementation checks of a textbook principle at $|G|\le 8000$, not a calibration of the checker at the size used in \cref{sec:exp-controls}.
+That calibration is P5-E8-CALIB, pre-registered with $N=200$, $M=64$, $B=199$, $200$ null replicates for the primary endpoint, and four fixed alternatives that must all be powered. It is \notrun{}, because it needs about \numCalibCPUmin{} CPU-minutes in pure Python, beyond the approved budget: \todo{P5-E8-CALIB: null rejection rate with one-sided CP upper bound $\le0.10$ and no excess flag, and all four alternatives powered}.
+Until it passes, the model-stage stop from v1 remains in force.
+
+\subsection{Learned generators}
+\label{sec:real}
+No learned generator has been evaluated.
+The planned study freezes per-modality encoders and decoders and trains a small conditional latent generator over random conditioning subsets, following the design of \citet{bounoua2023mld}. The dataset is not yet chosen; it needs at least three paired modalities and a documented licence.
+It will compare four arms: a shared-joint baseline whose conditionals all come from one multi-time network~\citep{bao2023unidiffuser,bounoua2023mld}; the simplest alternative of defining the direct output as the Monte Carlo sequential output; the base model given the same extra compute as any consistency method; and the base loss plus a sample-based discrepancy between the direct and sequential latents.
+The primary analysis will use $w=0$, a converged solver and large $M$, with guidance, solver and $M$ analyzed separately. Consistency will be reported with proper score, fidelity and diversity.
+\todo{P5-REAL-01: learned-model gaps $\Delta_T$, $\Delta_J$ with noise floor and the four arms above}.
+\todo{P5-REAL-02: whether any gap reduction survives the equal-compute and shared-joint baselines without loss of proper score or diversity}.
+
+% ---------------------------------------------------------------------
+\section{Limitations}
+\label{sec:limits}
+All evidence is from a three-variable Gaussian probe with scalar intermediate and target. Nothing here shows that learned generators are, or are not, incompatible.
+The closed-form decomposition relies on Gaussian conditionals and exact scores. For learned scores, discretization, prior mismatch and model error interact, and the components must be estimated by switching them off empirically.
+The joint-level test uses eight fixed projection directions. It is consistent for the Gaussian alternatives used here but can miss non-Gaussian differences that lie between the directions.
+The v1 results carry a seed flaw: identical noise was reused across the two joints. They also share reference draws across conditions, so their $p$-values are dependent.
+The revised test has only been verified at $|G|\le8000$. Its power at that size is poor for variance and correlation alternatives, and realistic calibration is not run.
+Test~P requires fresh intermediates for every sample and independent randomness across branches. Pipelines that reuse one intermediate for several targets need a different design.
+We treat the target marginal as the unconditional model for guidance, following \citet{bao2023unidiffuser}. Other conventions give other gaps.
+Energy distance is one of several possible discrepancies. Factorization consistency (C2) is not measured.
+The manuscript has not been compiled in our environment, so layout, page count and references are unchecked.
+
+% ---------------------------------------------------------------------
+\section{Conclusion}
+\label{sec:conclusion}
+For samplers without densities, testing whether direct and intermediate-then-target generation agree is mostly a problem of accounting for other sources of error.
+On a probe where every law is known, the design separates Monte Carlo error, discretization, prior mismatch and guidance. It shows that guidance can dominate the gap and that moderate solver error cancels between routes even when the sampler is wrong.
+Our first calibration gate failed for reasons of design. The replacement test passes exact checks at small size but is not yet calibrated at realistic size.
+The substantive question, whether learned any-to-any generators are incompatible beyond these effects, remains open.
+
+% ---------------------------------------------------------------------
+\section*{Impact Statement}
+This paper presents work whose goal is to advance the field of Machine Learning. There are many potential societal consequences of our work, none of which we feel must be specifically highlighted here.
+The work concerns evaluation methodology. A test that confuses sampler or guidance artifacts with model incoherence could lead practitioners to wrong conclusions about generated multimodal content. We therefore report our calibration failure and all unrun evidence explicitly.
+No human or personal data were used.
+
+\bibliography{references}
+\bibliographystyle{icml2026}
+
+% =====================================================================
+\newpage
+\appendix
+\onecolumn
+
+\section{Proofs}
+\label{app:proofs}
+
+\paragraph{\Cref{prop:triple}.}
+($\Leftarrow$) Take $r(y,z\mid x)=q(y\mid x)\,q(z\mid x,y)$. Its $y\mid x$ marginal and $z\mid x,y$ conditional are the given ones, and its $z\mid x$ marginal is $\qs=\qd$.
+($\Rightarrow$) Any $r$ with the stated $y\mid x$ marginal and $z\mid x,y$ conditional equals $q(y\mid x)\,q(z\mid x,y)$ wherever $q(y\mid x)>0$. Its $z\mid x$ marginal is therefore $\qs$, which must equal $\qd$. \qed
+
+\paragraph{\Cref{prop:collapse}.}
+Deterministic branches that return $\E[z\mid x]$, respectively $\E[z\mid x,\E[y\mid x]]$, coincide for Gaussian conditionals, so both laws are $\delta_{\E[z\mid x]}$.
+The CRPS of a point mass at $m$ against $Z\sim\mathcal N(m,\sigma^2)$ is $\E|Z-m|=\sigma\sqrt{2/\pi}$.
+The expected CRPS of $\mathcal N(m,\sigma^2)$ against its own draw is $\E|Z-m|-\tfrac12\E|Z-Z'|=\sigma\sqrt{2/\pi}-\sigma/\sqrt{\pi}=\sigma/\sqrt\pi$. The ratio of the two is $\sqrt2$. \qed
+
+\paragraph{\Cref{prop:leak}.}
+Conditionally on $(x,y^{\mathrm{obs}})$ we have $z^{\mathrm{obs}}\sim p(\cdot\mid x,y^{\mathrm{obs}})$. By propriety, $\E[S(p(\cdot\mid x,y^{\mathrm{obs}}),z^{\mathrm{obs}})\mid x,y^{\mathrm{obs}}]\le\E[S(Q,z^{\mathrm{obs}})\mid x,y^{\mathrm{obs}}]$ for every $Q$, in particular for $Q=p(\cdot\mid x)$. Averaging over $(x,y^{\mathrm{obs}})$ gives the claim. \qed
+
+\paragraph{\Cref{lem:vbias}.}
+The $n^2$ within-sample terms include $n$ zero diagonal terms, so $\E\frac{1}{n^2}\sum_{j,k}|a_j-a_k|=(1-\frac1n)\E|X-X'|$, and likewise for $c$. Hence $\E\,\ED_V=2\E|X-Y|-(1-\frac1n)\E|X-X'|-(1-\frac1m)\E|Y-Y'|=D+\frac1n\E|X-X'|+\frac1m\E|Y-Y'|$. The U-statistic removes the diagonal terms. This result is standard~\citep{szekely2013energy}; we include the derivation because the v1 contrast depends on it. \qed
+
+\paragraph{Exactness of Test~S.}
+Under $H_0$ and \cref{ass:design}, $(A_i,B_i,C_i)$ and $(A_i,C_i,B_i)$ have the same distribution, so $d_i\overset{d}{=}-d_i$. The $d_i$ are independent across $i$, so conditional on $(|d_i|)_i$ the signs are i.i.d.\ uniform. The Monte Carlo sign-flip p-value with the $+1$ correction is then valid~\citep{phipson2010permutation}. \qed
+
+\paragraph{\Cref{prop:vu}.}
+Fix example $i$ and its pooled multiset. Let $S_{aa}$, $S_{cc}$ and $S_{ac}$ be the within-$a$, within-$c$ and cross sums of absolute differences over unordered pairs. Then $S_{aa}+S_{cc}+S_{ac}=S_{\mathrm{pool}}$ is invariant under relabelling.
+With $n=m=M$, $\ED_V=\frac{2S_{ac}}{M^2}-\frac{2(S_{\mathrm{pool}}-S_{ac})}{M^2}$ and $\ED_U=\frac{2S_{ac}}{M^2}-\frac{2(S_{\mathrm{pool}}-S_{ac})}{M(M-1)}$.
+Both are increasing affine functions of $S_{ac}$, with slopes that depend only on $M$ and intercepts that are invariant under relabelling.
+Summing over examples, both versions of $T$ are the same increasing affine function of $\sum_i S_{ac,i}$ up to invariant constants, so they order all allocations identically. \qed
+
+\paragraph{\Cref{prop:affine}.}
+With $s_c=-(x-m_c)/(v_c+\sigma^2)$ and $s_u=-(x-m_u)/(v_u+\sigma^2)$, the velocity $dx/d\sigma=-\sigma[(1+w)s_c-ws_u]$ equals $\sigma a(\sigma)x-\sigma[b_c(\sigma)m_c+b_u(\sigma)m_u]$, with $a=\frac{1+w}{v_c+\sigma^2}-\frac{w}{v_u+\sigma^2}$, $b_c=\frac{1+w}{v_c+\sigma^2}$ and $b_u=-\frac{w}{v_u+\sigma^2}$.
+An Euler step $x\mapsto x+h\,v(x,\sigma)$ and a Heun step are compositions of affine maps in $(x,m_c,m_u)$ with coefficients independent of $(x,m_c,m_u)$. Induction over the steps gives the claim. \qed
+
+\section{Probe Details}
+\label{app:probe}
+\begin{itemize}
+\item \textbf{Conditionals} come from the Schur complement $T\mid G=g\sim\mathcal N(\mu_T+\Sigma_{TG}\Sigma_{GG}^{-1}(g-\mu_G),\,\Sigma_{TT}-\Sigma_{TG}\Sigma_{GG}^{-1}\Sigma_{GT})$.
+\item \textbf{Perturbations} act on the second stage $q(z\mid x,y)$:
+  \begin{itemize}
+  \item a mean shift adds $\delta\tau$ to the intercept;
+  \item a variance ratio $r$ sets the residual variance to $r\tau^2-b^2v_y$;
+  \item a correlation scale $c$ follows \cref{rem:joint};
+  \item a stage-1 shift adds $\delta\sqrt{v_y}$ to $\E[y\mid x]$.
+  \end{itemize}
+\item \textbf{Collapse} sets the sampling temperature to $0$.
+\item \textbf{Sampler.} The PF-ODE uses the schedule of \citet{karras2022edm} with $\sigma_{\min}=0.002$, $\sigma_{\max}=80$, $\rho=7$, the final step to $\sigma=0$, and initialization $\mathcal N(0,\sigma_{\max}^2)$.
+\item \textbf{Guidance.} The unconditional model for both stages is the marginal of the stage target.
+\item \textbf{Scale.} All discrepancies are computed after dividing $y$ and $z$ by their train-split standard deviations.
+\item \textbf{Sample reuse.} Reference sets are shared across conditions within a run (common random numbers). The Monte Carlo experiment uses nested prefixes across $M$.
+\end{itemize}
+
+\section{Estimator Versus Closed Form for All v1 Cells}
+\label{app:reanalysis}
+\Cref{tab:reanalysis} lists, for every v1 condition, the population gap, the closed-form expectation of the v1 contrast and the observed mean with its 95\% CI. It was computed after the results were seen and is exploratory. $z$ is not defined for the collapsed condition, whose contrasts are identically $0$.
+\begin{table}[h]
+\centering
+\caption{Closed-form expectation versus observation, all v1 cells (values $\times10^3$).}
+\label{tab:reanalysis}
+\scriptsize
+\input{generated/tab_reanalysis}
+\end{table}
+
+\section{Normal Reference Check for the Studentized Contrast}
+\label{app:znull}
+\begin{table}[h]
+\centering
+\caption{Sign-flip distribution of the studentized mean of $d_i$ given the observed $|d_i|$ (4999 flips) for the seven v1 null cells.}
+\label{tab:znull}
+\small
+\input{generated/tab_znull}
+\end{table}
+
+\section{Pre-Registration Record and Deviations}
+\label{app:prereg}
+\begin{itemize}
+\item \textbf{v1.} Hypotheses EH1--EH6, the statistic, $\alpha=0.05$ and the stop rule were fixed before the test run.
+  \begin{itemize}
+  \item EH2--EH6 matched their predictions. EH1 failed and is kept as failed.
+  \item Post hoc we found: the mis-specified EH1 criterion; the seed flaw that shares noise across joints; and a rendering bug in a table script, which did not affect the raw data.
+  \item A reported-statistics error in our own audit notes (a miscounted number of cells) was corrected in the record.
+  \end{itemize}
+\item \textbf{P5-E8-EXACT} was fixed before running.
+  \begin{itemize}
+  \item Components A and B passed their deterministic criteria.
+  \item In component C, the three pre-registered null cells showed no excess, and the pre-registered powered alternative was powered. The three ``report'' alternatives were not powered.
+  \item A development smoke run with a different seed preceded it.
+  \end{itemize}
+\item \textbf{P5-E8-CALIB} was fixed before any E8 result, except its resource estimate, which it declared would be filled from the E8 timing smoke. It is not run.
+\item \textbf{Exploratory analyses.} The re-analysis in \cref{app:reanalysis,app:znull} and the closed-form curves in \cref{fig:numerics} were computed after the v1 results were seen.
+\end{itemize}
+
+\section{Compute}
+\label{app:compute}
+All runs are single-process pure Python on CPU.
+\begin{itemize}
+\item v1 test run: \numRuntimeVone\,s.
+\item P5-E8-EXACT: \numRuntimeEeight\,s.
+\item Development, timing and analysis runs are listed in the supplementary compute ledger.
+\item P5-E8-CALIB is estimated at about \numCalibCPUmin{} CPU-minutes and is not run.
+\end{itemize}
+
+\section{Reproducibility}
+\label{app:repro}
+The supplementary code regenerates every number in this paper:
+\begin{itemize}
+\item \texttt{run\_first\_run.py --split test} reproduces the v1 raw results.
+\item \texttt{run\_e8\_exact.py} reproduces P5-E8-EXACT.
+\item \texttt{reanalyse\_v1.py} reproduces the exploratory re-analysis.
+\item \texttt{make\_paper\_assets.py} regenerates the tables, figure data and numeric macros from committed raw results.
+\end{itemize}
+Unit tests cover the linear algebra, the conditionals and perturbations, the sorted energy distance against brute force, the fair CRPS against its Gaussian closed form, the affine PF-ODE map against the sampler, the V/U equivalence and exact-enumeration super-uniformity of Test~P, and the Clopper--Pearson bounds. They are numerical checks, not proofs.
+
+\end{document}

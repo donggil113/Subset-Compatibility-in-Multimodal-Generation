@@ -1,6 +1,6 @@
 {
  "project": "P5: Do Any-to-Any Generators Define a Coherent Joint Distribution?",
- "updated": "2026-09-26",
+ "updated": "2026-09-26 (round 2)",
  "environment": {
   "python": "3.11.15",
   "platform": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
@@ -16,7 +16,7 @@
  },
  "unit_tests": {
   "command": "python3 -m unittest discover -s tests",
-  "result": "27 tests OK",
+  "result": "see STATUS.md (all pass at commit)",
   "note": "numerical checks, not proofs"
  },
  "runs": [
@@ -93,6 +93,25 @@
     }
    },
    "role": "reported FIRST RUN results"
+  },
+  {
+   "run_id": "p5_e8_exact_v1",
+   "experiment_id": "P5-E8-EXACT",
+   "raw_dir": "results/raw/p5_e8_exact_v1",
+   "config_path": "configs/p5_e8_exact_v1.json",
+   "config_file_sha256": "5d9be2d2eb476f13de6df2bb1e95285c1d8ee6b63d25686b686aac1a18c090ec",
+   "git_commit_at_run": "4b635f93a8830028ddc160d7abea977fb4fa40dd",
+   "code_dirty_at_run": false,
+   "started_utc": "2026-09-26T22:01:27Z",
+   "total_seconds": 1.11,
+   "budget_seconds": 30,
+   "status": {
+    "A": "PASS",
+    "B": "PASS",
+    "C": "COMPLETED",
+    "D": "COMPLETED"
+   },
+   "role": "pre-registered small exact verification of Test P"
   }
  ],
  "verdicts_first_run": {
@@ -106,11 +125,49 @@
   "central_scientific_question": "NOT_TESTED"
  },
  "not_run": [
-  "P5-E8-CALIB (next decision experiment)",
-  "model phase: frozen encoders/decoders + latent generator",
+  "P5-E8-CALIB",
+  "P5-REAL-01 (learned generator gaps)",
+  "P5-REAL-02 (consistency regularizer vs baselines)",
   "shared-joint baseline",
   "same-extra-compute baseline",
-  "consistency-loss method",
+  "factorization consistency (C2)",
   "real multimodal dataset (NOT_DECIDED)"
- ]
+ ],
+ "analyses": [
+  {
+   "id": "reanalysis_v1",
+   "script": "scripts/reanalyse_v1.py",
+   "outputs": "results/reanalysis_v1/",
+   "label": "EXPLORATORY (after v1 results were seen)",
+   "new_sampling": false
+  },
+  {
+   "id": "paper_assets",
+   "script": "scripts/make_paper_assets.py",
+   "outputs": "paper/generated/",
+   "label": "tables/figure data/macros from committed raw; closed-form curves",
+   "new_sampling": false
+  }
+ ],
+ "compute_ledger": "results/compute_ledger.csv",
+ "verdicts_round2": {
+  "EH1_v1_gate": "FAIL (kept)",
+  "model_stage_stop": "IN FORCE",
+  "E8_EXACT_A_superuniformity": "PASS",
+  "E8_EXACT_B_mc_vs_exact": "PASS",
+  "E8_EXACT_C": "no excess under 3 nulls; POWERED only for 2 tau shift (others NOT_POWERED at |G|=8000)",
+  "E8_CALIB": "NOT_RUN (resource request ~40 CPU-min)",
+  "P5_REAL_01": "NOT_TESTED",
+  "P5_REAL_02": "NOT_TESTED"
+ },
+ "manuscript": {
+  "path": "paper/main.tex",
+  "target_year": 2027,
+  "template_year": 2026,
+  "style": "official ICML 2026 (anonymous review), not vendored",
+  "submission_ready": false,
+  "compile_status": "COMPILE_NOT_RUN",
+  "static_check": "scripts/check_tex.py",
+  "claims": "paper/claims.csv"
+ }
 }

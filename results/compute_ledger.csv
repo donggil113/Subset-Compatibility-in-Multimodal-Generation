@@ -1,0 +1,13 @@
+date,round,item,kind,seconds,measured,notes
+2026-09-26,1,v1 timing smoke (throwaway rows),timing_smoke,3,approx,per-example timing of 5 condition types; total not logged
+2026-09-26,1,p5_first_run_v1_dev attempt 1,dev_smoke,18.7,yes,exposed degenerate-sd bug; output overwritten by attempt 2
+2026-09-26,1,p5_first_run_v1_dev attempt 2,dev_smoke,19.0,yes,committed dev smoke
+2026-09-26,1,p5_first_run_v1_test via /usr/bin/time,synthetic_run,0,yes,did not execute (/usr/bin/time missing); no output produced
+2026-09-26,1,p5_first_run_v1_test,synthetic_run,80.9,yes,reported v1 results
+2026-09-26,1,unit tests (several invocations),unit_tests,3,approx,about 0.7 s each
+2026-09-26,2,unit tests (several invocations),unit_tests,5,approx,about 0.9 s each
+2026-09-26,2,scripts/reanalyse_v1.py (3 invocations),analysis,5,approx,no new sampling; closed form + raw re-aggregation + 4999 sign flips per null cell
+2026-09-26,2,E8 dev smoke (seed 999; 1 failed start),dev_smoke,0.04,yes,code-path check with a different seed; not reported
+2026-09-26,2,p5_e8_exact_v1,synthetic_run,1.1,yes,pre-registered small exact verification
+2026-09-26,2,scripts/make_paper_assets.py (several invocations),analysis,4,approx,no new sampling; closed-form curves on 100 regenerated rows
+2026-09-26,2,P5-E8-CALIB,not_run,0,-,estimated 1442 CPU-s (about 24 CPU-min); requested about 40 CPU-min

@@ -1,5 +1,173 @@
 # STATUS — P5: Do Any-to-Any Generators Define a Coherent Joint Distribution?
 
+Last update: 2026-09-26 (round 2: statistical audit, revised test, manuscript v1).
+Round 1 (FIRST RUN) is kept unchanged below, under "History".
+
+## Summary (round 2)
+
+| Item | Status |
+|---|---|
+| v1 gate EH1 | **FAIL, kept.** Not reinterpreted. |
+| Model-stage STOP | **In force.** The checker is not cleared for learned models until P5-E8-CALIB passes. |
+| EH2–EH6 (v1 controls) | PASS (engineering) |
+| Statistical audit of v1 | DONE. RESEARCH_PACKET.md §6; `results/reanalysis_v1/` (EXPLORATORY). |
+| v2 seeds (joint / experiment / condition / example / replicate / branch; SHA-256) | IMPLEMENTED (`src/p5compat/seeds.py`). v1 code is left unchanged for reproducibility. |
+| Within-example permutation test (Test P) | IMPLEMENTED (`src/p5compat/permutation.py`) |
+| P5-E8-EXACT (small exact verification) | RUN, 1.1 s. Components A and B PASS. C: no excess under the nulls; powered only for the 2τ shift. D: timing. |
+| P5-E8-CALIB (realistic calibration) | **NOT_RUN.** Needs about 24 CPU-min (request: 40 CPU-min), beyond the approved budget. |
+| Learned generators (P5-REAL-01/02) | **NOT_TESTED** |
+| Manuscript v1 | WRITTEN: `paper/main.tex`, ICML 2026 anonymous style. **COMPILE_NOT_RUN**; SUBMISSION_READY=false. |
+
+The categories stay separate:
+
+- **Engineering:** EH2–EH6 PASS, EH1 FAIL, E8-EXACT A/B PASS.
+- **Toy results:** Gaussian probe only.
+- **Real-model results:** none.
+- **External utility:** none shown.
+- **Novelty:** candidate only. The diagnostic, the definitions, the
+  "marginal ⇏ joint" result and CFG distortion are prior work; see
+  RELATED_WORK.md §G.
+
+## Round 2: what was done
+
+1. **Statistical audit** (RESEARCH_PACKET.md §6). The single null
+   rejection (p = 0.026) and 2/20 replicate rejections do not show that the
+   test is invalid. Clopper–Pearson 95% for 2/20 is [0.012, 0.317].
+   - **The gate was mis-designed:** it required one α-level test not to
+     reject, and it had no power requirement.
+   - **The two exact-null rejections are one event:** the v1 seeds omit the
+     joint name, so the non-Markov (p = 0.026) and Markov (p = 0.015) nulls
+     reused the same noise.
+   - **Test S is exact under its assumptions:** d_i is symmetric by
+     exchangeability of B and C.
+   - **The normal reference for z holds given |d_i|:** under sign flips the
+     studentised mean has sd 0.985–1.014 and 95% quantile 1.61–1.69.
+   - **Replicate z sd = 1.33** (χ² CI [1.01, 1.95], R = 20). This is weak
+     and inconclusive.
+2. **Estimator vs closed form (EXPLORATORY).** Closed-form expectations
+   E[d] = D + (E|C−C'| − E|B−B'|)/M match the observed v1 means.
+   - Target level: |z| ≤ 2.16 over 43 cells.
+   - Joint level: |z| ≤ 2.60 over 25 cells.
+   - Both are numerical checks, not proofs.
+3. **Numerical components (EXPLORATORY; closed-form PF-ODE laws).**
+   - **Discretisation.** The Euler direct-vs-sequential gap is 0.00247 at 4
+     steps. From about 6 steps it drops below the resolution of 0.00143.
+   - **Prior mismatch.** The gap plateaus at 0.00017, which equals the
+     exact-flow limit. The plateau is prior mismatch at σ_max, not
+     discretisation.
+   - **Sampler bias.** Relative to the exact law it persists, e.g.
+     D = 0.0095 at 16 steps.
+   - **CFG.** CFG alone gives D = 0.031 / 0.155 / 0.677 / 1.909 at
+     w = 0.5 / 1 / 2 / 4.
+4. **P5-E8-EXACT** (`configs/p5_e8_exact_v1.json`, committed before the
+   run; results in `results/raw/p5_e8_exact_v1/`).
+   - **A. Full-enumeration super-uniformity:** holds on 55/55 datasets,
+     including ties. PASS.
+   - **B. Monte Carlo vs exact p:** agree within tolerance on 10/10; the
+     minimum p is 0.0025 (never 0). PASS.
+   - **C. Exact-p rejection rates at |G| = 8000:**
+     - Nulls: 9/200 (one-sided CP [0.024, 0.077]), 4/100 and 1/50. No
+       excess flagged.
+     - 2τ shift: 42/50, POWERED.
+     - Variance ×4, joint correlation flip and collapse-intermediate:
+       NOT_POWERED at this tiny size.
+     - Negative controls behave as intended: always-accept is NOT_POWERED,
+       and always-reject is flagged for excess.
+   - **D. Timing:** used for the E8-CALIB estimate.
+5. **Literature, second pass.** Full-text sections of 2608.06004,
+   UniDiffuser, MLD and GMM were read directly (RELATED_WORK.md §F).
+   Consequence: our former "Prop. 2" (target ⇏ joint) is Prop. 2 of
+   2608.06004 and was removed from the contributions. Two further close
+   works named there, Yalavarthi et al. (2026) and Young (2026), are
+   NOT_CHECKED.
+6. **Manuscript v1** (`paper/main.tex`, `paper/fig_numerics.tex`,
+   `paper/generated/*`, `paper/references.bib`, `paper/claims.csv`).
+   - All sections are written: Abstract, Introduction, Related Work,
+     Problem Setup, Method, Experiments, Limitations, Conclusion, Impact
+     Statement, Appendix.
+   - Tables, figure data and all numbers are generated from raw by
+     `scripts/make_paper_assets.py`.
+   - Open TODOs: P5-REAL-01 (twice), P5-E8-CALIB and P5-REAL-02.
+   - `scripts/check_tex.py` passes. It is a static check, not a compile:
+     33/33 citations, all references and macros defined, environments and
+     braces balanced, no anonymisation patterns.
+   - Page count, layout and figure rendering are NOT verified. The body is
+     about 5000 words including tables.
+7. **Re-aggregation fix.** The collapse_both ΔCRPS in the paper table is now
+   computed against the exact direct sampler, pairing examples from raw.
+   The v1 summary compared it with the collapsed reference, which is
+   trivially 0. The raw data are unchanged.
+
+## Manuscript flags
+
+- TARGET_YEAR = 2027. TEMPLATE_YEAR = 2026: the official ICML 2026 style,
+  anonymous review mode. No official ICML 2027 style was found on
+  2026-09-26.
+- SUBMISSION_READY = false.
+- COMPILE_STATUS = COMPILE_NOT_RUN: no pdflatex, latexmk or tectonic in this
+  environment.
+- The style kit (icml2026.zip, official URL) was read in the session
+  scratchpad only to confirm the macro names. It is not vendored in the
+  repo.
+- The file `paper/p5_skeleton.tex` (round 1) is superseded by
+  `paper/main.tex` and kept as history.
+
+## Compute (all CPU, single process; `results/compute_ledger.csv`)
+
+- **Sampling runs including smoke runs: about 122.7 s in total.**
+  - round 1: dev 18.7 + 19.0 s, test 80.9 s, timing about 3 s;
+  - round 2: E8-EXACT 1.1 s, E8 smoke 0.04 s.
+- **Analysis and unit tests:** about 17 s, with no new sampling.
+- **Budget interpretation.** It is ambiguous whether the approved "first
+  verification: 120 s synthetic" is a per-run or a total cap. Every
+  individual run stayed under 120 s. In total the cap is about 3 s over if
+  the smoke runs are counted. Round 2 therefore ran only the small exact
+  verification (1.1 s).
+
+## Known issues (additions in round 2)
+
+- v1 known issues 1–6 below still apply.
+- During the literature pass, three arXiv HTML files were written to the
+  repo root by mistake. They were moved to the scratchpad immediately and
+  never committed.
+- The subagent bibliography pass left PARTIAL entries (venue or pages
+  unverified):
+  - Klötergens 2026, Kim 2026, MODUS, Young (arXiv only);
+  - Bradley & Nakkiran and Ho & Salimans (workshop only);
+  - MMVAE and MVAE (pages missing).
+- The E8-CALIB config was re-serialised when its declared resource-estimate
+  field was filled. Design fields are unchanged.
+
+## Next decision experiment (one)
+
+**P5-E8-CALIB** (`configs/p5_e8_calib_v2.json`, frozen). This is the only
+step that can lift the model-stage STOP.
+
+- **Design:** within-example permutation test, N = 200, M = 64, B = 199.
+- **Primary endpoint:** the exact-null target rejection rate over R = 200
+  replicates with fresh rows.
+- **Secondary null cells:**
+  - the joint null (R = 200);
+  - the target-level correlation null (R = 100);
+  - the Markov chain null (R = 100).
+- **Four fixed alternatives, R = 50 each:**
+  - a 0.1τ shift;
+  - variance ×1.25;
+  - collapse-intermediate;
+  - the joint correlation flip.
+- **Gate:** every null cell has no excess flag and a one-sided CP upper
+  bound ≤ 0.10, AND all four alternatives are POWERED. Passing does not
+  prove size 0.05.
+- **If it fails:** report FAIL and do not change estimator, seeds or
+  thresholds.
+- **Unapproved resource needed:** about 40 CPU-minutes of pure-Python CPU (2
+  processes, about 20 min wall), or approval to install numpy (not
+  requested).
+
+---
+
+# History: round 1 (FIRST RUN), unchanged
+
 Last update: 2026-09-26. Pre-registration: RESEARCH_PACKET.md §2, committed in
 51ed9f6 before the test split was run. Raw data: `results/raw/`. Rendered
 tables: `results/p5_first_run_v1_test_tables.md`.

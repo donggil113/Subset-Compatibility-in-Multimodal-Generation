@@ -23,17 +23,17 @@ generation give the same *distribution*.
 
 | Work | Access | What it establishes | Direct-vs-seq test? | Remaining difference to P5 |
 |---|---|---|---|---|
-| Klötergens, Yalavarthi, Schmidt-Thieme, Hanika. *Do Tabular Foundation Models Agree with Themselves?* arXiv 2608.06004 (6 Aug 2026) | ABSTRACT_ONLY (verified); distance measure and model list from SUMMARY_FULL_TEXT (subagent) | Defines *marginalization consistency* (marginalised conditionals must equal directly predicted marginals) and *factorization consistency*. Every TFM they evaluate violates both. | **YES**, for tabular predictors. The subagent's summary says total-variation distance on TabPFN / TabICL / TabDPT / TabFM; this is not verified. | Tabular prediction, not multimodal generation. Per the summary it is diagnostic only, with no fix proposed. **P5's definition of Δ_T is essentially their C1**: we cannot claim the diagnostic itself. |
+| Klötergens, Yalavarthi, Schmidt-Thieme, Hanika. *Do Tabular Foundation Models Agree with Themselves?* arXiv 2608.06004 (6 Aug 2026) | FULL_TEXT_SECTIONS_READ (second pass; see §F) | Defines *marginalization consistency* (marginalised conditionals must equal directly predicted marginals) and *factorization consistency*. Every TFM they evaluate violates both. | **YES**, for tabular predictors. The subagent's summary says total-variation distance on TabPFN / TabICL / TabDPT / TabFM; this is not verified. | Tabular prediction, not multimodal generation. Per the summary it is diagnostic only, with no fix proposed. **P5's definition of Δ_T is essentially their C1**: we cannot claim the diagnostic itself. |
 | Kim. *Path-Dependent Denoising: A Non-Conservative Field Perspective on Order Collapse in Diffusion Language Models.* arXiv 2605.09303 (10 May 2026) | ABSTRACT_ONLY (verified) | Order-induced pseudo-joints, and a local "circulation" that is zero under compatible conditionals, for diffusion LMs. | Order dependence, not direct-vs-intermediate. | Text only. The subagent reported a proposed regularizer; the abstract does not mention one, so this is UNVERIFIED. |
 | Téllez et al. *Path-independent Flow Matching for Multi-parameter Generative Dynamics.* arXiv 2605.13487 | SUMMARY_FULL_TEXT (subagent) | In multi-parameter flows the final distribution can depend on integration order. Measured with W2 and reduced with a commutativity regularizer. | No, it concerns path order. | Not about multimodal conditionals. |
-| Liu, Ramadge, Adams. *Generative Marginalization Models.* ICML 2024, arXiv 2310.12920 | SUMMARY_FULL_TEXT (subagent) | A marginalization self-consistency loss (squared log-space) for discrete models. | Partial: it checks marginal estimates, not sampling-based direct-vs-chain. | Discrete data. The closest prior *loss* for P5's method candidate. |
+| Liu, Ramadge, Adams. *Generative Marginalization Models.* ICML 2024 (PMLR 235), arXiv 2310.12920 | FULL_TEXT_SECTIONS_READ (§F) | A marginalization self-consistency loss (squared log-space) for discrete models. | Partial: it checks marginal estimates, not sampling-based direct-vs-chain. | Discrete data. The closest prior *loss* for P5's method candidate. |
 
 ## B. Any-to-any / multimodal diffusion
 
 | Work | Access | What it establishes | Direct-vs-seq test? | Remaining difference |
 |---|---|---|---|---|
-| Bao et al. *One Transformer Fits All Distributions in Multi-Modal Diffusion at Scale* (UniDiffuser). ICML 2023, arXiv 2303.06555 | SUMMARY_FULL_TEXT (subagent) | Predicts the noise of all modalities with a separate timestep per modality. Marginal, conditional and joint are special cases of the timesteps. | NO. Chained / Gibbs-like sampling is shown qualitatively; the metrics are FID and CLIP. | This is the natural **shared-joint baseline**. Its conditionals come from one network, but they are not guaranteed to be mutually compatible. |
-| Bounoua, Franzese, Michiardi. *Multi-modal Latent Diffusion.* arXiv 2306.04445 (Entropy 2024 venue UNVERIFIED) | SUMMARY_FULL_TEXT (subagent) | Frozen deterministic per-modality autoencoders plus a masked multi-time latent score model. Coherence is judged by classifiers. | NO. Only single-step subset→missing generation is evaluated. | Closest to the P5 model template (frozen enc/dec + small latent generator). |
+| Bao et al. *One Transformer Fits All Distributions in Multi-Modal Diffusion at Scale* (UniDiffuser). ICML 2023 (PMLR 202), arXiv 2303.06555 | FULL_TEXT_SECTIONS_READ (§F) | Predicts the noise of all modalities with a separate timestep per modality. Marginal, conditional and joint are special cases of the timesteps. | NO. Chained / Gibbs-like sampling is shown qualitatively; the metrics are FID and CLIP. | This is the natural **shared-joint baseline**. Its conditionals come from one network, but they are not guaranteed to be mutually compatible. |
+| Bounoua, Franzese, Michiardi. *Multi-modal Latent Diffusion.* arXiv 2306.04445; Entropy 26(4):320, 2024 (metadata verified via Crossref) | FULL_TEXT_SECTIONS_READ (§F) | Frozen deterministic per-modality autoencoders plus a masked multi-time latent score model. Coherence is judged by classifiers. | NO. Only single-step subset→missing generation is evaluated. | Closest to the P5 model template (frozen enc/dec + small latent generator). |
 | Li et al. *OmniFlow.* CVPR 2025, arXiv 2412.01169 | SUMMARY_FULL_TEXT (subagent) | Multi-modal rectified flow with one time per modality. | NO | — |
 | Rojas et al. *Diffuse Everything.* ICML 2025, arXiv 2506.07903 | ABSTRACT_ONLY (subagent) | A noise schedule per modality. | NO | — |
 | Mizrahi et al. *4M.* NeurIPS 2023, arXiv 2312.06647 | SUMMARY_FULL_TEXT (subagent) | Chained generation: finished modalities are fed back in as conditions for "self-consistency". | NO, qualitative only. | Chaining is used, not tested distributionally. |
@@ -96,3 +96,118 @@ model. P5-E7 measures this confound with exact scores.
 Any novelty claim for P5 must be restricted to these two points. It stays
 provisional until the closest papers (2608.06004, UniDiffuser, MLD, GMM) are
 read in full.
+
+## F. Full-text checks (second pass, 2026-09-26)
+
+**Method.** The arXiv HTML full text was fetched with curl and converted to
+plain text in the session scratchpad; nothing was saved in this repo. The
+sections listed below were read directly, not through a summariser. Sections
+not listed were not read. Bibliographic metadata for every cited work was
+checked separately; `paper/references.bib` records the verification URL of
+each entry in its `x-verified` field.
+
+### Klötergens et al., arXiv 2608.06004
+
+Read: §3.1–3.3, §4.1, the regression paragraph of §4.2, §4.3, the related
+work on Kolmogorov consistency and on compatibility, the conclusion, and the
+first paragraph of Appendices A and C.
+
+- **Definition 1 (C1, marginalization consistency).**
+  p̂(a|x; D^A_{−B}) = ∫ p̂(a|b,x; D^A) p̂(b|x; D^B_{−A}) db. This is our Δ_T = 0
+  with a = target and b = intermediate.
+- **Definition 2 (C2, factorization consistency).** The two chain-rule orders
+  must agree.
+- **Proposition 1.** C2 ⇒ C1.
+- **Proposition 2.** C1 ⇏ C2, via a binary counterexample in Appendix A.
+  **Our "Proposition 2" is the same kind of statement** (a target-level
+  identity does not fix the joint). Our Gaussian corr-scale construction is
+  only a continuous instance of it, so it is **not a contribution**.
+- **Measurement.** Total variation computed from the models' explicit
+  predictive heads:
+  - classification: exact finite sums;
+  - regression: deterministic quadrature with K = 1000 equal-mass atoms and
+    a 20-cell grid, a TV lower bound; the factorization check uses a
+    128×128 grid.
+  - Appendix C states that "there is no sampling anywhere in the pipeline".
+- **Setup.** TabPFNv2/v3, TabICLv1/v2, TabDPT and TabFM on OpenML datasets,
+  with 5-fold cross-testing. Every model violates C1 and C2.
+- **Difference to P5.**
+  - Their models expose densities or quantiles, so no sampling error arises.
+  - P5 targets generators that expose samples only, such as diffusion or
+    flow models. There, Monte Carlo, solver and guidance error must be
+    separated from incompatibility, and a sample-based test is needed.
+  - The consistency definition itself is theirs (and older).
+- **Also cited there, not checked here:**
+  - Yalavarthi et al. (2026), marginalization consistency in irregular
+    time-series forecasting;
+  - Young (2026), a conditioning-consistency gap for conditional neural
+    processes.
+
+  Both are NOT_CHECKED and are possible further close prior work.
+
+### UniDiffuser, arXiv 2303.06555
+
+Read: §3.1 (Eq. 5), §3.2, §6.1, §6.3.
+
+- **Objective.** A joint noise-prediction network trained with independent
+  per-modality timesteps. t^y = T gives the marginal, t^y = 0 the
+  conditional, and t^x = t^y the joint.
+- **CFG.** CFG "for free" uses the model at t^y = T (the marginal) as the
+  unconditional model. This is the convention used in P5-E7.
+- **Evaluation.** FID and CLIP score. DPM-Solver with 50 steps.
+- **§6.3.** Data variation (image→text→image) and blocked Gibbs sampling are
+  shown only as qualitative samples.
+- **Direct-vs-sequential test.** None.
+
+### Multi-modal Latent Diffusion, arXiv 2306.04445
+
+Read: §4.1 (multi-time diffusion; training and conditional generation) and
+the §5 evaluation-metrics paragraph.
+
+- **Model.** Independently trained deterministic unimodal autoencoders and a
+  masked score network with a multi-time vector τ.
+- **Training.** The conditioning subset A₂ is drawn from ν with
+  ν(∅) = d at each step.
+- **Sampling.** Euler–Maruyama.
+- **Evaluation.**
+  - Coherence: pre-trained classifiers, following Shi et al., Sutter et al.
+    and Palumbo et al.
+  - Quality: FID / FAD.
+  - Averages are over 5 seeds.
+- **Direct-vs-sequential test.** None.
+
+### Generative Marginalization Models, arXiv 2310.12920
+
+Read: §3 (Eqs. 4, 5, 7 and the ConsistencyError) and the conclusion.
+
+- **Loss.** Marginalization self-consistency is enforced as the squared
+  log-space error of single-step constraints
+  p_θ(x_{σ(<d)}) p_φ(x_{σ(d)} | x_{σ(<d)}) ≈ p_θ(x_{σ(≤d)}).
+- **Scope.** The method is for "high-dimensional discrete data", and it
+  needs explicit likelihoods.
+- **Relation to P5.** This is the closest prior *training-time* consistency
+  loss. It does not transfer directly to sample-only continuous generators.
+
+## G. Revised novelty accounting (supersedes the gap assessment above where they differ)
+
+**Not ours:**
+
+- the consistency definitions (C1/C2, compatibility);
+- the fact that marginal-level consistency does not imply joint-level
+  consistency;
+- the propriety argument against observed intermediates;
+- CFG distortion;
+- permutation-test validity;
+- energy distance and its bias;
+- ED-based two-sample tests;
+- consistency losses as an idea.
+
+**Candidate contributions, each still to be defended:**
+
+1. A sampling design for generators that expose samples only. It uses
+   within-example exchangeable relabelling with a fresh intermediate per
+   sample, with the conditioning example as the unit.
+2. An error decomposition that separates Monte Carlo, discretisation, prior
+   mismatch and CFG components from incompatibility. It is validated in
+   closed form on a Gaussian probe.
+3. \todo{P5-REAL-01}: measurements on learned multimodal generators — NOT_RUN.

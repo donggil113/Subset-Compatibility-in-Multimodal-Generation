@@ -215,10 +215,15 @@ numerical checks, not proofs.
   - It is exactly 0 under H0.
   - It is biased under alternatives whose spread differs from the
     reference, and the bias is negative for under-dispersed C.
-  - Closed-form predictions match the observed mean d within about 2 SE
-    for all 37 non-degenerate cells. Examples: var_ratio_0.8 predicted
-    0.0029 vs population D 0.0033; collapse_intermediate predicted 0.0216
-    vs D 0.0228.
+  - Closed-form predictions against the observed mean d:
+    - Target level, 43 non-degenerate cells: |z| ≤ 2.16. Two cells exceed
+      2, and they are the shared-noise exact-null pair E1-NULL / E4-MARKOV.
+    - Joint level, 25 cells: |z| ≤ 2.60. Two cells exceed 2:
+      collapse_intermediate and corr_scale_0.5.
+    - Examples: var_ratio_0.8 predicted 0.0029 vs population D 0.0033;
+      collapse_intermediate predicted 0.0216 vs D 0.0228.
+    - (Corrected after commit 4b635f9, which misstated the cell count as 37
+      and the bound as "about 2 SE".)
 - **U-statistic.** ED_U(A,C) is unbiased for D with null mean 0 and needs no
   B set. It cannot be recomputed from v1 raw because samples were not
   stored: NOT_RUN for v1.
@@ -305,3 +310,22 @@ scale:
     session.
   - `configs/p5_e8_calib_v2.json`: realistic calibration and power, NOT_RUN.
   - Both were committed before any E8 result.
+
+## 7. P5-E8 outcomes (post-run record, 2026-09-26; §6.6 design unchanged)
+
+- **P5-E8-EXACT** ran at commit 4b635f9, clean code tree, in 1.1 s.
+  - A: 55/55 datasets pass the super-uniformity check. PASS.
+  - B: 10/10 agree between Monte Carlo and exact p. PASS.
+  - C, null cells: 9/200, 4/100 and 1/50, all without an excess flag. This
+    matches the pre-registered expectation NO_EXCESS_FLAGGED in all three
+    cells.
+  - C, alternatives: the 2τ shift is POWERED (42/50), matching its
+    expectation. The variance ×4, correlation-flip (joint) and
+    collapse-intermediate cells are NOT_POWERED at N = 3, M = 3. They were
+    pre-registered as "report".
+  - Negative-control rules fail as intended.
+- These checks verify the implementation of a textbook principle on tiny
+  designs. They do **not** calibrate the checker at realistic size.
+- **P5-E8-CALIB: NOT_RUN.** The resource estimate (about 24 CPU-min) was
+  filled from the E8-EXACT timing, as the config declared in advance.
+- The model-stage STOP stands until P5-E8-CALIB passes.
