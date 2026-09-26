@@ -91,10 +91,10 @@ def main():
         lines.append(f"| {eid} | {e['status']} | {e.get('seconds', 0):.1f} |")
     lines.append("")
     for eid, exp in summ.items():
-        if "conditions" in exp:
-            lines += cond_table(eid, exp)
-        else:
+        if "replicates" in exp or "fpr_target" in exp:
             lines += reps_table(eid, exp)
+        else:
+            lines += cond_table(eid, exp)
     print("\n".join(lines))
 
 

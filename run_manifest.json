@@ -1,0 +1,116 @@
+{
+ "project": "P5: Do Any-to-Any Generators Define a Coherent Joint Distribution?",
+ "updated": "2026-09-26",
+ "environment": {
+  "python": "3.11.15",
+  "platform": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
+  "packages": "standard library only (numpy/scipy/torch/pytest not installed; nothing installed)",
+  "compute": "CPU, single process (<= 2 threads allowed); no GPU",
+  "network_use": "literature lookup only (read-only web fetch); no uploads, no dataset/model downloads"
+ },
+ "sources": {
+  "data": "synthetic Gaussian draws defined in configs/p5_first_run.json (no external data)",
+  "models": "none (exact Gaussian samplers and exact-score PF-ODE)",
+  "external_code": "none",
+  "repo_license": "none present (owner decision)"
+ },
+ "unit_tests": {
+  "command": "python3 -m unittest discover -s tests",
+  "result": "27 tests OK",
+  "note": "numerical checks, not proofs"
+ },
+ "runs": [
+  {
+   "run_id": "p5_first_run_v1_dev",
+   "split": "dev",
+   "raw_dir": "results/raw/p5_first_run_v1_dev",
+   "config_path": "configs/p5_first_run.json",
+   "config_json_sha256_sorted": "17c7284d4914664439f63f22a00af7b77fe6285bdc4ea711b3a8814d5eedfaf4",
+   "config_file_sha256": "0c481fdcaff3c674d74e10ce68692893fd3e90250d95d4b29f08b6041411ce0b",
+   "code_commit": "51ed9f6a7f87db179535061175672bb4f501103c",
+   "git_commit_at_run": null,
+   "git_worktree_dirty_at_run": true,
+   "dirty_note": "run executed before the first commit; code identical to 51ed9f6",
+   "started_utc": "2026-09-26T14:41:20Z",
+   "total_seconds": 19.01,
+   "budget_seconds": 120,
+   "experiments": {
+    "P5-E1-NULL": "COMPLETED",
+    "P5-E2-CHECKER": "COMPLETED",
+    "P5-E3-COLLAPSE": "COMPLETED",
+    "P5-E4-INTERMEDIATE": "COMPLETED",
+    "P5-E4-MARKOV": "COMPLETED",
+    "P5-E6-SOLVER": "COMPLETED",
+    "P5-E7-CFG": "COMPLETED",
+    "P5-E5-MC": "COMPLETED",
+    "P5-E1-NULL-REPS": "COMPLETED"
+   },
+   "data_digests": {
+    "nonmarkov": {
+     "train_digest": "3c60b2a0b1019f31",
+     "dev_digest": "1ca7b5c61eb0baf6"
+    },
+    "markov": {
+     "train_digest": "a8c63f74398b23ce",
+     "dev_digest": "0fb40b4e369700e1"
+    }
+   },
+   "role": "pipeline smoke only; not reported"
+  },
+  {
+   "run_id": "p5_first_run_v1_test",
+   "split": "test",
+   "raw_dir": "results/raw/p5_first_run_v1_test",
+   "config_path": "configs/p5_first_run.json",
+   "config_json_sha256_sorted": "17c7284d4914664439f63f22a00af7b77fe6285bdc4ea711b3a8814d5eedfaf4",
+   "config_file_sha256": "0c481fdcaff3c674d74e10ce68692893fd3e90250d95d4b29f08b6041411ce0b",
+   "code_commit": "51ed9f6a7f87db179535061175672bb4f501103c",
+   "git_commit_at_run": "51ed9f6a7f87db179535061175672bb4f501103c",
+   "git_worktree_dirty_at_run": true,
+   "dirty_note": "dirty only because the run's own output directory was untracked; src/configs/tests identical to 51ed9f6",
+   "started_utc": "2026-09-26T14:42:05Z",
+   "total_seconds": 80.85,
+   "budget_seconds": 120,
+   "experiments": {
+    "P5-E1-NULL": "COMPLETED",
+    "P5-E2-CHECKER": "COMPLETED",
+    "P5-E3-COLLAPSE": "COMPLETED",
+    "P5-E4-INTERMEDIATE": "COMPLETED",
+    "P5-E4-MARKOV": "COMPLETED",
+    "P5-E6-SOLVER": "COMPLETED",
+    "P5-E7-CFG": "COMPLETED",
+    "P5-E5-MC": "COMPLETED",
+    "P5-E1-NULL-REPS": "COMPLETED"
+   },
+   "data_digests": {
+    "nonmarkov": {
+     "train_digest": "3c60b2a0b1019f31",
+     "test_digest": "bf58ad541c8e0524"
+    },
+    "markov": {
+     "train_digest": "a8c63f74398b23ce",
+     "test_digest": "22f3f5bce159bd30"
+    }
+   },
+   "role": "reported FIRST RUN results"
+  }
+ ],
+ "verdicts_first_run": {
+  "EH1": "FAIL (pre-registered criterion); calibration inconclusive",
+  "EH2": "PASS",
+  "EH3": "PASS",
+  "EH4": "PASS",
+  "EH5": "PASS",
+  "EH6": "PASS",
+  "stop_rule": "TRIGGERED by EH1: checker not cleared for model use",
+  "central_scientific_question": "NOT_TESTED"
+ },
+ "not_run": [
+  "P5-E8-CALIB (next decision experiment)",
+  "model phase: frozen encoders/decoders + latent generator",
+  "shared-joint baseline",
+  "same-extra-compute baseline",
+  "consistency-loss method",
+  "real multimodal dataset (NOT_DECIDED)"
+ ]
+}

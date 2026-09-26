@@ -1,0 +1,100 @@
+% P5 manuscript skeleton. Claims are limited to what STATUS.md supports.
+% Every result that does not exist yet is marked \todo{EXPERIMENT_ID}.
+\documentclass{article}
+\usepackage{amsmath,amssymb,amsthm}
+\newcommand{\todo}[1]{\textbf{[TODO: #1]}}
+\newtheorem{proposition}{Proposition}
+
+\title{Do Any-to-Any Generators Define a Coherent Joint Distribution?\\
+\large A measurement protocol for direct vs.\ intermediate-then-target compatibility}
+\author{Anonymous}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\todo{P5-MODEL-RESULTS} Abstract to be written only after the model phase.
+Current evidence is limited to a synthetic Gaussian validation of the
+measurement protocol, whose null calibration is not yet established
+(\todo{P5-E8-CALIB}).
+\end{abstract}
+
+\section{Introduction}
+Any-to-any generators expose many conditionals of one implied joint. Under the
+same observation $x$, a target $z$ can be produced directly, $z\sim q_d(z\mid x)$,
+or through an intermediate, $y\sim q(y\mid x)$, $z\sim q(z\mid x,y)$.
+The marginalisation identity is standard; the question is whether a learned
+model satisfies it once numerical, guidance and Monte Carlo error are
+separated out. \todo{P5-MODEL-RESULTS}
+
+Contributions (provisional; each must survive the model phase):
+(i) a measurement protocol with an explicit Monte Carlo noise floor and the
+conditioning example as the independent unit;
+(ii) controls showing what the protocol cannot see (joint breaks with exact
+target marginals, collapse, observed intermediates);
+(iii) \todo{P5-MODEL-RESULTS} measurements on learned generators;
+(iv) \todo{P5-METHOD} whether the gap can be reduced without quality loss
+against shared-joint and equal-extra-compute baselines.
+
+\section{Related work}
+Conditional compatibility and pseudo-Gibbs sampling (Arnold \& Press, 1989;
+Heckerman et al., 2000; Chen \& Ip, 2015). Incompatibility of learned
+conditionals (masked LMs; any-order autoregressive models; tabular foundation
+models, where the same direct-vs-marginalised diagnostic is defined, arXiv
+2608.06004). Any-to-any diffusion (UniDiffuser; Multi-modal Latent Diffusion;
+OmniFlow; 4M chained generation). Guidance does not sample the tilted
+conditional (Chidambaram et al., 2024; Bradley \& Nakkiran, 2024).
+\todo{RELATED-WORK-FULLTEXT}: closest papers have only been checked at
+abstract level.
+
+\section{Problem setup}
+Sequential law $q_s(z\mid x)=\int q(z\mid x,y)\,q(y\mid x)\,dy$;
+target gap $\Delta_T(x)=D(q_d(\cdot\mid x),q_s(\cdot\mid x))$;
+joint gap $\Delta_J(x)$ against a direct joint sampler.
+
+\begin{proposition}[elementary]
+The triple $(q(y\mid x), q(z\mid x,y), q_d(z\mid x))$ is compatible iff
+$q_s(\cdot\mid x)=q_d(\cdot\mid x)$.
+\end{proposition}
+\begin{proposition}[elementary]
+$\Delta_T\equiv 0$ does not imply $\Delta_J\equiv 0$ (Gaussian construction).
+\end{proposition}
+\begin{proposition}[elementary]
+Collapsed generators have $\Delta_T=\Delta_J=0$; a strictly proper score
+separates them from the truth. Using the observed intermediate improves the
+proper score by information leakage.
+\end{proposition}
+
+\section{Measurement protocol}
+Per conditioning example: two independent reference sample sets $A,B$ and the
+compared set $C$; statistic $d_i=\mathrm{ED}(A_i,C_i)-\mathrm{ED}(A_i,B_i)$,
+symmetric under $H_0$; one-sided sign-flip test over examples. Proper score
+(CRPS / energy score), fidelity and diversity reported alongside. Same-index
+paired MSE is not used.
+
+\section{Synthetic validation (exact Gaussian)}
+Positive controls (mean, variance, correlation breaks), collapse, observed vs
+generated intermediate, and chain generation behave as predicted
+(P5-E2, P5-E3, P5-E4; STATUS.md). The null calibration failed its
+pre-registered criterion and is unresolved: \todo{P5-E8-CALIB}.
+Error decomposition with exact scores: Monte Carlo (P5-E5), solver (P5-E6),
+classifier-free guidance (P5-E7). \todo{P5-E8-CALIB} Re-state these only
+after calibration passes.
+
+\section{Learned any-to-any generators}
+Frozen encoders/decoders with a small conditional latent generator.
+Dataset: \todo{P5-DATA-DECISION}.
+Guidance off, converged solver, large $M$: \todo{P5-MODEL-GAP}.
+Shared-joint baseline: \todo{P5-BASELINE-SHARED-JOINT}.
+Equal extra-compute baseline: \todo{P5-BASELINE-EXTRA-COMPUTE}.
+
+\section{Reducing the gap}
+Base loss plus a sample-based discrepancy between direct and sequential latent
+samples. \todo{P5-METHOD} Consistency, proper score, fidelity, diversity.
+
+\section{Limitations}
+\todo{P5-LIMITATIONS} Including: the target-level test is blind to joint
+breaks; sliced energy distance uses a fixed set of directions; synthetic
+results do not transfer to learned models by themselves.
+
+\end{document}

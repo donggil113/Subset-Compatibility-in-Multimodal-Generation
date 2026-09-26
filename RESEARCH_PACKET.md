@@ -161,3 +161,13 @@ variance 1.5) are missed, the checker is invalid and must not be used on models.
   analysis, CFG / solver / M analysed separately.
 - Dataset: NOT_DECIDED (needs ≥ 3 paired modalities, licence and version
   recorded; splits by conditioning example / subject).
+
+## 5. Post-hoc notes after the test run (added 2026-09-26; do not alter §2)
+
+- Outcome summary and verdicts: STATUS.md. EH1 failed its pre-registered
+  criterion; the stop rule in §2 is in force.
+- The EH1 sub-criterion "P5-E1-NULL not detected" is mis-specified (an exact
+  α-level test fails it with probability α). Recorded, not used to change the
+  verdict; P5-E8-CALIB replaces it with a replicate-based calibration criterion.
+- Seed-design flaw: seeds omit the joint name, so same-named conditions on
+  the two joints share noise (see STATUS.md, Known issue 1).
