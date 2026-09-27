@@ -1,0 +1,9 @@
+{
+ "built_from_head": "161a432633cc22b5a159ca9d219c1b321b1d86c1",
+ "branch": "claude/bold-feynman-qohhel",
+ "worktree_dirty_at_build": true,
+ "note": "files are copied from the working tree; the bundle is committed in the same commit as these sources, so that commit (not built_from_head) is the exact source",
+ "pdf_included": false,
+ "compile_status": "COMPILE_NOT_RUN",
+ "n_files_copied": 88
+}

@@ -1,0 +1,297 @@
+{
+ "source_files": [
+  "results/raw/p5_e8_calib_v3/summary.json",
+  "results/raw/p5_e8_exact_v1/summary.json"
+ ],
+ "rows": [
+  {
+   "run": "p5_e8_calib_v3",
+   "cell": "exact_sequential|target|nonmarkov",
+   "k": 16,
+   "n": 400,
+   "rate": 0.04,
+   "one_sided_95_lower": 0.025247924285960538,
+   "one_sided_95_upper": 0.06012105707643042,
+   "two_sided_90_equal_tailed": [
+    0.025247924285960538,
+    0.06012105707643042
+   ],
+   "two_sided_95": [
+    0.02303339574056168,
+    0.06414601093905165
+   ]
+  },
+  {
+   "run": "p5_e8_calib_v3",
+   "cell": "exact_sequential|joint|nonmarkov",
+   "k": 5,
+   "n": 100,
+   "rate": 0.05,
+   "one_sided_95_lower": 0.019905563662168266,
+   "one_sided_95_upper": 0.10225337764327466,
+   "two_sided_90_equal_tailed": [
+    0.019905563662168245,
+    0.10225337764327469
+   ],
+   "two_sided_95": [
+    0.01643187918204702,
+    0.11283491110546295
+   ]
+  },
+  {
+   "run": "p5_e8_calib_v3",
+   "cell": "corr_scale_-1|target|nonmarkov",
+   "k": 5,
+   "n": 100,
+   "rate": 0.05,
+   "one_sided_95_lower": 0.019905563662168266,
+   "one_sided_95_upper": 0.10225337764327466,
+   "two_sided_90_equal_tailed": [
+    0.019905563662168245,
+    0.10225337764327469
+   ],
+   "two_sided_95": [
+    0.01643187918204702,
+    0.11283491110546295
+   ]
+  },
+  {
+   "run": "p5_e8_calib_v3",
+   "cell": "chain_drop_x|target|markov",
+   "k": 4,
+   "n": 100,
+   "rate": 0.04,
+   "one_sided_95_lower": 0.013776612464854097,
+   "one_sided_95_upper": 0.08919625015887933,
+   "two_sided_90_equal_tailed": [
+    0.013776612464854097,
+    0.08919625015887936
+   ],
+   "two_sided_95": [
+    0.011004493986185176,
+    0.09925715671265939
+   ]
+  },
+  {
+   "run": "p5_e8_calib_v3",
+   "cell": "mean_shift_0.1|target|nonmarkov",
+   "k": 45,
+   "n": 50,
+   "rate": 0.9,
+   "one_sided_95_lower": 0.8011669974835931,
+   "one_sided_95_upper": 0.9597634095978855,
+   "two_sided_90_equal_tailed": [
+    0.8011669974835931,
+    0.9597634095978855
+   ],
+   "two_sided_95": [
+    0.7818646335658206,
+    0.9667249064109777
+   ]
+  },
+  {
+   "run": "p5_e8_calib_v3",
+   "cell": "var_ratio_1.25|target|nonmarkov",
+   "k": 26,
+   "n": 50,
+   "rate": 0.52,
+   "one_sided_95_lower": 0.39541203526900626,
+   "one_sided_95_upper": 0.6427412098827665,
+   "two_sided_90_equal_tailed": [
+    0.3954120352690057,
+    0.6427412098827665
+   ],
+   "two_sided_95": [
+    0.37415194507911753,
+    0.6633949083965405
+   ]
+  },
+  {
+   "run": "p5_e8_calib_v3",
+   "cell": "collapse_intermediate|target|nonmarkov",
+   "k": 50,
+   "n": 50,
+   "rate": 1.0,
+   "one_sided_95_lower": 0.9418449208830344,
+   "one_sided_95_upper": 1.0,
+   "two_sided_90_equal_tailed": [
+    0.9418449208830344,
+    1.0
+   ],
+   "two_sided_95": [
+    0.9288782635358153,
+    1.0
+   ]
+  },
+  {
+   "run": "p5_e8_calib_v3",
+   "cell": "corr_scale_-1|joint|nonmarkov",
+   "k": 50,
+   "n": 50,
+   "rate": 1.0,
+   "one_sided_95_lower": 0.9418449208830344,
+   "one_sided_95_upper": 1.0,
+   "two_sided_90_equal_tailed": [
+    0.9418449208830344,
+    1.0
+   ],
+   "two_sided_95": [
+    0.9288782635358153,
+    1.0
+   ]
+  },
+  {
+   "run": "p5_e8_calib_v3",
+   "cell": "collapse_both|target|nonmarkov",
+   "k": 0,
+   "n": 10,
+   "rate": 0.0,
+   "one_sided_95_lower": 0.0,
+   "one_sided_95_upper": 0.2588655508930522,
+   "two_sided_90_equal_tailed": [
+    0.0,
+    0.2588655508930523
+   ],
+   "two_sided_95": [
+    0.0,
+    0.3084971078187607
+   ]
+  },
+  {
+   "run": "p5_e8_calib_v3",
+   "cell": "collapse_both|joint|nonmarkov",
+   "k": 0,
+   "n": 10,
+   "rate": 0.0,
+   "one_sided_95_lower": 0.0,
+   "one_sided_95_upper": 0.2588655508930522,
+   "two_sided_90_equal_tailed": [
+    0.0,
+    0.2588655508930523
+   ],
+   "two_sided_95": [
+    0.0,
+    0.3084971078187607
+   ]
+  },
+  {
+   "run": "p5_e8_exact_v1",
+   "cell": "exact_sequential|target",
+   "k": 9,
+   "n": 200,
+   "rate": 0.045,
+   "one_sided_95_lower": 0.023673576156505213,
+   "one_sided_95_upper": 0.07721097501733742,
+   "two_sided_90_equal_tailed": [
+    0.0236735761565052,
+    0.07721097501733745
+   ],
+   "two_sided_95": [
+    0.02078042222699568,
+    0.0837026880758534
+   ]
+  },
+  {
+   "run": "p5_e8_exact_v1",
+   "cell": "corr_scale_-1|target",
+   "k": 4,
+   "n": 100,
+   "rate": 0.04,
+   "one_sided_95_lower": 0.013776612464854097,
+   "one_sided_95_upper": 0.08919625015887933,
+   "two_sided_90_equal_tailed": [
+    0.013776612464854097,
+    0.08919625015887936
+   ],
+   "two_sided_95": [
+    0.011004493986185176,
+    0.09925715671265939
+   ]
+  },
+  {
+   "run": "p5_e8_exact_v1",
+   "cell": "exact_sequential|joint",
+   "k": 1,
+   "n": 50,
+   "rate": 0.02,
+   "one_sided_95_lower": 0.0010253398672320658,
+   "one_sided_95_upper": 0.09139813071969752,
+   "two_sided_90_equal_tailed": [
+    0.0010253398672320632,
+    0.09139813071969755
+   ],
+   "two_sided_95": [
+    0.0005062279830408305,
+    0.10646954571150005
+   ]
+  },
+  {
+   "run": "p5_e8_exact_v1",
+   "cell": "mean_shift_2.0|target",
+   "k": 42,
+   "n": 50,
+   "rate": 0.84,
+   "one_sided_95_lower": 0.7297799224735997,
+   "one_sided_95_upper": 0.9178149382614398,
+   "two_sided_90_equal_tailed": [
+    0.7297799224735997,
+    0.9178149382614398
+   ],
+   "two_sided_95": [
+    0.708873693404908,
+    0.9282992328167141
+   ]
+  },
+  {
+   "run": "p5_e8_exact_v1",
+   "cell": "var_ratio_4.0|target",
+   "k": 5,
+   "n": 50,
+   "rate": 0.1,
+   "one_sided_95_lower": 0.04023659040211798,
+   "one_sided_95_upper": 0.19883300251641906,
+   "two_sided_90_equal_tailed": [
+    0.04023659040211798,
+    0.19883300251641906
+   ],
+   "two_sided_95": [
+    0.03327509358902732,
+    0.21813536643420273
+   ]
+  },
+  {
+   "run": "p5_e8_exact_v1",
+   "cell": "corr_scale_-1|joint",
+   "k": 4,
+   "n": 50,
+   "rate": 0.08,
+   "one_sided_95_lower": 0.027787668392932785,
+   "one_sided_95_upper": 0.17379115816419383,
+   "two_sided_90_equal_tailed": [
+    0.02778766839293275,
+    0.17379115816419388
+   ],
+   "two_sided_95": [
+    0.022227963654932584,
+    0.19234278359596307
+   ]
+  },
+  {
+   "run": "p5_e8_exact_v1",
+   "cell": "collapse_intermediate|target",
+   "k": 2,
+   "n": 50,
+   "rate": 0.04,
+   "one_sided_95_lower": 0.007153719531293963,
+   "one_sided_95_upper": 0.12061415542204457,
+   "two_sided_90_equal_tailed": [
+    0.007153719531293954,
+    0.12061415542204462
+   ],
+   "two_sided_95": [
+    0.004881433426164539,
+    0.13713762560396786
+   ]
+  }
+ ]
+}

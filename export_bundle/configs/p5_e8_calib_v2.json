@@ -1,0 +1,109 @@
+{
+  "run_name": "p5_e8_calib_v2",
+  "experiment_id": "P5-E8-CALIB",
+  "status": "NOT_RUN",
+  "reason_not_run": "exceeds the remaining approved synthetic budget; exact resource request in STATUS.md",
+  "description": "Calibration and power of the within-example label-permutation test at a realistic design. Fixed before any P5-E8 result was seen. The v1 gate (EH1 in p5_first_run.json) and its FAIL verdict are preserved; this config defines a new, separate gate.",
+  "seed": 20261001,
+  "seed_scheme": "seeds.seed_v2 over {experiment, joint, condition, example, replicate, branch}; fresh conditioning rows per replicate; no common random numbers across cells or branches",
+  "design": {
+    "N_examples_per_replicate": 200,
+    "M_samples_per_branch": 64,
+    "B_permutations": 199,
+    "statistic": "T = mean_i ED_V(direct_i, sequential_i) on z / 0.5 (target); mean over 8 fixed directions of projected ED_V on (y/2, z/0.5) (joint); upper tail",
+    "randomisation": "within-example relabelling of individual samples (vectors as units); Monte Carlo p = (1 + #{T_b >= T_obs - tol}) / (B + 1)"
+  },
+  "primary_endpoint": {
+    "cell": "exact_sequential | target | nonmarkov",
+    "quantity": "rejection rate at nominal alpha = 0.05 over R = 200 independent replicates",
+    "ci": "one-sided 95% Clopper-Pearson bounds"
+  },
+  "cells": [
+    {
+      "cond": "exact_sequential",
+      "joint": "nonmarkov",
+      "level": "target",
+      "role": "null",
+      "replicates": 200,
+      "primary": true
+    },
+    {
+      "cond": "exact_sequential",
+      "joint": "nonmarkov",
+      "level": "joint",
+      "role": "null",
+      "replicates": 200
+    },
+    {
+      "cond": "corr_scale_-1",
+      "joint": "nonmarkov",
+      "level": "target",
+      "role": "null",
+      "replicates": 100
+    },
+    {
+      "cond": "chain_drop_x",
+      "joint": "markov",
+      "level": "target",
+      "role": "null",
+      "replicates": 100
+    },
+    {
+      "cond": "mean_shift_0.1",
+      "joint": "nonmarkov",
+      "level": "target",
+      "role": "alternative",
+      "replicates": 50
+    },
+    {
+      "cond": "var_ratio_1.25",
+      "joint": "nonmarkov",
+      "level": "target",
+      "role": "alternative",
+      "replicates": 50
+    },
+    {
+      "cond": "collapse_intermediate",
+      "joint": "nonmarkov",
+      "level": "target",
+      "role": "alternative",
+      "replicates": 50
+    },
+    {
+      "cond": "corr_scale_-1",
+      "joint": "nonmarkov",
+      "level": "joint",
+      "role": "alternative",
+      "replicates": 50
+    }
+  ],
+  "gate": {
+    "nominal_alpha": 0.05,
+    "null_cells": "EXCESS if the one-sided 95% CP lower bound > 0.05; the engineering tolerance additionally requires the one-sided 95% CP upper bound <= 0.10. Passing the tolerance does NOT establish size 0.05; the size claim rests on the permutation argument under the stated exchangeability assumption.",
+    "alternative_cells": "POWERED if the one-sided 95% CP lower bound > 0.05; the gate requires all four alternative cells POWERED so that an always-accept detector cannot pass",
+    "negative_controls": "always-accept and always-reject detectors are evaluated with the same rules and must fail",
+    "gate_pass": "primary and all other null cells within tolerance and not EXCESS, AND all alternative cells POWERED"
+  },
+  "multiplicity": "one primary endpoint; the other cells are secondary engineering diagnostics reported individually without adjustment; the gate is a conjunction and makes no family-wise error claim",
+  "independence": "replicates independent (fresh rows and seeds); within a replicate, examples independent; permutations and samples are not units; target and joint cells use separate datasets",
+  "stop_rule": "if the gate fails, report FAIL; do not change estimator, seeds, B, N, M or thresholds and re-run; diagnose only with checks declared here (component-A style enumeration on sub-designs)",
+  "resource_estimate": {
+    "source": "P5-E8-EXACT component D timing (results/raw/p5_e8_exact_v1/summary.json), linear extrapolation in M; excludes sampling and sorting overhead",
+    "sec_per_example_per_perm_at_M32": {
+      "target": 1.2429475784301758e-05,
+      "joint": 4.474031925201416e-05
+    },
+    "seconds_per_test": {
+      "target": 0.99,
+      "joint": 3.58
+    },
+    "tests": {
+      "target": 550,
+      "joint": 250
+    },
+    "estimated_cpu_seconds": 1442,
+    "estimated_cpu_minutes": 24.0,
+    "request": "about 40 CPU-minutes (1.5x safety factor) of pure-Python CPU, 2 processes (about 20 min wall); or numpy installation approval (not requested here)",
+    "filled_utc": "2026-09-26"
+  }
+}

@@ -1,0 +1,14 @@
+{
+ "run_id": "p5_syn_learn_01_dev",
+ "experiment_id": "P5-SYN-LEARN-01",
+ "split": "dev",
+ "config_path": "configs/p5_syn_learn_01.json",
+ "started_utc": "2026-09-27T05:17:08Z",
+ "git_commit_at_run": "161a432633cc22b5a159ca9d219c1b321b1d86c1",
+ "code_dirty_at_run": true,
+ "wall_seconds": 22.30509114265442,
+ "processes": 1,
+ "threads": 1,
+ "python": "3.11.15",
+ "note": "single process; CPU-seconds approximately equal wall-seconds"
+}

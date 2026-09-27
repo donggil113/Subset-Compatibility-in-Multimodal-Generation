@@ -1,0 +1,76 @@
+{
+  "run_name": "p5_e8_exact_v1",
+  "experiment_id": "P5-E8-EXACT",
+  "description": "Small exact randomisation verification of the within-example label-permutation test. Pre-registered before running; v1 config (p5_first_run.json) is preserved unchanged.",
+  "status_at_registration": "NOT_RUN",
+  "seed": 20260927,
+  "seed_scheme": "seeds.seed_v2 over {experiment, joint, condition, example, replicate, branch, component, design}; SHA-256 of canonical JSON; fresh rows per dataset",
+  "joint": "nonmarkov",
+  "joints": {
+    "nonmarkov": {"mean": [0.5, -1.0, 2.0], "sd": [1.0, 2.0, 0.5], "corr": [[1.0, 0.6, 0.1], [0.6, 1.0, 0.6], [0.1, 0.6, 1.0]]}
+  },
+  "standardisation_sd": {"y": 2.0, "z": 0.5},
+  "alpha": 0.05,
+  "statistic": "T = mean over conditioning examples of ED_V(direct_i, sequential_i); target level on z, joint level = mean over 8 fixed directions of the projected ED_V on standardised (y, z); vectors relabelled as units. Upper-tail test. For equal group sizes the V- and U-statistic versions give identical permutation p-values.",
+  "randomisation": "within each conditioning example, pooled 2M samples; branch labels reassigned uniformly over all C(2M, M) allocations; never across examples; product group over examples",
+  "p_value_rules": {
+    "exact": "p = #{g in G: T(g) >= T_obs - tol} / |G|, G includes the observed allocation",
+    "monte_carlo": "p = (1 + #{b: T_b >= T_obs - tol}) / (B + 1); never 0",
+    "ties": "counted as at least as extreme (conservative); tol = 1e-12 (1 + |T|)"
+  },
+  "exchangeability_assumption": "within each example the M direct samples are i.i.d., the M sequential samples are i.i.d. (fresh intermediate per sample), and the two sets are independent; no shared latent across samples and no common random numbers across branches",
+  "conditions": [
+    {"id": "exact_sequential", "kind": "exact_sequential"},
+    {"id": "collapse_both", "kind": "collapse_both"},
+    {"id": "mean_shift_1.0", "kind": "stage2_mean_shift", "param": 1.0},
+    {"id": "mean_shift_2.0", "kind": "stage2_mean_shift", "param": 2.0},
+    {"id": "var_ratio_4.0", "kind": "stage2_target_var_ratio", "param": 4.0},
+    {"id": "corr_scale_-1", "kind": "stage2_corr_scale", "param": -1.0},
+    {"id": "collapse_intermediate", "kind": "collapse_intermediate"}
+  ],
+  "component_A": {
+    "purpose": "implementation check: exact conditional size <= alpha over the full permutation group, including ties",
+    "designs_target": [[1, 4], [2, 3], [3, 2], [2, 4]],
+    "designs_joint": [[2, 3]],
+    "conditions": ["exact_sequential", "collapse_both"],
+    "datasets_per_design": 10,
+    "tie_datasets": 1,
+    "alphas": [0.01, 0.05, 0.1, 0.2, 0.5],
+    "pass_criterion": "for every dataset and alpha: #{g: p(g) <= alpha} <= alpha |G| (deterministic property; any violation = implementation bug)"
+  },
+  "component_B": {
+    "purpose": "Monte Carlo p-value agrees with the exact p-value and is never 0",
+    "design": [2, 4],
+    "conditions": ["exact_sequential", "mean_shift_1.0"],
+    "datasets_per_condition": 5,
+    "n_perm": 1999,
+    "pass_criterion": "|p_mc - p_exact| <= 4 sqrt(p_exact (1 - p_exact) / (B+1)) + 1/(B+1) and p_mc >= 1/(B+1) for all datasets"
+  },
+  "component_C": {
+    "purpose": "unconditional rejection rates with exact p-values (|G| = 20^3 = 8000) under H0 and fixed alternatives, with always-accept and always-reject negative-control detectors",
+    "design": [3, 3],
+    "cells": [
+      {"cond": "exact_sequential", "level": "target", "role": "null", "replicates": 200, "expect": "NO_EXCESS_FLAGGED"},
+      {"cond": "corr_scale_-1", "level": "target", "role": "null", "replicates": 100, "expect": "NO_EXCESS_FLAGGED", "note": "target marginal is exactly the direct law, so this is a target-level null"},
+      {"cond": "exact_sequential", "level": "joint", "role": "null", "replicates": 50, "expect": "NO_EXCESS_FLAGGED"},
+      {"cond": "mean_shift_2.0", "level": "target", "role": "alternative", "replicates": 50, "expect": "POWERED"},
+      {"cond": "var_ratio_4.0", "level": "target", "role": "alternative", "replicates": 50, "expect": "report"},
+      {"cond": "corr_scale_-1", "level": "joint", "role": "alternative", "replicates": 50, "expect": "report"},
+      {"cond": "collapse_intermediate", "level": "target", "role": "alternative", "replicates": 50, "expect": "report"}
+    ],
+    "nominal_alpha": 0.05,
+    "engineering_diagnostics": {
+      "excess_flag": "one-sided 95% Clopper-Pearson LOWER bound of the null rejection rate > alpha (evidence of anti-conservativeness beyond Monte Carlo noise). Not flagging does NOT prove size <= alpha.",
+      "powered_flag": "one-sided 95% Clopper-Pearson LOWER bound of the alternative rejection rate > alpha (better than any data-independent level-alpha rule)",
+      "negative_controls": "always-accept must be NOT_POWERED; always-reject must be EXCESS_FLAGGED; otherwise the diagnostics are uninformative"
+    },
+    "multiplicity": "engineering diagnostics reported cell by cell; no family-wise claim"
+  },
+  "component_D": {
+    "purpose": "timing smoke only (no inference) to extrapolate the cost of P5-E8-CALIB",
+    "design": [10, 32],
+    "n_perm": 199
+  },
+  "budget": {"max_seconds": 30, "cpu_threads": 1, "note": "remaining approved synthetic budget is ambiguous (see STATUS.md); run capped at 30 s and recorded in the compute ledger"},
+  "independence": "each dataset has its own conditioning rows and sample seeds; datasets are the replication units; permutations and generated samples are not units"
+}

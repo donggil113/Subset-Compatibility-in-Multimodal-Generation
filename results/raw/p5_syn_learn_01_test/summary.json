@@ -1,0 +1,221 @@
+{
+ "split": "test",
+ "scale_from_train": {
+  "y": 1.3062590871260458,
+  "z": 1.0371491514992974
+ },
+ "fitted_model": {
+  "K": 2,
+  "weights": [
+   0.5030603772122741,
+   0.4969396227877258
+  ],
+  "means": [
+   [
+    -1.0593465619547722,
+    -1.0615412779146212,
+    -0.03847710731129868
+   ],
+   [
+    0.588067966935073,
+    1.0669292975618496,
+    -0.030622559505645564
+   ]
+  ],
+  "em": {
+   "iterations": 37,
+   "converged": true,
+   "train_mean_loglik": -3.7316815049684586,
+   "loglik_trace_head": [
+    -4.78320672528261,
+    -3.9546396048812675,
+    -3.873185352918994,
+    -3.8351305939729357,
+    -3.8064704789256805
+   ],
+   "loglik_trace_tail": [
+    -3.7316818269201173,
+    -3.731681678465482,
+    -3.7316815897198996,
+    -3.731681536674438,
+    -3.7316815049684586
+   ],
+   "loglik_monotone": true
+  }
+ },
+ "heldout_loglik": {
+  "true_mean_loglik": -3.3897931142022664,
+  "fitted_mean_loglik": -3.623116659426463
+ },
+ "results": {
+  "TRUE_JOINT_CONTROL": {
+   "target": {
+    "p": 0.075,
+    "t_obs": 0.032220590085568386,
+    "effect_ED_U": {
+     "n": 200,
+     "mean": 0.002707300442732182,
+     "sd": 0.029512708515444363,
+     "se": 0.0020868636322452674,
+     "lo": -0.001382877117114982,
+     "hi": 0.006797478002579346
+    },
+    "n_examples": 200,
+    "M": 64,
+    "B": 199,
+    "min_distinct_intermediates": 64,
+    "seconds_sampling": 3.1608705520629883,
+    "seconds_test": 0.9244608879089355,
+    "quality_ED_to_truth": {
+     "n": 200,
+     "mean": 0.0,
+     "sd": 0.0,
+     "se": 0.0,
+     "lo": 0.0,
+     "hi": 0.0
+    },
+    "quality_CRPS_divergence": {
+     "n": 200,
+     "mean": 0.0,
+     "sd": 0.0,
+     "se": 0.0,
+     "lo": 0.0,
+     "hi": 0.0
+    },
+    "sd_ratio_direct": {
+     "n": 200,
+     "mean": 0.989196697047147,
+     "sd": 0.09324677982671131,
+     "se": 0.006593543033927653,
+     "lo": 0.9762735901701338,
+     "hi": 1.0021198039241601
+    }
+   },
+   "joint": {
+    "p": 0.035,
+    "t_obs": 0.02773624278892853,
+    "effect_ED_U": {
+     "n": 200,
+     "mean": 0.0020761965762254543,
+     "sd": 0.027039242919776302,
+     "se": 0.0019119632026724164,
+     "lo": -0.0016711824407783372,
+     "hi": 0.005823575593229246
+    },
+    "n_examples": 200,
+    "M": 64,
+    "B": 199,
+    "min_distinct_intermediates": 64,
+    "seconds_sampling": 3.720008134841919,
+    "seconds_test": 3.495354652404785,
+    "quality_projected_ED_to_truth": {
+     "n": 200,
+     "mean": 0.0,
+     "sd": 0.0,
+     "se": 0.0,
+     "lo": 0.0,
+     "hi": 0.0
+    }
+   }
+  },
+  "FITTED_JOINT_CONTROL": {
+   "target": {
+    "p": 0.46,
+    "t_obs": 0.03055434550077671,
+    "effect_ED_U": {
+     "n": 200,
+     "mean": 0.00021299578701860667,
+     "sd": 0.023399901340672314,
+     "se": 0.0016546228917085578,
+     "lo": -0.0030300054887256837,
+     "hi": 0.003455997062762897
+    },
+    "n_examples": 200,
+    "M": 64,
+    "B": 199,
+    "min_distinct_intermediates": 64,
+    "seconds_sampling": 2.1178486347198486,
+    "seconds_test": 0.9199986457824707,
+    "quality_ED_to_truth": {
+     "n": 200,
+     "mean": 0.030103381991327068,
+     "sd": 0.03493783727824983,
+     "se": 0.002470478165944261,
+     "lo": 0.02526133376148375,
+     "hi": 0.03494543022117039
+    },
+    "quality_CRPS_divergence": {
+     "n": 200,
+     "mean": 0.015051690995663534,
+     "sd": 0.017468918639124916,
+     "se": 0.0012352390829721304,
+     "lo": 0.012630666880741876,
+     "hi": 0.017472715110585194
+    },
+    "sd_ratio_direct": {
+     "n": 200,
+     "mean": 1.0558209873238906,
+     "sd": 0.17715878284985123,
+     "se": 0.012527017669988484,
+     "lo": 1.0312684838570163,
+     "hi": 1.080373490790765
+    }
+   },
+   "joint": {
+    "p": 0.25,
+    "t_obs": 0.026536649759395133,
+    "effect_ED_U": {
+     "n": 200,
+     "mean": 0.0005600924877296583,
+     "sd": 0.01536871222148222,
+     "se": 0.0010867320629914647,
+     "lo": -0.0015698632165785254,
+     "hi": 0.002690048192037842
+    },
+    "n_examples": 200,
+    "M": 64,
+    "B": 199,
+    "min_distinct_intermediates": 64,
+    "seconds_sampling": 2.6970572471618652,
+    "seconds_test": 3.4818975925445557,
+    "quality_projected_ED_to_truth": {
+     "n": 200,
+     "mean": 0.0209748793744689,
+     "sd": 0.02059063496823372,
+     "se": 0.0014559777614974914,
+     "lo": 0.01812121539964257,
+     "hi": 0.02382854334929523
+    }
+   }
+  },
+  "INDEPENDENT_CONDITIONAL_FM": {
+   "status": "NOT_RUN",
+   "blocker": "no CPU tensor library (numpy/PyTorch absent); installation not approved"
+  },
+  "SHARED_CONDITIONAL_FM": {
+   "status": "NOT_RUN",
+   "blocker": "same as INDEPENDENT_CONDITIONAL_FM"
+  }
+ },
+ "primary_family": {
+  "tests": [
+   "FITTED_JOINT_CONTROL",
+   "TRUE_JOINT_CONTROL"
+  ],
+  "raw_p": {
+   "TRUE_JOINT_CONTROL": 0.075,
+   "FITTED_JOINT_CONTROL": 0.46
+  },
+  "holm_p": {
+   "TRUE_JOINT_CONTROL": 0.15,
+   "FITTED_JOINT_CONTROL": 0.46
+  },
+  "alpha": 0.05
+ },
+ "timings": {
+  "fit_FITTED_JOINT_CONTROL_seconds": 1.9277946949005127,
+  "eval_TRUE_JOINT_CONTROL_seconds": 11.304710149765015,
+  "eval_FITTED_JOINT_CONTROL_seconds": 9.220953226089478
+ },
+ "total_wall_seconds": 22.47418713569641
+}

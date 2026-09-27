@@ -1,0 +1,17 @@
+{
+ "run_id": "p5_e8_calib_v3",
+ "experiment_id": "P5-E8-CALIB",
+ "config_path": "configs/p5_e8_calib_v3.json",
+ "started_utc": "2026-09-27T00:00:24Z",
+ "git_commit_at_run": "9ba6ad90dcc8627ad2d8cceb1ded1850b3f2b020",
+ "code_dirty_at_run": false,
+ "wall_seconds": 1192.7527422904968,
+ "cpu_seconds_tasks": 2381.21168589592,
+ "tasks": [
+  920,
+  920
+ ],
+ "timed_out": false,
+ "workers": 2,
+ "python": "3.11.15"
+}
