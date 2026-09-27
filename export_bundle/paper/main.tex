@@ -1,6 +1,7 @@
 %% =====================================================================
-%% P5 manuscript v3 (v1 = 9923d50, v2 = 1814564). v3: statistical errata E1-E6, coherent-joint
+%% P5 manuscript v3.1 (v1 = 9923d50, v2 = 1814564, v3 = ca0c350). v3: statistical errata E1-E6, coherent-joint
 %% controls (P5-SYN-LEARN-01), calibration history moved to the appendix, body edited toward 8 pages.
+%% v3.1 (round 5): wording corrections only; v4 (neural flow arms) is blocked on dependencies.
 %%   TARGET_YEAR      = 2027  (intended venue: ICML 2027)
 %%   TEMPLATE_YEAR    = 2026  (official ICML 2026 style, anonymous review mode;
 %%                             no official ICML 2027 style was found on 2026-09-26)
@@ -460,6 +461,7 @@ The primary endpoint is the target test. The projected-joint test is secondary.
 Neither control is flagged by the primary target test: $p=\numSynTrueP$ and $\numSynFitP$, Holm-adjusted over the primary family $\numSynHolmTrue$ and $\numSynHolmFit$. The gap estimates contain $0$.
 The exact mixture's secondary projected-joint test gave $p=\numSynTruePJ$, with gap estimate $\numSynTrueEJ\times10^{-3}$.
 Its population gap is exactly zero, so this is a false positive of a level-$0.05$ test, one of four tests run. We report it as observed; it is not evidence of incompatibility.
+The coherence of both controls follows from their construction (\cref{rem:coherent}), not from these $p$-values; non-rejection is only consistent with it.
 
 \paragraph{Correctness.}
 The fitted control is coherent yet wrong.
@@ -484,16 +486,17 @@ Question & Status \\
 Coherence vs.\ quality & controls: coherent by construction, not flagged at the primary endpoint; the fitted control's quality is clearly worse \\
 Separate vs.\ shared learners & \notrun{} (no tensor library; installation not approved) \\
 Gap from solver refinement & not applicable to the controls (exact sampling); \notrun{} for learners \\
-Non-detection vs.\ equality, correctness, global joint & for the controls equality and a global joint hold by construction, correctness fails for the fitted one; for learned models none is established \\
+Non-detection vs.\ equality, correctness, global joint & for the controls equality and a global joint hold by construction, correctness fails for the fitted one; for the neural flow learners (\notrun) none is established \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{Learned flow generators}
+\subsection{Neural flow learners (not run)}
 \label{sec:exp-real}
 The experiment that bears on the central question is designed and coded but not run. It compares independently trained conditional flow-matching models with one shared conditional network, both trained on the mixture probe.
 The environment has no tensor library, and installing one was not approved.
 \Cref{app:mixture} fixes the architecture, update budget, conditioning-pattern exposure and the two solver levels, so that data cannot influence them.
+A static review before any execution found that the shared network could not tell an absent coordinate from a target one; its input now carries a target mask.
 If the two solver levels disagree or training is insufficient, the outcome is labeled inconclusive, not incompatible.
 \todo{P5-REAL-01: $\widehat\Delta_T$, $\widehat\Delta_J^U$, quality and cost for independent vs.\ shared conditional flow matching on the mixture probe}.
 A consistency regularizer, and any real multimodal data, are outside this paper (\todo{P5-REAL-02: real paired multimodal data}).
@@ -502,7 +505,7 @@ A consistency regularizer, and any real multimodal data, are outside this paper 
 \section{Limitations}
 \label{sec:limits}
 \begin{itemize}
-\item \textbf{Data and models.} All evidence is synthetic, and no learned flow or diffusion generator has been evaluated. Nothing here shows that such models are, or are not, incompatible.
+\item \textbf{Data and models.} All evidence is synthetic. The only learned model is an EM-fitted mixture; no neural flow or diffusion generator has been evaluated. Nothing here shows that such models are, or are not, incompatible.
 \item \textbf{Closed-form decomposition.} It relies on Gaussian conditionals and exact scores. With learned scores, discretization, prior mismatch and model error interact and must be separated empirically.
 \item \textbf{Joint test.} It compares eight projections and cannot certify joint equality.
 \item \textbf{Calibration.} It ran once, at one design. Its secondary null cells screen only for gross anti-conservativeness.
@@ -788,10 +791,12 @@ All marginals and conditionals are computed from the fitted density.
 \begin{itemize}
 \item \textbf{Loss:} linear-path conditional flow matching.
 \item \textbf{Independent arm:} four MLPs (width 64, depth 3), one per pattern $z\mid x$, $y\mid x$, $z\mid x,y$ and $y,z\mid x$, with $5000$ updates each.
-\item \textbf{Shared arm:} one mask-conditioned MLP (width 128, depth 3) over $(x,y,z)$, with $20000$ updates and uniform pattern sampling.
-\item \textbf{Budgets:} the two arms get equal total updates and equal expected pattern exposure. Their parameter counts differ, are recorded and are not equalized.
+\item \textbf{Shared arm:} one MLP (width 128, depth 3) over $(x,y,z)$ whose input marks each coordinate as observed, target or absent, with $20000$ updates and uniform pattern sampling.
+\item \textbf{Budgets:} both arms get $20000$ updates in total ($4\times5000$ for the independent arm) and equal expected pattern exposure. Parameter counts are close ($34757$ and $34819$), but each shared update runs a network about four times larger, so the arms are not equal-compute.
 \item \textbf{Optimizer:} Adam, learning rate $10^{-3}$, batch size $256$.
-\item \textbf{Solver:} Euler from $\mathcal N(0,I)$ with CFG off, at a coarse (32) and a fine (128) level chosen on dev. ``Numerically stable'' only if the two test statistics differ by at most $1.645$ combined standard errors.
+\item \textbf{Solver:} Euler from $\mathcal N(0,I)$ with CFG off. The fine level (128) is primary, fixed in advance; the coarse level (32) is a sensitivity check. An arm is labeled inconclusive if the two levels' gap estimates differ by more than $1.645$ combined standard errors, or if its dev loss has not plateaued. Agreement does not prove convergence.
+\item \textbf{Checkpoint and comparison:} the final iterate, with no selection. The primary comparison is the paired per-example difference of the unbiased gap estimates of the two arms, over the same test examples.
+\item \textbf{Pre-execution fixes:} the shared input gained a target mask, and each independent network got its own optimizer.
 \item \textbf{Blocker:} the adapter is written but untested, because no tensor library is available.
 \end{itemize}
 

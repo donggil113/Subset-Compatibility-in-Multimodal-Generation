@@ -78,7 +78,7 @@ are already included, so building the PDF does not need regeneration.
 ## Tests and runs (Python 3.11, standard library only)
 
 ```sh
-python3 -m unittest discover -s tests         # 56 tests, about 11 s, 1 thread
+python3 -m unittest discover -s tests         # 64 tests, about 13 s, 1 thread; 7 torch fixtures SKIP without torch
 python3 scripts/run_syn_learn.py --config configs/p5_syn_learn_01.json --split test --out /tmp/p5_syn_rerun
 ```
 

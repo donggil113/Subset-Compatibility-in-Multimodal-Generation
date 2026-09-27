@@ -1,6 +1,6 @@
 {
  "project": "P5: Do Any-to-Any Generators Define a Coherent Joint Distribution?",
- "updated": "2026-09-27 (round 4)",
+ "updated": "2026-09-27 (round 5)",
  "environment": {
   "python": "3.11.15",
   "platform": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
@@ -18,7 +18,8 @@
   "command": "python3 -m unittest discover -s tests",
   "result": "see STATUS.md (all pass at commit)",
   "note": "numerical checks, not proofs",
-  "round4": "56 tests pass (11.3 s wall), including 9 GMM fixture tests"
+  "round4": "56 tests pass (11.3 s wall), including 9 GMM fixture tests",
+  "round5": "64 tests: 57 pass, 7 SKIPPED (torch fixtures in tests/test_fm_adapter.py; not a pass)"
  },
  "runs": [
   {
@@ -203,12 +204,12 @@
  "not_run": [
   "P5-REAL-01 (learned generator gaps)",
   "P5-REAL-02 (consistency regularizer vs baselines)",
-  "SHARED_CONDITIONAL_NET baseline (renamed from shared-joint; P5-SYN-LEARN-01 SHARED_CONDITIONAL_FM arm NOT_RUN)",
+  "SHARED_CONDITIONAL_NET baseline (renamed from shared-joint; P5-SYN-LEARN-01 SHARED_CONDITIONAL_FM arm BLOCKED_DEPENDENCIES)",
   "same-extra-compute baseline",
   "factorization consistency (C2)",
   "real multimodal dataset (NOT_DECIDED)",
-  "P5-SYN-LEARN-01 INDEPENDENT_CONDITIONAL_FM arm (no tensor library; install not approved)",
-  "PDF build (no TeX; installation not approved; external compile services not used)"
+  "PDF build (no TeX; installation not approved; external compile services not used)",
+  "P5-SYN-LEARN-01 INDEPENDENT_CONDITIONAL_FM arm (BLOCKED_DEPENDENCIES)"
  ],
  "analyses": [
   {
@@ -253,7 +254,7 @@
   "compile_status": "COMPILE_NOT_RUN (no TeX in environment; installation not approved)",
   "static_check": "scripts/check_tex.py",
   "claims": "paper/claims.csv",
-  "version": "v3",
+  "version": "v3.1 (wording corrections; v4 blocked on FM results)",
   "page_fit_8": "UNVERIFIED (static estimate about 5080 words before the appendix, incl. tables/captions)",
   "export_bundle": "export_bundle/ (source only; no PDF; style fetched by export_bundle/fetch_style.sh with SHA-256 check)"
  },
@@ -282,5 +283,17 @@
   "P5_REAL_02": "NOT_TESTED",
   "scientific_support_for_learned_generators": "none",
   "reproducibility": "p5_syn_learn_01 test re-run from export_bundle/ into scratch: identical summary except timings (23.0 s wall); not reported"
+ },
+ "verdicts_round5": {
+  "INDEPENDENT_CONDITIONAL_FM": "BLOCKED_DEPENDENCIES (no torch/numpy in any interpreter, venv or pip/uv cache; no resource approval)",
+  "SHARED_CONDITIONAL_FM": "BLOCKED_DEPENDENCIES (same)",
+  "fm_adapter": "static review found D1 (shared role ambiguity) and D2 (single optimizer over independent MLPs); fixed before any execution; UNTESTED",
+  "fm_contract": "configs/p5_syn_learn_01_fm_amendment_a1.json (pre-execution; base config unchanged)",
+  "corrections": {
+   "verdicts_round4.scientific_support_for_learned_generators": "superseded: the EM-fitted GMM is a learned model; the neural conditional flow arms are NOT_RUN",
+   "TRUE_control_family_bound": "union bound <= 0.20; the earlier 1-0.95^4 assumed unproven independence",
+   "GMM_coherence": "by construction, not shown by p > 0.05"
+  },
+  "kept": "EH1 FAIL; calib v2 NEVER RUN; calib v3 PASS (not re-run); TRUE/FITTED control results (not re-run); model-stage STOP record"
  }
 }

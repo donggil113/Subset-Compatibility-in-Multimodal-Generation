@@ -584,7 +584,7 @@ Runs:
 | Coherence vs quality to truth | Both controls are coherent by construction and are not flagged at the primary endpoint. FITTED is clearly worse in quality. **Consistency ≠ correctness.** |
 | Separate vs shared learner gap, quality, cost | NOT_RUN (blocker above) |
 | Gap explained by solver refinement vs remaining | Not applicable to the controls (exact sampling). NOT_RUN for learners. |
-| Non-detection vs equality / correctness / global joint | For the controls, equality and a global joint hold by construction (a proof, not the test). Correctness fails for FITTED. For learned models none of the three is established. |
+| Non-detection vs equality / correctness / global joint | For the controls, equality and a global joint hold by construction (a proof, not the test). Correctness fails for FITTED. For the neural flow learners (NOT_RUN) none of the three is established. *[Round 5: "learned models" narrowed; FITTED is an EM-learned model.]* |
 
 ### 11.3 Notes
 
@@ -592,7 +592,9 @@ Runs:
   - This is a rejection of a null that holds exactly, so it is a false
     positive.
   - Four control tests were run with independent streams given the test
-    rows, so P(any p ≤ 0.05) ≤ 1 − 0.95⁴ ≈ 0.19.
+    rows, so P(any p ≤ 0.05) ≤ 1 − 0.95⁴ ≈ 0.19. *[Round 5 correction:
+    the independence was not proven. The bound used is the union bound
+    ≤ 4 × 0.05 = 0.20.]*
   - The declared checks were done:
     - fixture tests pass (including the quadrature marginalization
       identity);
@@ -611,3 +613,47 @@ Runs:
   solver-level choice exists, so dev informed nothing but the pipeline.
 - **Scope.** This is one data seed, one model seed and one fitted control,
   so it is a pilot. It does not test any any-to-any generator.
+
+## 12. Flow-matching arms: pre-execution amendment A1 (round 5; no FM run)
+
+**Status: BLOCKED_DEPENDENCIES.** No torch or numpy is available, and no
+installation was approved. No flow-matching code has been executed, and no
+FM output exists.
+
+The amendment is `configs/p5_syn_learn_01_fm_amendment_a1.json`. It leaves
+`configs/p5_syn_learn_01.json` unchanged and fixes the fields the base left
+open, before any execution:
+
+- **Checkpoint:** the final iterate; no early stopping or selection.
+- **Solver:** 128 steps is primary, fixed a priori; 32 steps is a
+  sensitivity check.
+- **MODEL_FIT_OR_NUMERICS_INCONCLUSIVE label:** any of
+  - non-finite values;
+  - dev-loss decrease of more than 2% between 90% and 100% of updates;
+  - a solver-level disagreement larger than 1.645 combined SEs.
+- **Primary family:** the two FM target Test P results, Holm.
+- **Primary comparison:** the paired per-example ED_U difference between the
+  arms, on the same 200 test examples. It is conditional on one model seed
+  per arm.
+- **Cap:** 1800 CPU-s, one thread. Otherwise INCOMPLETE_BUDGET.
+
+Static review of `src/p5compat/fm_adapter.py` (original sha256 at ca0c350:
+`abcc2ef3…`):
+
+- **D1:** shared-network role ambiguity; fixed with a target mask.
+- **D2:** one optimizer over the independent MLPs; fixed with per-network
+  optimizers.
+
+Everything else checked is correct: dimensions, path direction, velocity
+sign, Euler direction, fresh intermediates, branch streams, and no batch
+coupling.
+
+Budget:
+
+- 20 000 updates per arm (independent: 4 × 5000);
+- parameters 34 757 vs 34 819 (by formula);
+- about 4× training and sampling FLOPs for the shared arm, so the arms are
+  not equal-compute.
+
+Controls are reused from the round-4 run. Their per-example values were not
+stored, so no FM-vs-control paired comparison is planned.

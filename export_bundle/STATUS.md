@@ -1,8 +1,74 @@
 # STATUS — P5: Do Any-to-Any Generators Define a Coherent Joint Distribution?
 
-Last update: 2026-09-27 (round 4: statistical errata, coherent-joint controls,
-manuscript v3). Round 3 is kept below with inline markers on superseded
-statements; rounds 1–2 are kept unchanged after it.
+Last update: 2026-09-27 (round 5: flow-matching arms BLOCKED_DEPENDENCIES;
+pre-execution adapter review; wording corrections). Rounds 3–4 are kept below
+with inline markers on corrected statements; rounds 1–2 are unchanged.
+
+## Summary (round 5)
+
+| Item | Status |
+|---|---|
+| INDEPENDENT_CONDITIONAL_FM, SHARED_CONDITIONAL_FM | **BLOCKED_DEPENDENCIES.** No torch or numpy in any interpreter (python 3.10–3.13), venv, or pip/uv cache. No resource approval was given. Nothing was installed or trained, and no FM result exists. |
+| Adapter static review | **Two defects found and fixed before any execution.** The fixed code is still UNTESTED. |
+| Adapter fixtures (`tests/test_fm_adapter.py`) | 7 torch fixtures **SKIPPED** (not passed); 1 blocker test passes |
+| FM run contract | Fixed pre-run in `configs/p5_syn_learn_01_fm_amendment_a1.json`; the base config is unchanged |
+| Previous verdicts | All kept: EH1 FAIL, calib v2 NEVER RUN, calib v3 PASS (not re-run), TRUE/FITTED controls (not re-run) |
+| Manuscript | **v3.1**, wording corrections only. v4 (flow arms) is blocked. Static check PASS; COMPILE_NOT_RUN (no TeX). |
+
+**Adapter defects (pre-execution fixes):**
+
+- **D1, shared arm.** The shared network saw only an observation mask. For
+  z|x, y|x and y,z|x that mask is the same, so an absent coordinate and a
+  target coordinate differed only by a slot value being exactly 0. The
+  input now also carries a target mask. An observed 0 is distinguished from
+  an absent coordinate by the observation mask.
+- **D2, independent arm.** One Adam optimizer covered all four MLPs. That is
+  correct only if gradients are reset to None. Each MLP now has its own
+  optimizer, and gradients are reset to None explicitly.
+- **Checked statically and correct:**
+  - dimensions;
+  - interpolation direction (t = 0 noise, t = 1 data);
+  - velocity target x1 − x0;
+  - forward Euler direction;
+  - the sequential branch draws a fresh y from the model and never uses the
+    observed y;
+  - separate branch streams;
+  - no batch-coupled layers.
+
+**Budget contract** (parameter counts are by formula, to be verified at run
+time):
+
+| Arm | Updates | Parameters |
+|---|---|---|
+| Independent | 20 000 in total (4 networks × 5000) | 34 757 |
+| Shared | 20 000 | 34 819 |
+
+Each shared update runs a network about 4× larger, so the arms are **not**
+equal-compute.
+
+**Wording corrections:**
+
+- "Learned-generator results: none" was wrong: the EM-fitted GMM is a
+  learned generative model. It now reads "the neural conditional flow arms
+  are NOT_RUN".
+- GMM coherence holds by construction. It is not shown by p > 0.05.
+- For the family of four control tests, the bound 1 − 0.95⁴ assumed
+  independence that was not proven. It is replaced by the union bound
+  (≤ 0.20).
+
+**Compute (round 5):**
+
+- no installs, downloads, GPU, paid API or training;
+- test suite: 12.7 s wall / 12.5 CPU-s, 1 thread; 64 tests, 7 skipped;
+- static checks: < 1 s.
+
+**Next decision (one):** give or withhold a resource approval for a CPU-only
+torch wheel. The exact block is in the round-5 report and in the amendment's
+`dependency_request`.
+
+---
+
+# History: round 4 (kept; corrected statements marked inline)
 
 ## Summary (round 4)
 
@@ -11,7 +77,7 @@ statements; rounds 1–2 are kept unchanged after it.
 | v1 gate EH1 | **FAIL, kept** |
 | Calibration v2 | **NEVER RUN, kept** as superseded |
 | Calibration v3 | **Gate PASS, kept; not re-run.** Its meaning is restated (erratum E4). |
-| Model-stage STOP | **Record kept.** Learned-model arms remain NOT_RUN. |
+| Model-stage STOP | **Record kept.** The neural conditional flow arms remain NOT_RUN. *[Corrected in round 5]* |
 | Statistical errata E1–E6 | DONE. Derived only: no re-run, and raw/config files unchanged (RESEARCH_PACKET §10, `results/errata/`). |
 | P5-SYN-LEARN-01, coherent controls | **RUN once on test** (22.5 s wall, 1 process, 1 thread). The dev smoke (22.3 s) is not reported. |
 | P5-SYN-LEARN-01, flow-matching arms | **NOT_RUN.** Blocker: no numpy or PyTorch, and installation was not approved. `src/p5compat/fm_adapter.py` is UNTESTED. |
@@ -25,7 +91,9 @@ Categories:
   - GMM fixture tests (9/9 pass; numerical checks, not proofs);
   - the full suite (56 tests) passes.
 - **Toy results:** Gaussian probe (rounds 1–3); coherent mixture controls (round 4).
-- **Learned-generator results:** none.
+- **Learned-model results:** only the EM-fitted GMM (FITTED_JOINT_CONTROL). The
+  neural conditional flow arms are NOT_RUN. *[Corrected in round 5]* The earlier wording "none"
+  was wrong, because the EM-fitted GMM is a learned generative model.
 - **Real-data results:** none.
 - **Novelty:** candidate only. "Target consistency does not imply joint
   consistency" is Prop. 2 of Klötergens et al., not ours.
@@ -88,15 +156,18 @@ Runtimes:
 Interpretation:
 
 - **Non-detection, not equality.** Both controls are coherent by
-  construction (proof: `gmm.py` docstring and manuscript appendix;
-  quadrature fixture). They are not flagged at the primary endpoint. This
+  construction (proof: `gmm.py` docstring and manuscript appendix; the
+  quadrature fixture is a numerical check, not a proof). Coherence is not
+  shown by p > 0.05. They are not flagged at the primary endpoint. This
   checks the pipeline on non-Gaussian conditionals. It says nothing about
-  learned generators.
+  neural conditional samplers. *[Corrected in round 5]*
 - **TRUE joint p = 0.035.**
   - This is a false positive of a level-0.05 test on a null that holds
     exactly.
-  - Four tests were run on two true nulls with independent streams, so
-    P(some p ≤ 0.05) ≤ 1 − 0.95⁴ ≈ 0.19.
+  - Four tests were run on two true nulls. By the union bound,
+    P(some p ≤ 0.05) ≤ 4 × 0.05 = 0.20; no independence is claimed.
+    *[Corrected in round 5]* The earlier "≤ 1 − 0.95⁴ ≈ 0.19" assumed that the four tests are
+    independent, which was not proven.
   - The declared checks were done:
     - fixture tests pass;
     - min distinct intermediates = 64;

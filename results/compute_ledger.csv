@@ -27,3 +27,7 @@ date,round,item,kind,seconds,measured,notes
 2026-09-27,4,PDF build,not_run,0,-,no TeX in environment; installation not approved; no external compile service
 2026-09-27,4,export bundle build + checks from export_bundle/ (static check; 56 tests),analysis,12,yes,11.9 s wall for the tests; bundle copy 0.07 s; fetch_style.sh tested offline with the round-2 local zip (no download)
 2026-09-27,4,p5_syn_learn_01 reproducibility re-run from export_bundle (test split; scratch output),repro_check,23.0,yes,wall; 1 process 1 thread; summary identical to the committed run except timings; not reported and not a second result
+2026-09-27,5,environment search for torch/numpy/TeX (interpreters; venvs; pip/uv caches),analysis,2,approx,none found; nothing installed or downloaded
+2026-09-27,5,full unit suite (after adapter fixes),unit_tests,12.7,yes,64 tests; 57 pass; 7 SKIPPED (torch fixtures); 12.5 CPU-s; 1 thread
+2026-09-27,5,INDEPENDENT/SHARED_CONDITIONAL_FM training and evaluation,blocked,0,-,BLOCKED_DEPENDENCIES: no torch/numpy; no resource approval
+2026-09-27,5,PDF build,not_run,0,-,no TeX in environment; installation not approved; no external compile service

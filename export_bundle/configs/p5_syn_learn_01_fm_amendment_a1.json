@@ -1,0 +1,60 @@
+{
+  "amendment_id": "P5-SYN-LEARN-01-FM-A1",
+  "status": "BLOCKED_DEPENDENCIES",
+  "registered": "2026-09-27, round 5, before any flow-matching code was executed and before any flow-matching output existed",
+  "base_config": {"path": "configs/p5_syn_learn_01.json", "file_sha256": "89a9c877a7c6bca779e18ef48a951935a8691ea4bb614b9d7360c957e6677294",
+                  "note": "base config unchanged; this file adds the fields the base left open and records the pre-execution fixes"},
+  "blocker": "no torch and no numpy in any interpreter, venv or pip/uv cache of this environment; no resource approval for installing them was given",
+  "reused_unchanged": ["source mixture and seed 20261010", "train/dev/test rows (regenerated deterministically from the data seed keys; 2000/200/200)",
+                       "standardisation of y, z by train sds for evaluation", "Test P with N = 200, M = 64, B = 199, upper tail",
+                       "8 fixed projection directions", "architecture widths/depths, Adam lr 1e-3, batch 256, linear-path loss",
+                       "20000 updates per arm", "Euler levels 32 and 128, base N(0, I), CFG off"],
+  "controls": {"TRUE_JOINT_CONTROL and FITTED_JOINT_CONTROL": "results reused from results/raw/p5_syn_learn_01_test; not re-run and not re-drawn",
+               "limitation": "per-example values and samples of the controls were not stored (summary only); they can be regenerated deterministically from the seeds (round-4 reproducibility check), but no paired comparison between a flow arm and a control is planned",
+               "not_used_for": "calibration, early stopping or any choice for the flow arms"},
+  "pre_execution_fixes": {
+    "D1_shared_role_encoding": "shared network input = state(3) + observed mask(3) + target mask(3) + t; before the fix, absent and target coordinates had the same mask and z|x, y|x, y,z|x were distinguishable only by a slot value being exactly 0",
+    "D2_independent_optimizers": "one Adam per independent MLP and zero_grad(set_to_none=True); before the fix a single Adam covered all four MLPs",
+    "original_adapter_sha256_at_ca0c350": "abcc2ef315735c5aaf767059b0d17de36f04562d09330ac75dc99cfc5bff55b5",
+    "status_of_fixed_code": "UNTESTED until torch is available; tests/test_fm_adapter.py fixtures are SKIPPED without torch"
+  },
+  "budget_contract": {
+    "INDEPENDENT_CONDITIONAL_FM": {"networks": 4, "updates_per_network": 5000, "total_updates_arm": 20000,
+                                   "target_exposure_per_pattern": "5000 updates x 256 rows", "params_by_formula": {"z|x": 8641, "y|x": 8641, "z|x,y": 8705, "y,z|x": 8770, "total": 34757}},
+    "SHARED_CONDITIONAL_FM": {"networks": 1, "total_updates_arm": 20000, "pattern_sampling": "uniform i.i.d.; realised exposure recorded (expected 5000 each)",
+                              "params_by_formula": {"total": 34819}},
+    "equal_compute": "NO. Updates and parameter counts are about equal, but each shared update runs a network about 4x larger than the one independent network it replaces, so training and sampling FLOPs are about 4x for the shared arm. Report parameters, updates, exposure, wall-s and CPU-s; do not call the arms equal-compute."
+  },
+  "training": {"data": "train split only, raw (unstandardised) x, y, z", "t": "U(0, 1)", "x0": "N(0, I)", "dtype": "float32",
+               "schedule": "none (constant lr), no weight decay, no gradient clipping",
+               "checkpoint": "final iterate after exactly the fixed number of updates; no early stopping; no checkpoint selection",
+               "model_seed": "seed_v2(seed, experiment, joint='mixture3', condition=<arm>, level='-', example='all', replicate=0, branch='model_init')",
+               "threads": "torch.set_num_threads(1)"},
+  "dev_use": {"allowed": ["pipeline smoke", "dev flow-matching loss at 90% and 100% of updates with fixed dev noise (branch key 'dev_loss')", "the numerics label below"],
+              "not_allowed": ["choosing the solver level by any outcome", "changing data, seeds, widths, lr, batch or updates", "looking at test before the dev labels are written"]},
+  "solver": {"primary_level": 128, "rule": "fixed a priori as the finer level; not chosen by any dev or test outcome",
+             "sensitivity_level": 32,
+             "seeds": "sampling keys add solver_steps=<32|128> to the base sampling keys; permutation keys likewise"},
+  "labels": {
+    "MODEL_FIT_OR_NUMERICS_INCONCLUSIVE": "for an arm, if any training loss or sample is non-finite; or if on dev the relative decrease of the dev flow-matching loss of any pattern between 90% and 100% of updates exceeds 2%; or if |mean ED_U(128) - mean ED_U(32)| > 1.645 * sqrt(se128^2 + se32^2) at the target level on dev or on test",
+    "meaning": "a label, not a verdict of incompatibility; all numbers are still reported; agreement of two levels does not prove ODE convergence",
+    "INCOMPLETE_BUDGET": "if the cap below is reached before both arms are trained and evaluated; untrained or partial models are not reported as results"
+  },
+  "evaluation": {
+    "examples": "the same 200 test examples for both arms; the conditioning example is the unit",
+    "sampling": "sequential branch draws a fresh y from the arm's own y|x for every sample; direct and sequential branches use separate seed streams; rows in a batch are independent (no batch-coupled layers); the observed y is never used",
+    "primary_family": "Test P at the target level (direct z|x vs sequential) for INDEPENDENT_CONDITIONAL_FM and SHARED_CONDITIONAL_FM at 128 steps: 2 tests, Holm at alpha = 0.05",
+    "primary_comparison": "paired per-example difference d_i = ED_U(IND)_i - ED_U(SHARED)_i at the target level (standardised), mean with normal 95% CI over the 200 examples; ED_U removes the finite-M bias of ED_V; the CI covers example and sampling noise, not training randomness (one model seed per arm)",
+    "not_a_difference": "one arm rejecting and the other not is not evidence that the arms differ; p-values are not ranked as scores",
+    "secondary_descriptive": ["projected-joint Test P and paired ED_U difference", "32-step results", "quality to truth: unbiased sample energy distance between the arm's direct z|x samples and the true mixture conditional (closed-form cross and truth terms, U-statistic within-sample term), and the projected-joint analogue",
+                              "diversity: direct-branch sample sd / true conditional sd", "cost: parameters, updates, exposure, training and sampling wall-s and CPU-s, threads"],
+    "ratios": "no ratio is a primary quantity; any reported ratio gets a bootstrap CI over examples that recomputes the whole ratio",
+    "per_example_storage": "store per-example ED_U, quality and sd values for both levels and both arms in raw"
+  },
+  "budget": {"threads": 1, "cap_cpu_seconds": 1800, "scope": "training both arms once plus dev and test evaluation at both levels", "processes": 1},
+  "stop_rule": "one model seed per arm; train once; evaluate dev, write labels, then evaluate test once; no reruns after seeing test",
+  "dependency_request": {"venv": "<checkout>/.venv-p5 (not committed)", "package": "torch, CPU-only wheel, from https://download.pytorch.org/whl/cpu",
+                         "numpy": "not required by the adapter; install only if torch import requires it",
+                         "record": "torch version, wheel filename, wheel sha256, index URL, pip freeze of the venv",
+                         "not_included": "CUDA builds, model weights, datasets, global installs"}
+}

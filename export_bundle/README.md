@@ -2,10 +2,10 @@
 
 **P5: Do Any-to-Any Generators Define a Coherent Joint Distribution?**
 Manuscript title: *Separating Sampling Error from Conditional
-Incompatibility in Generative Models* (v3).
+Incompatibility in Generative Models* (v3.1: v3 plus round-5 wording corrections).
 
 This bundle is a copy of the repository files needed to review, rebuild and
-re-check the round-4 state. The layout is the same as the repository's, so
+re-check the round-5 state. It is an internal evidence package. The layout is the same as the repository's, so
 the scripts run from this directory.
 
 ## What is here
@@ -34,9 +34,13 @@ the scripts run from this directory.
 - **No per-example v1 rows** (about 5.8 MB). They are in the repository.
 - **No model weights and no datasets.** None exist: all data are synthetic
   and generated from seeds.
-- **No results for learned generators.** INDEPENDENT_CONDITIONAL_FM and
-  SHARED_CONDITIONAL_FM are NOT_RUN: there is no numpy/PyTorch, and
-  installation was not approved. `src/p5compat/fm_adapter.py` is UNTESTED.
+- **No neural flow results.** INDEPENDENT_CONDITIONAL_FM and
+  SHARED_CONDITIONAL_FM are BLOCKED_DEPENDENCIES: there is no numpy/PyTorch,
+  and installation was not approved. `src/p5compat/fm_adapter.py`, with its
+  pre-execution fixes D1/D2, is UNTESTED. Its torch fixtures are SKIPPED.
+  The pre-run contract is `configs/p5_syn_learn_01_fm_amendment_a1.json`.
+  The only learned model with results is the EM-fitted GMM control.
+- **No checkpoints.** No neural model was trained.
 
 ## Status in one paragraph
 
@@ -58,7 +62,14 @@ Round 4 did three things:
   wrong;
 - produced manuscript v3.
 
-No claim about learned any-to-any generators is supported yet.
+Round 5 added:
+
+- the FM arms, recorded as BLOCKED_DEPENDENCIES;
+- the adapter static review;
+- the pre-run amendment;
+- wording corrections.
+
+No claim about neural any-to-any generators is supported yet.
 
 ## Before any other use
 
