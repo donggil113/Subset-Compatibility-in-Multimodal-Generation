@@ -1,5 +1,6 @@
 %% =====================================================================
-%% P5 manuscript v1
+%% P5 manuscript v2 (v1 = commit 9923d50). v2 adds: the three-claim distinction,
+%% finite-projection identification, the calibration contract audit and the P5-E8-CALIB run.
 %%   TARGET_YEAR      = 2027  (intended venue: ICML 2027)
 %%   TEMPLATE_YEAR    = 2026  (official ICML 2026 style, anonymous review mode;
 %%                             no official ICML 2027 style was found on 2026-09-26)
@@ -172,6 +173,41 @@ When a direct joint sampler exists, the \emph{joint-level gap} is $\Delta_J(x) =
 
 $\Delta_T\equiv 0$ is C1 of \citet{klotergens2026tabular}.
 $\Delta_J$ compares the sequential pair with a direct joint sampler. It is not their factorization consistency (C2), which compares the two chain-rule orders; we do not measure C2.
+
+In practice we estimate a \emph{projected} joint gap. For a fixed set $U$ of eight unit directions,
+\begin{equation}
+  \Delta_J^{U}(x)=\frac{1}{|U|}\sum_{u\in U}D\big(u^{\top}_{\#}\qd(\cdot,\cdot\mid x),\,u^{\top}_{\#}\,q(y\mid x)q(z\mid x,y)\big),
+  \label{eq:projected}
+\end{equation}
+where $u^\top_\#$ denotes the law of the projection $u^\top(y,z)$.
+$\Delta_J^U=0$ is implied by joint equality but does not imply it: two joints can agree on finitely many projections and differ elsewhere.
+Within the Gaussian family used below, eight directions identify the law; in general they do not.
+
+\paragraph{Three different claims.}
+We keep three statements apart; \cref{tab:claims} lists what would support each.
+\emph{Non-detection}: a test at a given design ($N$, $M$, $B$) did not reject.
+\emph{Distributional correctness}: a branch samples the law it is meant to sample, e.g.\ the true conditional.
+\emph{Coherent joint existence}: a single joint distribution induces every conditional the model exposes.
+Non-detection is bounded by power and resolution and does not establish $\Delta_T=0$. Even $\Delta_T=0$ does not establish correctness, as \cref{prop:collapse} and the common-mode solver bias of \cref{sec:exp-numerics} show. Equality of one relation is necessary for a coherent joint, but it is not sufficient.
+This paper measures only the first kind of statement for two relations, $\Delta_T$ and $\Delta_J^U$, together with quality metrics that bear on the second. It measures the third for no model.
+
+\begin{table}[t]
+\centering
+\caption{Three claims that a consistency check is often taken to support, and what supports each here.}
+\label{tab:claims}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{0.24\columnwidth}p{0.36\columnwidth}p{0.3\columnwidth}}
+\toprule
+Claim & Evidence that would support it & Status in this paper \\
+\midrule
+Non-detection of $\Delta_T$, $\Delta_J^U$ & a calibrated, powered test that does not reject; reported with its design & Gaussian probe only; learned models \todo{P5-REAL-01: learned-model tests} \\
+Distributional correctness & proper scores against held-out data or a known truth & oracle metrics on the probe only \\
+Coherent joint existence & all relations of the model (every subset and order), not one & not tested \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 Neither check establishes a global joint for all conditionals of an any-to-any model. Each tests one relation.
 
 \begin{proposition}[Target-level equality is compatibility of the triple]
@@ -259,6 +295,17 @@ With equal group sizes, the permutation p-values of $T$ built from $\ED_V$ and f
 \end{proposition}
 Given the pooled multiset of an example, the within- and cross-sums add to a constant, so both statistics are increasing affine functions of the cross-sum with slopes depending only on $M$ (\cref{app:proofs}).
 The choice between V and U thus matters for effect sizes, not for the test.
+
+\paragraph{What Test P can and cannot establish.}
+For the target level, Test~P is exact under $H_0^T$: $\qd(z\mid x_i)=\qs(z\mid x_i)$ for all $i$.
+For the joint level, the pooled vectors are exchangeable only under equality of the \emph{full} joint laws, so the test is exact under that null. Its statistic depends only on the projections in $U$, so it has power only against differences visible in them (\cref{eq:projected}).
+A rejection therefore shows that the joint laws differ. A non-rejection says nothing about directions outside $U$.
+
+\paragraph{Resolution and multiplicity.}
+With $B$ permutations the p-value lies on a grid of step $1/(B+1)$; for $B=199$ the smallest value is $\numPres$.
+For a continuous statistic, the size at $\alpha=0.05$ is exactly $\lfloor\alpha(B+1)\rfloor/(B+1)=0.05$.
+A Bonferroni family of $m$ such tests can reject at all only if $m\le\alpha(B+1)=\numPfamMax$. Any later evaluation with a larger family, for example many conditions $\times$ two levels for one model, needs a larger $B$.
+Inside a calibration run each replicate is a single test, so no p-value adjustment applies there. Multiplicity enters only in the gate that aggregates cells (\cref{sec:calib}).
 
 \subsection{Error decomposition on a Gaussian probe}
 \label{sec:decomp}
@@ -423,6 +470,9 @@ The revised test has only been verified at $|G|\le8000$. Its power at that size 
 Test~P requires fresh intermediates for every sample and independent randomness across branches. Pipelines that reuse one intermediate for several targets need a different design.
 We treat the target marginal as the unconditional model for guidance, following \citet{bao2023unidiffuser}. Other conventions give other gaps.
 Energy distance is one of several possible discrepancies. Factorization consistency (C2) is not measured.
+The joint-level test compares eight projected laws and cannot certify equality of the full joint.
+The secondary null cells of the calibration ($R=100$) detect a true size of $0.10$ with probability only $\numOCsecDetectTen$, so they screen for gross anti-conservativeness only.
+In the small exact verification, target- and joint-level cells of one condition shared data, a key error corrected before the calibration run.
 The manuscript has not been compiled in our environment, so layout, page count and references are unchecked.
 
 % ---------------------------------------------------------------------
@@ -532,7 +582,20 @@ An Euler step $x\mapsto x+h\,v(x,\sigma)$ and a Heun step are compositions of af
   \item In component C, the three pre-registered null cells showed no excess, and the pre-registered powered alternative was powered. The three ``report'' alternatives were not powered.
   \item A development smoke run with a different seed preceded it.
   \end{itemize}
-\item \textbf{P5-E8-CALIB} was fixed before any E8 result, except its resource estimate, which it declared would be filled from the E8 timing smoke. It is not run.
+\item \textbf{P5-E8-CALIB, v2} was fixed before any E8 result, except its resource estimate, which it declared would be filled from the E8 timing smoke.
+  \begin{itemize}
+  \item A pre-run contract audit showed that its gate would fail an exactly valid test with probability $1-\numOCvTwo$.
+  \item The audit also found that the E8 seed key omitted the test level, and that v2 had no quality-control family.
+  \item v2 was never run and is preserved.
+  \end{itemize}
+\item \textbf{P5-E8-CALIB, v3} replaced v2 before any calibration result.
+  \begin{itemize}
+  \item It has three families: null validity, power, and quality control.
+  \item Primary null: $R=400$ with a tolerance criterion. The other null cells use Bonferroni excess flags.
+  \item Seeds include the test level.
+  \item The gate's operating characteristics were computed in advance: P(pass $\mid$ valid, power $0.3$) $=\numOCvThreeGate$.
+  \item A timing smoke with a different seed preceded the single run and is not reported.
+  \end{itemize}
 \item \textbf{Exploratory analyses.} The re-analysis in \cref{app:reanalysis,app:znull} and the closed-form curves in \cref{fig:numerics} were computed after the v1 results were seen.
 \end{itemize}
 

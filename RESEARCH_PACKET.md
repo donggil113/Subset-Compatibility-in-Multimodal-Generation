@@ -329,3 +329,113 @@ scale:
 - **P5-E8-CALIB: NOT_RUN.** The resource estimate (about 24 CPU-min) was
   filled from the E8-EXACT timing, as the config declared in advance.
 - The model-stage STOP stands until P5-E8-CALIB passes.
+
+## 8. Calibration contract audit and v3 pre-registration (2026-09-27, before the run)
+
+Scope: `configs/p5_e8_calib_v2.json` was never run and is preserved.
+`scripts/audit_calib_contract.py` (closed form, no sampling) writes
+`results/calib_contract_audit/`. The v1 EH1 FAIL and the model-stage STOP are
+unchanged.
+
+### 8.1 What each fixed alternative changes
+
+The table below is closed form and uses the standardised scale. "Seq." is
+the sequential branch.
+
+| Cell | Target law (seq. vs direct) | Projected joint law | Truth / quality |
+|---|---|---|---|
+| mean_shift_0.1 (target) | changes (D = 0.0056) | changes (0.0033) | seq. biased by 0.1τ; E ΔCRPS 0.0028 |
+| var_ratio_1.25 (target) | changes (0.0037) | changes (0.0023) | seq. over-dispersed (sd ratio 1.118); E ΔCRPS 0.0018 |
+| collapse_intermediate (target) | changes (0.0227) | changes (0.110) | seq. under-dispersed (0.735); Cov(y,z\|x) 0.54 → 0; E ΔCRPS 0.0113 |
+| corr_scale_−1 (joint) | **unchanged** (target null) | changes (0.065) | target exactly the truth; Cov flips 0.54 → −0.54 |
+
+Notes on the alternatives:
+
+- collapse_intermediate is a one-sided collapse. The two branch laws
+  differ, so it is a legitimate compatibility alternative.
+- Both-branch collapse (collapse_both) is a compatibility null: both
+  branches are the same point mass. It is at the same time a quality
+  failure, with E ΔCRPS 0.233 for both branches. It was not in the v2 power
+  gate. v3 adds it as a separate quality-control family.
+- The corr_scale_−1 perturbation is a null for the target test and an
+  alternative for the joint test. It enters as two cells with different
+  roles.
+
+### 8.2 Sampling contract (checked in code and tests)
+
+Checked:
+
+- The direct branch draws M i.i.d. samples.
+- Each sequential sample draws a fresh intermediate. `min_distinct_intermediates`
+  = M is recorded per task.
+- Branches use separate `seed_v2` streams, so there are no common random
+  numbers.
+- Permutations happen within an example only. Vectors are relabelled as
+  units; a test rebuilds the vector groups and compares.
+
+Found (E8-EXACT, round 2): `e8.make_dataset` omitted the level from its
+seed key. Target- and joint-level cells of one condition and replicate
+therefore shared rows and samples, so E8-EXACT C's target and joint cells
+are not independent evidence. No verdict changes. The calibration keys
+include the level (`tests/test_calib_contract.py`).
+
+### 8.3 Identification
+
+- The target test is exact under equality of the z-laws.
+- The joint test is exact under full joint equality but only has power
+  against differences in the 8 projected laws. It cannot certify joint
+  equality.
+- Neither test addresses correctness relative to the truth, nor the
+  existence of a coherent joint for all conditionals.
+
+### 8.4 Gate operating characteristics
+
+All probabilities below are exact binomial, for a test whose size is
+exactly 0.05.
+
+**v2 gate:**
+
+- Its tolerance "CP upper ≤ 0.10" fails a valid test with probability 0.56
+  at R = 100 and 0.20 at R = 200.
+- P(all v2 null cells pass | exactly valid) = 0.121. The v2 gate was not a
+  usable contract.
+
+**v3 gate:**
+
+- **Primary null**, R = 400, with a tolerance criterion:
+  - false fail 0.019;
+  - detection at size 0.10: 0.964.
+- **Null family (4 cells)**, EXCESS flags at the Bonferroni level
+  1 − 0.05/4:
+  - false EXCESS ≈ 0.011 per R = 100 cell;
+  - detection at size 0.10: only 0.42 per secondary cell, which is a stated
+    limitation.
+- **Power:** each of 4 cells has R = 50 and is POWERED iff k ≥ 6:
+  - P(POWERED | power 0.2) = 0.952;
+  - P(POWERED | power 0.05) = 0.038.
+- **Whole gate:**
+  - P(all null cells pass | valid) = 0.948;
+  - P(gate pass | valid, each power 0.3) = 0.945.
+
+### 8.5 p-value resolution vs multiplicity
+
+- B = 199 puts p on a grid of 0.005, and the size at α = 0.05 is exactly
+  0.050.
+- The actual families differ by level:
+  - per replicate: one test, no adjustment;
+  - gate: 4 null cells with Bonferroni EXCESS, and a conjunction of 4
+    power cells;
+  - later model evaluations: a Bonferroni family with m > 10 cannot reject
+    at all with B = 199.
+
+### 8.6 Computation
+
+- **Array-at-a-time backend** (stdlib; numpy is not installed): identical
+  to the loop backend on every allocation of the exact fixtures, including
+  the joint case and ties. It gives identical exact and Monte Carlo
+  p-values under the same RNG.
+- **Speed:** it is about 0.6× the speed of the loop backend, because
+  `rng.sample` dominates the cost. It is therefore unused.
+- **Parallelism:** the only speed-up is 2 worker processes over independent
+  tasks. Results do not depend on scheduling, because seeds are fixed per
+  task.

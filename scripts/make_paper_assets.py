@@ -325,6 +325,114 @@ def main():
 
 
 
+def write_calibration_assets():
+    """Contract table (pre-run closed form) and calibration results (if run)."""
+    aud = load(os.path.join(ROOT, "results", "calib_contract_audit", "p5_e8_calib_v3.json"))
+    aud2 = load(os.path.join(ROOT, "results", "calib_contract_audit", "p5_e8_calib_v2.json"))
+    labels = {"mean_shift_0.1": "Mean shift $0.1\\tau$", "var_ratio_1.25": "Variance ratio 1.25",
+              "collapse_intermediate": "Collapse, intermediate only", "corr_scale_-1": "Corr.\\ scale $-1$",
+              "exact_sequential": "Exact sequential", "chain_drop_x": "Chain $z\\mid y$ (Markov)",
+              "collapse_both": "Collapse, both branches"}
+    order = ["exact_sequential", "chain_drop_x", "corr_scale_-1", "mean_shift_0.1", "var_ratio_1.25",
+             "collapse_intermediate", "collapse_both"]
+    rows = {r["cond"]: r for r in aud["contract"]}
+
+    def yn(v):
+        return "yes" if v > 1e-12 else "no"
+
+    t = HEADER + "\\begin{tabular}{lcccrr}\n\\toprule\n"
+    t += ("Condition & target law & proj.\\ joint law & truth (target) & sd ratio & $\\E\\,\\Delta$CRPS$\\times10^3$ \\\\\n"
+          " & \\multicolumn{2}{c}{changed between branches?} & seq.\\ vs.\\ truth & & seq.\\ / direct \\\\\n\\midrule\n")
+    for cid in order:
+        r = rows[cid]
+        t += (f"{labels[cid]} & {yn(r['target_D_cmp_vs_ref'])} & {yn(r['joint_proj_D_cmp_vs_ref'])} & "
+              f"{yn(r['target_D_cmp_vs_truth'])} & {r['sd_ratio_cmp_z']:.3f} & "
+              f"{1e3 * r['exp_crps_excess_cmp']:.2f} / {1e3 * r['exp_crps_excess_ref']:.2f} \\\\\n")
+    t += "\\bottomrule\n\\end{tabular}\n"
+    open(os.path.join(OUT, "tab_contract.tex"), "w").write(t)
+
+    n = ""
+    n += macro("numOCvTwo", f"{aud2['gate_oc']['P_all_null_cells_pass_if_exactly_valid']:.3f}")
+    n += macro("numOCvThree", f"{aud['gate_oc']['P_all_null_cells_pass_if_exactly_valid']:.3f}")
+    n += macro("numOCvThreeGate", f"{aud['gate_oc']['P_gate_pass_if_valid_and_each_power_0.3']:.3f}")
+    c2 = {c["cell"]: c for c in aud2["gate_oc"]["cells"]}
+    n += macro("numOCtolFailHundred", f"{c2['corr_scale_-1|target|nonmarkov']['P_false_tolerance_fail_at_size_0.05']:.2f}")
+    n += macro("numOCtolFailTwoHundred", f"{c2['exact_sequential|target|nonmarkov']['P_false_tolerance_fail_at_size_0.05']:.2f}")
+    c3 = {c["cell"]: c for c in aud["gate_oc"]["cells"]}
+    prim = c3["exact_sequential|target|nonmarkov"]
+    n += macro("numOCprimFail", f"{1 - prim['P_cell_pass_at_size_0.05']:.3f}")
+    n += macro("numOCprimDetectTen", f"{1 - prim['P_tolerance_pass_at_size_0.10']:.3f}")
+    n += macro("numOCsecDetectTen", f"{c3['exact_sequential|joint|nonmarkov']['P_excess_at_size_0.10']:.2f}")
+    res = aud["p_resolution"]
+    n += macro("numPres", f"{res['p_min']:.3f}")
+    n += macro("numPfamMax", str(res["largest_bonferroni_family_that_can_reject"]))
+
+    cal_dir = os.path.join(ROOT, "results", "raw", "p5_e8_calib_v3")
+    order_cells = ["exact_sequential|target|nonmarkov", "exact_sequential|joint|nonmarkov", "corr_scale_-1|target|nonmarkov",
+                   "chain_drop_x|target|markov", "mean_shift_0.1|target|nonmarkov", "var_ratio_1.25|target|nonmarkov",
+                   "collapse_intermediate|target|nonmarkov", "corr_scale_-1|joint|nonmarkov",
+                   "collapse_both|target|nonmarkov", "collapse_both|joint|nonmarkov"]
+    lab_cell = {k: labels[k.split("|")[0]] + (" (joint)" if "|joint|" in k else "") for k in order_cells}
+    if os.path.exists(os.path.join(cal_dir, "summary.json")):
+        cs = load(os.path.join(cal_dir, "summary.json"))
+        cm = load(os.path.join(cal_dir, "manifest.json"))
+        t = HEADER + "\\begin{tabular}{llrrrll}\n\\toprule\n"
+        t += ("Cell & family & rejections & CP$_{95}$ lower & CP$_{95}$ upper & criterion & outcome \\\\\n\\midrule\n")
+        for k in order_cells:
+            b = cs["cells"][k]
+            if b["status"] != "COMPLETED":
+                t += f"{lab_cell[k]} & {b['role']} & \\multicolumn{{5}}{{l}}{{{b['status']} ({b['done']}/{b['planned']})}} \\\\\n"
+                continue
+            r = b["rate_95"]
+            fam = {"null": "null validity", "alternative": "power", "quality_control": "quality control"}[b["role"]]
+            if b["role"] == "null":
+                crit = "Bonferroni excess" + (", tolerance" if "tolerance_pass" in b else "")
+                ok = (not b["excess_flag"]) and b.get("tolerance_pass", True)
+                out = ("within tolerance, " if "tolerance_pass" in b and b["tolerance_pass"] else ("tolerance FAILED, " if "tolerance_pass" in b else "")) + ("excess flagged" if b["excess_flag"] else "no excess")
+            elif b["role"] == "alternative":
+                crit = "powered"
+                out = "POWERED" if b["powered"] else "NOT POWERED"
+            else:
+                crit = "not rejected; quality flagged"
+                out = ("not rejected" if not b["compat_test_rejects_any"] else "REJECTED") + "; " + (
+                    "quality flagged" if b["quality_flag_all_reps"] else "quality NOT flagged")
+            t += (f"{lab_cell[k]} & {fam} & {r['k']}/{r['n']} & {r['cp_lower']:.3f} & {r['cp_upper']:.3f} & {crit} & {out} \\\\\n")
+        t += "\\bottomrule\n\\end{tabular}\n"
+        open(os.path.join(OUT, "tab_calib.tex"), "w").write(t)
+        t = HEADER + "\\begin{tabular}{lrrrr}\n\\toprule\n"
+        t += ("Cell & $\\overline{\\Delta\\mathrm{CRPS}}$ seq.\\ & $\\overline{\\Delta\\mathrm{CRPS}}$ direct & sd ratio seq.\\ & reps with CI $>0$ \\\\\n\\midrule\n")
+        for k in order_cells:
+            b = cs["cells"][k]
+            if b["status"] != "COMPLETED":
+                continue
+            t += (f"{lab_cell[k]} & {1e3 * b['mean_excess_crps_seq']:.2f} & {1e3 * b['mean_excess_crps_direct']:.2f} & "
+                  f"{b['mean_sd_ratio_seq']:.3f} & {100 * b['frac_reps_excess_crps_seq_ci_above_0']:.0f}\\% \\\\\n")
+        t += "\\bottomrule\n\\end{tabular}\n"
+        open(os.path.join(OUT, "tab_calib_quality.tex"), "w").write(t)
+        g = cs["gate"]
+        n += macro("numCalibGate", "PASS" if g["gate_pass"] else ("FAIL" if g["gate_pass"] is False else "INCOMPLETE"))
+        for key, name in (("G1_primary_tolerance", "numCalibGOne"), ("G2_null_family_no_excess", "numCalibGTwo"), ("G3_power_family", "numCalibGThree")):
+            n += macro(name, ("pass" if g.get(key) else "fail") if key in g else "n/a")
+        pr = cs["cells"]["exact_sequential|target|nonmarkov"]["rate_95"]
+        n += macro("numCalibPrimK", f"{pr['k']}/{pr['n']}")
+        n += macro("numCalibPrimLo", f"{pr['cp_lower']:.3f}")
+        n += macro("numCalibPrimHi", f"{pr['cp_upper']:.3f}")
+        n += macro("numCalibWall", f"{cm['wall_seconds'] / 60:.1f}")
+        n += macro("numCalibCPU", f"{cm['cpu_seconds_tasks'] / 60:.1f}")
+        for k, name in (("mean_shift_0.1|target|nonmarkov", "Shift"), ("var_ratio_1.25|target|nonmarkov", "Var"),
+                        ("collapse_intermediate|target|nonmarkov", "CollInt"), ("corr_scale_-1|joint|nonmarkov", "CorrJ")):
+            b = cs["cells"][k]
+            n += macro("numCalibPow" + name, f"{b['rate_95']['k']}/{b['rate_95']['n']}" if b["status"] == "COMPLETED" else "NOT RUN")
+        for k, name in (("exact_sequential|joint|nonmarkov", "NullJ"), ("corr_scale_-1|target|nonmarkov", "NullCorrT"),
+                        ("chain_drop_x|target|markov", "NullChain")):
+            b = cs["cells"][k]
+            n += macro("numCalib" + name, f"{b['rate_95']['k']}/{b['rate_95']['n']}" if b["status"] == "COMPLETED" else "NOT RUN")
+    else:
+        n += macro("numCalibGate", "NOT RUN")
+    with open(os.path.join(OUT, "numbers.tex"), "a") as f:
+        f.write(n)
+
+
 def write_reference_lines():
     """Horizontal reference line data (detection resolution) for the figure."""
     num = open(os.path.join(OUT, "numbers.tex")).read()
@@ -336,3 +444,4 @@ def write_reference_lines():
 if __name__ == "__main__":
     main()
     write_reference_lines()
+    write_calibration_assets()

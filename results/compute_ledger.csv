@@ -11,3 +11,7 @@ date,round,item,kind,seconds,measured,notes
 2026-09-26,2,p5_e8_exact_v1,synthetic_run,1.1,yes,pre-registered small exact verification
 2026-09-26,2,scripts/make_paper_assets.py (several invocations),analysis,4,approx,no new sampling; closed-form curves on 100 regenerated rows
 2026-09-26,2,P5-E8-CALIB,not_run,0,-,estimated 1442 CPU-s (about 24 CPU-min); requested about 40 CPU-min
+2026-09-27,3,unit tests (several invocations),unit_tests,6,approx,about 1.4 s each
+2026-09-27,3,backend benchmark (loop vs array-at-a-time),timing_smoke,1,approx,20 examples x 50 permutations; target and joint
+2026-09-27,3,scripts/audit_calib_contract.py (3 invocations),analysis,3,approx,closed form + exact binomial OC; no sampling
+2026-09-27,3,calibration timing smoke (seed 999; 1 replicate per cell),timing_smoke,16.6,yes,wall; 31 CPU-s over 2 processes; not reported
