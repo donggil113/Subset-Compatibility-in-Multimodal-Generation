@@ -1,0 +1,59 @@
+{
+  "run_name": "p5_syn_learn_01",
+  "experiment_id": "P5-SYN-LEARN-01",
+  "status_at_registration": "NOT_RUN",
+  "scope": "Synthetic 3-variable non-Gaussian pilot. Not real multimodal data. One fixed model seed. No consistency loss and no model sweep.",
+  "preserved_records": "v1 EH1 FAIL, calibration v2 never-run/superseded, calibration v3 PASS (not re-run), model-stage STOP record.",
+  "seed": 20261010,
+  "seeds": {
+    "data": "seed_v2(seed, experiment, joint='mixture3', condition='data', example='all', replicate=0, branch=<train|dev|test>)",
+    "model": "seed_v2(seed, ..., condition=<model>, branch='model_init') for EM initialisation and (if run) FM training",
+    "sampling": "seed_v2(seed, ..., condition=<model>, level=<target|joint>, example=i, branch=<direct|sequential>)",
+    "permutation": "seed_v2(seed, ..., condition=<model>, level=<level>, example='all', branch='permutation')"
+  },
+  "source_distribution": {
+    "type": "finite Gaussian mixture over (x, y, z), fixed before any data were generated",
+    "K": 3,
+    "weights": [0.5, 0.3, 0.2],
+    "means": [[-1.0, -1.0, 0.0], [1.0, 1.5, 1.0], [0.0, 0.5, -1.5]],
+    "sds": [[0.6, 0.8, 0.5], [0.5, 0.6, 0.7], [0.8, 0.5, 0.6]],
+    "corrs": [[[1, 0.5, 0.2], [0.5, 1, 0.4], [0.2, 0.4, 1]],
+              [[1, -0.3, 0.4], [-0.3, 1, 0.2], [0.4, 0.2, 1]],
+              [[1, 0.2, -0.5], [0.2, 1, 0.3], [-0.5, 0.3, 1]]],
+    "pd_check_at_registration": "Cholesky succeeds for all 3 components; log-determinants -3.316, -3.534, -3.434; minimum Cholesky diagonal 0.458",
+    "note": "parameters chosen once for multimodal, non-Gaussian conditionals with z not independent of x given y within components 2 and 3; not tuned for any test outcome"
+  },
+  "splits": {"n_train": 2000, "n_dev": 200, "n_test": 200,
+             "use": "train: fitting and standardisation sds; dev: pipeline smoke and (for FM) the solver-level choice only; test: reported results"},
+  "standardisation": "y and z divided by their train-split sample sds",
+  "models": {
+    "TRUE_JOINT_CONTROL": {"status": "RUN", "definition": "analytic marginals/conditionals of the exact source mixture; JOINT_COHERENT_CONTROL with exact quality"},
+    "FITTED_JOINT_CONTROL": {"status": "RUN", "definition": "EM-fitted Gaussian mixture on train only; all conditionals and marginals computed analytically from the same normalized density (JOINT_COHERENT_CONTROL)",
+                             "K_fit": 2, "misspecified": "yes, declared before fitting: K_fit = 2 < K = 3, so fit quality is imperfect by design while coherence holds exactly",
+                             "em": {"max_iter": 500, "tol": 1e-8, "reg": 1e-6, "init": "k-means++-style seeding with the model seed"},
+                             "not_a": "not an equal-budget baseline for flow models"},
+    "INDEPENDENT_CONDITIONAL_FM": {"status": "NOT_RUN", "blocker": "no CPU tensor library (numpy/PyTorch absent); installation not approved",
+                                    "design": {"patterns": ["z|x", "y|x", "z|x,y", "y,z|x"], "mlp_width": 64, "mlp_depth": 3,
+                                               "optimizer": "Adam lr 1e-3", "batch": 256, "updates_per_pattern": 5000, "total_updates": 20000,
+                                               "loss": "linear-path conditional flow matching", "code": "src/p5compat/fm_adapter.py (UNTESTED)"}},
+    "SHARED_CONDITIONAL_FM": {"status": "NOT_RUN", "blocker": "same as INDEPENDENT_CONDITIONAL_FM",
+                               "naming": "SHARED_CONDITIONAL_NET; not a coherent joint",
+                               "design": {"mlp_width": 128, "mlp_depth": 3, "total_updates": 20000, "pattern_sampling": "uniform over the 4 patterns (expected 5000 each)",
+                                          "budget_note": "same total updates as the independent arm; parameter counts differ and are recorded, not equalised"}}
+  },
+  "solver_for_fm": {"base": "N(0, I)", "cfg": "off", "integrator": "Euler", "levels": {"coarse": 32, "fine": 128},
+                     "rule": "levels chosen on dev only; both levels reported on test; 'numerically stable' only if |T_fine - T_coarse| <= 1.645 x combined SE of the example means; two levels do not prove convergence"},
+  "evaluation": {
+    "test": "Test P (within-example relabelling), N = 200, M = 64, B = 199, statistic mean ED_V on standardised scale, upper tail",
+    "primary": "target: direct z|x vs sequential (y ~ q(y|x), then z ~ q(z|x,y)); a fresh y per sample; branches on independent streams",
+    "secondary": "projected joint: direct q(y,z|x) vs sequential (y, z) pairs; 8 fixed directions; vectors relabelled as units; equality of 8 projected laws only",
+    "effect_size": "mean ED_U(direct_i, sequential_i) over examples with a normal 95% CI (unbiased for the mean population gap)",
+    "quality_to_truth": "closed form for GMM models: per-example energy distance between the model's direct z|x and the true z|x (CRPS divergence = ED/2); projected-joint analogue; sample sd ratio vs the true conditional sd",
+    "families": "primary family = the target tests of the models actually run (2 here, Holm-adjusted p also reported); secondary joint tests descriptive. With B = 199 the p grid step is 0.005; a planned 4-model primary family (alpha/4 = 0.0125) remains attainable",
+    "interpretation": "TRUE and FITTED controls are coherent by construction (population gaps exactly 0; proof: mixture weights collapse, see gmm.py and the quadrature fixture). A rejection is not an automatic FAIL; it triggers only the declared checks (fixture tests, stream independence). FITTED is expected to have worse quality than TRUE while remaining coherent."
+  },
+  "decision_table_categories": ["coherence control vs truth quality", "separate vs shared learner gap and quality/cost (NOT_RUN)", "gap explained by solver refinement vs remaining (NOT_RUN: no solver in the GMM controls)", "non-detection vs equality / correctness / global joint existence"],
+  "fm_outcome_labels": "MODEL_FIT_OR_NUMERICS_INCONCLUSIVE if training is insufficient or the two solver levels disagree; that is not evidence of incompatibility",
+  "budget": {"max_wall_seconds": 120, "processes": 1, "note": "within the standing first-verification cap (CPU <= 2 threads, 120 s synthetic run)"},
+  "stop_rule": "run once with the registered seeds; do not change data, K_fit, EM settings, N, M, B or seeds after seeing results"
+}
