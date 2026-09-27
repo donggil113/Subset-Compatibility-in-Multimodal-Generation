@@ -1,0 +1,254 @@
+{
+ "run_name": "p5_e8_calib_v3",
+ "experiment_id": "P5-E8-CALIB",
+ "status_at_registration": "NOT_RUN",
+ "supersedes": "configs/p5_e8_calib_v2.json (never run; preserved). v2 was replaced before any calibration result because its gate would fail an exactly valid test with probability 0.879 (results/calib_contract_audit/p5_e8_calib_v2.md), and because the E8 dataset key omitted the test level.",
+ "preserved_verdicts": "v1 EH1 FAIL and the model-stage STOP are unchanged by this config.",
+ "seed": 20261003,
+ "seed_scheme": "seeds.seed_v2 over {experiment, joint, condition, level, example, replicate, branch}; rows, direct samples, sequential samples and permutations use separate keys; target- and joint-level cells never share rows or samples",
+ "joints": {
+  "nonmarkov": {
+   "mean": [
+    0.5,
+    -1.0,
+    2.0
+   ],
+   "sd": [
+    1.0,
+    2.0,
+    0.5
+   ],
+   "corr": [
+    [
+     1.0,
+     0.6,
+     0.1
+    ],
+    [
+     0.6,
+     1.0,
+     0.6
+    ],
+    [
+     0.1,
+     0.6,
+     1.0
+    ]
+   ]
+  },
+  "markov": {
+   "mean": [
+    0.5,
+    -1.0,
+    2.0
+   ],
+   "sd": [
+    1.0,
+    2.0,
+    0.5
+   ],
+   "corr": [
+    [
+     1.0,
+     0.6,
+     0.36
+    ],
+    [
+     0.6,
+     1.0,
+     0.6
+    ],
+    [
+     0.36,
+     0.6,
+     1.0
+    ]
+   ]
+  }
+ },
+ "standardisation_sd": {
+  "y": 2.0,
+  "z": 0.5
+ },
+ "design": {
+  "N_examples_per_replicate": 200,
+  "M_samples_per_branch": 64,
+  "B_permutations": 199,
+  "statistic": "T = mean_i ED_V(direct_i, sequential_i); target level on z/0.5; joint level = mean over 8 fixed directions (angles pi*t/8, t=0..7) of the projected ED_V on (y/2, z/0.5); upper tail",
+  "randomisation": "within each conditioning example, branch labels of the 2M pooled samples are reassigned uniformly over all C(2M, M) allocations; never across examples; a joint sample (y, z) is relabelled as one unit",
+  "p_value": "(1 + #{b: T_b >= T_obs - tol}) / (B + 1), ties counted as extreme, tol = 1e-12 (1 + |T_obs|); never 0",
+  "backend": "loop backend (PooledExample). The array-at-a-time backend is verified identical on exact fixtures but is slower, so it is not used.",
+  "workers": 2
+ },
+ "sampling_contract": {
+  "direct": "M i.i.d. draws from q_d(z|x_i) (target level) or q_d(y,z|x_i) (joint level)",
+  "sequential": "M i.i.d. pairs; every pair draws a fresh intermediate y_ij ~ q(y|x_i) and then z_ij ~ q(z|x_i, y_ij); no intermediate is reused",
+  "independence": "direct and sequential use different seed_v2 keys (independent random streams); no common random numbers across branches, levels, cells or replicates",
+  "units": "conditioning examples are the independent units inside a replicate; replicates (fresh rows) are the units of the rejection-rate estimate; samples and permutations are never units"
+ },
+ "estimand_and_identification": {
+  "target": "H0_T: q_d(z|x_i) = q_s(z|x_i) for every example. The test is exact under H0_T and consistent against any difference of the target laws.",
+  "joint": "The test is exact under full equality of the joint laws of (y, z)|x_i. Its statistic depends only on the 8 projected laws, so it has power only against differences visible in those projections. Non-rejection does not establish joint equality, and rejection says nothing about directions not tested. Within the Gaussian family, 8 directions identify the law; in general they do not.",
+  "not_tested": "global existence of a joint for all conditionals of a model; factorization consistency (C2); correctness relative to the truth (a quality question)"
+ },
+ "alternative_contract": {
+  "mean_shift_0.1": {
+   "level": "target",
+   "changes_target": true,
+   "changes_joint": true,
+   "changes_truth_quality": "sequential branch biased by 0.1 tau; expected CRPS excess 0.0028 (standardised)"
+  },
+  "var_ratio_1.25": {
+   "level": "target",
+   "changes_target": true,
+   "changes_joint": true,
+   "changes_truth_quality": "sequential branch over-dispersed (sd ratio 1.118); expected CRPS excess 0.0018"
+  },
+  "collapse_intermediate": {
+   "level": "target",
+   "changes_target": true,
+   "changes_joint": true,
+   "changes_truth_quality": "one-sided collapse: sequential branch under-dispersed (sd ratio 0.735), Cov(y,z|x) 0.54 -> 0; expected CRPS excess 0.0113. It is a genuine compatibility alternative because only one branch collapses."
+  },
+  "corr_scale_-1|joint": {
+   "level": "joint",
+   "changes_target": false,
+   "changes_joint": true,
+   "changes_truth_quality": "target law is exactly the truth; joint Cov(y,z|x) flips 0.54 -> -0.54; target CRPS excess 0"
+  }
+ },
+ "families": {
+  "null_validity": [
+   "exact_sequential|target|nonmarkov",
+   "exact_sequential|joint|nonmarkov",
+   "corr_scale_-1|target|nonmarkov",
+   "chain_drop_x|target|markov"
+  ],
+  "power": [
+   "mean_shift_0.1|target|nonmarkov",
+   "var_ratio_1.25|target|nonmarkov",
+   "collapse_intermediate|target|nonmarkov",
+   "corr_scale_-1|joint|nonmarkov"
+  ],
+  "quality_control": [
+   "collapse_both|target|nonmarkov",
+   "collapse_both|joint|nonmarkov"
+  ]
+ },
+ "cells": [
+  {
+   "cond": "exact_sequential",
+   "kind": "exact_sequential",
+   "joint": "nonmarkov",
+   "level": "target",
+   "role": "null",
+   "replicates": 400,
+   "primary": true,
+   "tolerance": true
+  },
+  {
+   "cond": "exact_sequential",
+   "kind": "exact_sequential",
+   "joint": "nonmarkov",
+   "level": "joint",
+   "role": "null",
+   "replicates": 100
+  },
+  {
+   "cond": "corr_scale_-1",
+   "kind": "stage2_corr_scale",
+   "param": -1.0,
+   "joint": "nonmarkov",
+   "level": "target",
+   "role": "null",
+   "replicates": 100,
+   "note": "target marginal preserved exactly: a null for the target test"
+  },
+  {
+   "cond": "chain_drop_x",
+   "kind": "chain_drop_x",
+   "joint": "markov",
+   "level": "target",
+   "role": "null",
+   "replicates": 100
+  },
+  {
+   "cond": "mean_shift_0.1",
+   "kind": "stage2_mean_shift",
+   "param": 0.1,
+   "joint": "nonmarkov",
+   "level": "target",
+   "role": "alternative",
+   "replicates": 50
+  },
+  {
+   "cond": "var_ratio_1.25",
+   "kind": "stage2_target_var_ratio",
+   "param": 1.25,
+   "joint": "nonmarkov",
+   "level": "target",
+   "role": "alternative",
+   "replicates": 50
+  },
+  {
+   "cond": "collapse_intermediate",
+   "kind": "collapse_intermediate",
+   "joint": "nonmarkov",
+   "level": "target",
+   "role": "alternative",
+   "replicates": 50
+  },
+  {
+   "cond": "corr_scale_-1",
+   "kind": "stage2_corr_scale",
+   "param": -1.0,
+   "joint": "nonmarkov",
+   "level": "joint",
+   "role": "alternative",
+   "replicates": 50,
+   "note": "same perturbation as the target-level null cell; alternative only at the joint level"
+  }
+ ],
+ "quality_controls": [
+  {
+   "cond": "collapse_both",
+   "kind": "collapse_both",
+   "joint": "nonmarkov",
+   "level": "target",
+   "role": "quality_control",
+   "replicates": 10
+  },
+  {
+   "cond": "collapse_both",
+   "kind": "collapse_both",
+   "joint": "nonmarkov",
+   "level": "joint",
+   "role": "quality_control",
+   "replicates": 10
+  }
+ ],
+ "quality_metrics": "for every dataset: per-example fair CRPS of each branch against the held-out z_obs minus the closed-form CRPS of the true conditional N(E[z|x], tau^2) at z_obs (excess CRPS vs truth, mean over examples with normal 95% CI); oracle sd ratio sd(z samples)/tau",
+ "gate": {
+  "nominal_alpha_per_test": 0.05,
+  "G1_primary_tolerance": "primary null cell: one-sided 95% Clopper-Pearson upper bound of the rejection rate <= 0.10 (passes iff k <= 29 of 400). Engineering tolerance only; it does not establish size 0.05.",
+  "G2_null_family_no_excess": "no null-validity cell has its one-sided Clopper-Pearson lower bound at level 1 - 0.05/4 above 0.05 (Bonferroni over the 4 null cells)",
+  "G3_power_family": "every power cell POWERED: one-sided 95% Clopper-Pearson lower bound > 0.05 (k >= 6 of 50); an always-accept rule cannot pass",
+  "gate_pass": "G1 and G2 and G3",
+  "quality_controls": "reported separately and not part of the gate. Expected: the compatibility test does not reject collapse_both (both branches are the same point mass), while the excess-CRPS-vs-truth CI lower bound is > 0 and the sd ratio is 0 in every replicate.",
+  "negative_controls": "always-accept and always-reject rules evaluated with G1-G3 must fail",
+  "operating_characteristics": "results/calib_contract_audit/p5_e8_calib_v3.md (computed before the run)"
+ },
+ "multiplicity": {
+  "per_test": "each replicate of a cell is one test at alpha = 0.05; no p-value adjustment inside the calibration (it estimates the size of a single test)",
+  "gate": "Bonferroni over the 4-cell null family for the EXCESS flags; the power family is a conjunction; quality controls are outside the gate",
+  "p_resolution": "B = 199 gives p on a grid of 0.005 with exact size 0.050 at alpha = 0.05; any later Bonferroni family with more than 10 tests cannot reject at all with B = 199 and needs B >= ceil(m/alpha) - 1, preferably far more"
+ },
+ "stop_rule": "run once. If the gate fails, report FAIL; do not change estimator, statistic, seeds, B, N, M, R or thresholds and do not re-run. Diagnose only with the declared checks (fixture enumeration, per-cell summaries).",
+ "budget": {
+  "estimated_cpu_seconds": 2340,
+  "max_wall_seconds": 3000,
+  "processes": 2,
+  "note": "calibration run authorised by the user instruction of 2026-09-26; cells not finished within max_wall_seconds are reported NOT_RUN, never PASS",
+  "estimate_source": "timing smoke with a different seed (999), one replicate per cell, not reported: about 1.6 s per target task and 7 s per joint task"
+ }
+}

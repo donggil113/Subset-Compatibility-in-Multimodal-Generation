@@ -146,3 +146,55 @@ class TestStatsAndSeeds(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestFastBackendMatchesReference(unittest.TestCase):
+    """Small exact fixtures: the array-at-a-time backend must reproduce the loop
+    backend for every allocation and give identical p-values."""
+
+    def _pair(self, a, c, dirs=None):
+        return pm.PooledExample(a, c, dirs), pm.FastPooledExample(a, c, dirs)
+
+    def test_every_allocation_target_and_joint(self):
+        rng = random.Random(11)
+        dirs = mt.slice_directions(8)
+        cases = [([rng.gauss(0, 1) for _ in range(4)], [rng.gauss(0.5, 2) for _ in range(4)], None),
+                 ([rng.gauss(0, 1) for _ in range(3)], [rng.gauss(0, 1) for _ in range(5)], None),
+                 ([[rng.gauss(0, 1), rng.gauss(0, 1)] for _ in range(3)],
+                  [[rng.gauss(0, 1), rng.gauss(1, 1)] for _ in range(4)], dirs),
+                 ([2.0] * 4, [2.0] * 4, None)]
+        for a, c, d in cases:
+            ref, fast = self._pair(a, c, d)
+            for m in ref.all_masks():
+                for ub in (False, True):
+                    r, f = ref.stat(m, ub), fast.stat(m, ub)
+                    self.assertAlmostEqual(r, f, delta=1e-10 * (1 + abs(r)))
+
+    def test_exact_and_mc_pvalues_identical(self):
+        rng = random.Random(12)
+        for shift in (0.0, 1.0):
+            a_list = [[rng.gauss(0, 1) for _ in range(3)] for _ in range(3)]
+            c_list = [[rng.gauss(shift, 1) for _ in range(3)] for _ in range(3)]
+            ref = [pm.PooledExample(a, c) for a, c in zip(a_list, c_list)]
+            fast = [pm.FastPooledExample(a, c) for a, c in zip(a_list, c_list)]
+            vr, tr = pm.exact_null_values(ref)
+            vf, tf = pm.exact_null_values(fast)
+            self.assertEqual(pm.exact_pvalue(vr, tr), pm.exact_pvalue(vf, tf))
+            p1 = pm.mc_permutation_test(ref, 499, random.Random(99))["p"]
+            p2 = pm.mc_permutation_test(fast, 499, random.Random(99))["p"]
+            self.assertEqual(p1, p2)
+
+    def test_vectors_relabelled_as_units(self):
+        # The statistic of an allocation equals the sliced ED of the explicitly
+        # rebuilt vector groups: (y, z) pairs are never split.
+        rng = random.Random(13)
+        dirs = mt.slice_directions(8)
+        a = [[rng.gauss(0, 1), rng.gauss(0, 1)] for _ in range(4)]
+        c = [[rng.gauss(0, 1), rng.gauss(0, 1)] for _ in range(4)]
+        fast = pm.FastPooledExample(a, c, dirs)
+        pooled = a + c
+        for _ in range(10):
+            m = fast.random_mask(rng)
+            ga = [pooled[k] for k in range(8) if m[k]]
+            gc = [pooled[k] for k in range(8) if not m[k]]
+            self.assertAlmostEqual(fast.stat(m), mt.sliced_energy_distance_2d(ga, gc, dirs), places=10)

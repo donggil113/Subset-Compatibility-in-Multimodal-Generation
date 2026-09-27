@@ -165,3 +165,65 @@ def group_superuniformity(values: Sequence[float], alphas: Sequence[float]) -> d
         out[str(a)] = {"count": cnt, "bound": a * n, "ok": cnt <= a * n + 1e-9}
     out["all_ok"] = all(out[str(a)]["ok"] for a in alphas)
     return out
+
+
+# ---------------------------------------------------------------------------
+# Array-at-a-time backend (stdlib only; numpy is not installed)
+# ---------------------------------------------------------------------------
+#
+# Same statistic, same permutation scheme and the same RNG consumption as
+# PooledExample: only the arithmetic is reorganised so that the per-element
+# work runs inside C-level builtins (operator.itemgetter, itertools.accumulate,
+# map, sum). For a sorted pooled sequence v with labels l_k (1 = a, 0 = c) and
+# inclusive running count I_k of a-labels,
+#   S_aa = 2 sum v_k l_k I_k - (n_a + 1) sum v_k l_k
+#   S_ac = 2 (sum v_k I_k - VL) - n_a sum v + 2 sum k v_k l_k - 4 (VLI - VL) + (n_a - n_c) VL
+#   S_cc = S_pool - S_aa - S_ac
+# with VL = sum v_k l_k and VLI = sum v_k l_k I_k. These identities are checked
+# against the loop implementation by exact enumeration in the tests.
+
+import operator as _op
+from itertools import accumulate as _acc
+
+
+class FastPooledExample(PooledExample):
+    def __init__(self, a, c, directions=None):
+        super().__init__(a, c, directions)
+        self._getters, self._vals, self._kv, self._sumv = [], [], [], []
+        for order in self.orders:
+            idx = [k for _, k in order]
+            vals = [v for v, _ in order]
+            self._getters.append(_op.itemgetter(*idx))
+            self._vals.append(vals)
+            self._kv.append([r * v for r, v in enumerate(vals)])
+            self._sumv.append(sum(vals))
+
+    def stat(self, in_a, unbiased: bool = False) -> float:
+        na, nc = self.n_a, self.n_c
+        mask = in_a  # bools or 0/1 ints; both act as 0/1 in the arithmetic below
+        tot = 0.0
+        mul = _op.mul
+        for get, vals, kv, sumv, s_pool in zip(self._getters, self._vals, self._kv, self._sumv, self.s_pool):
+            lab = get(mask)
+            inc = list(_acc(lab))
+            vl = sum(map(mul, vals, lab))
+            vi = sum(map(mul, vals, inc))
+            vli = sum(map(mul, map(mul, vals, lab), inc))
+            kvl = sum(map(mul, kv, lab))
+            s_aa = 2.0 * vli - (na + 1) * vl
+            s_ac = 2.0 * (vi - vl) - na * sumv + 2.0 * kvl - 4.0 * (vli - vl) + (na - nc) * vl
+            s_cc = s_pool - s_aa - s_ac
+            if unbiased:
+                tot += 2.0 * s_ac / (na * nc) - 2.0 * s_aa / (na * (na - 1)) - 2.0 * s_cc / (nc * (nc - 1))
+            else:
+                tot += 2.0 * s_ac / (na * nc) - 2.0 * s_aa / (na * na) - 2.0 * s_cc / (nc * nc)
+        return tot / len(self.orders)
+
+    def random_mask(self, rng):
+        mask = [0] * self.n
+        for k in rng.sample(range(self.n), self.n_a):
+            mask[k] = 1
+        return mask
+
+    def observed_mask(self):
+        return [1] * self.n_a + [0] * self.n_c
