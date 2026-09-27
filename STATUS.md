@@ -1,5 +1,138 @@
 # STATUS — P5: Do Any-to-Any Generators Define a Coherent Joint Distribution?
 
+Last update: 2026-09-27 (round 3: calibration contract audit and single calibration run).
+Rounds 1–2 are kept unchanged below.
+
+## Summary (round 3)
+
+| Item | Status |
+|---|---|
+| v1 gate EH1 | **FAIL, kept** |
+| Model-stage STOP | **Record kept.** Its lifting condition ("P5-E8-CALIB passes") is now met for the Gaussian probe at N = 200, M = 64, B = 199 only. The model stage has not started (NOT_RUN): it needs unapproved resources. |
+| Calibration contract audit | DONE (`results/calib_contract_audit/`) |
+| Calibration v2 | **NEVER RUN, superseded before any result.** A valid test would fail its gate with probability 0.879. The E8 seed key also omitted the test level, and there was no quality-control family. |
+| Calibration v3 (single run) | **Gate PASS**, 1192.8 s wall on 2 processes |
+| Learned generators (P5-REAL-01/02) | **NOT_TESTED** |
+| Manuscript | **v2** in `paper/main.tex`. COMPILE_NOT_RUN; SUBMISSION_READY = false; the body is likely over 8 pages (unverified). |
+
+Categories:
+
+- **Engineering:** v3 calibration PASS; v1 EH1 FAIL (kept).
+- **Toy results:** Gaussian probe only.
+- **Real-model results:** none.
+- **Novelty:** candidate only (RELATED_WORK.md §G).
+
+## Round 3: what was done
+
+1. **Contract of the four alternatives** (closed form; `tab_contract.tex`):
+
+   | Alternative | Changes the target? | Changes the projected joint? | Truth / quality |
+   |---|---|---|---|
+   | 0.1τ mean shift | yes | yes | sequential biased; E ΔCRPS 0.0028 |
+   | variance ratio 1.25 | yes | yes | sd ratio 1.118; E ΔCRPS 0.0018 |
+   | one-sided (intermediate) collapse | yes | yes | sd ratio 0.735; Cov 0.54 → 0; E ΔCRPS 0.0113 |
+   | correlation flip | no | yes | target exactly the truth |
+
+   The one-sided collapse is a genuine compatibility alternative.
+
+2. **Both-branch collapse** is a compatibility null and a quality failure
+   (E ΔCRPS 0.233 for both branches). It was not in the v2 power gate. v3
+   adds it as a separate quality-control family.
+
+3. **Correlation flip** is a null cell for the target test and an
+   alternative cell for the joint test.
+
+4. **Sampling contract, checked in code and tests:**
+   - the direct branch draws i.i.d. samples;
+   - each sequential sample gets a fresh intermediate (min distinct = M,
+     recorded per task; intentionally 1 only for the deterministic collapse
+     cells);
+   - branches use separate streams, so there are no common random numbers;
+   - seed keys include the level.
+   - **Finding:** in E8-EXACT (round 2) the target and joint cells shared
+     rows and samples. No verdict changes.
+
+5. **Permutation units:** joint vectors are relabelled as units, never
+   across examples. A test rebuilds the vector groups to confirm this.
+
+6. **Finite projections:** the joint test is exact under full joint
+   equality but powered only against differences in the 8 chosen
+   projections. It does not certify joint equality.
+
+7. **Resolution vs multiplicity.** With B = 199, p lies on a 0.005 grid and
+   the size at α = 0.05 is exactly 0.05. The multiplicity families are:
+   - per replicate: 1 test;
+   - gate: Bonferroni over the 4-cell null family plus a conjunction of the
+     power cells;
+   - future: Bonferroni families with m > 10 cannot reject with B = 199.
+
+8. **Vectorised backend.** numpy is not installed and was not installed. An
+   array-at-a-time stdlib backend was built and verified identical to the
+   loop backend on all allocations of the exact fixtures, including joint
+   and tied data, with identical p-values. It was about 0.6× the speed of
+   the loop, because `rng.sample` dominates, so it is unused. The run used
+   2 worker processes over independent tasks.
+
+9. **Calibration v3, one run.**
+   - **Null validity:**
+     - primary 16/400 (one-sided 95% CP [0.025, 0.060]);
+     - joint null 5/100, correlation target null 5/100, Markov chain null
+       4/100;
+     - no excess.
+   - **Power:**
+     - shift 45/50, variance 26/50, one-sided collapse 50/50, joint
+       correlation flip 50/50;
+     - all POWERED.
+   - **Quality control:**
+     - collapse_both rejected 0/10 and 0/10;
+     - quality flagged in 10/10 replicates at both levels.
+   - **Negative controls:** both fail.
+   - **Descriptive:** the proper score is much less sensitive than the
+     compatibility test at N = 200 (CI > 0 in 12% / 14% of replicates vs
+     90% / 52% rejections).
+
+10. **Stop rule honoured:** the run was not repeated, and no seed,
+    threshold or metric was changed after the run.
+
+11. **Manuscript v2:**
+    - separates non-detection, distributional correctness and
+      coherent-joint existence (Table `tab:claims`);
+    - defines the projected joint gap and its identification limits;
+    - reports the calibration contract audit and the v3 result by family;
+    - keeps learned-generator claims as TODO (P5-REAL-01/02).
+
+## Compute (round 3)
+
+- Calibration: 1192.8 s wall / 2381 CPU-s, as requested in round 2.
+- Timing smoke: 16.6 s. Audits, tests and benchmark: about 10 s.
+- Ledger: `results/compute_ledger.csv`.
+
+## Next decision experiment (one)
+
+**P5-REAL-01 pilot: a learned conditional generator on a synthetic,
+non-Gaussian probe.**
+
+- **Why:** this is the first test of the central question with learned
+  conditionals.
+- **Models:** small flow-matching models with CPU-feasible size.
+- **Two arms:**
+  - separately trained conditionals;
+  - a shared-joint multi-time network (UniDiffuser / MLD-style).
+- **Data:** a 3-variable mixture with non-Gaussian conditionals.
+- **Measurement:** Δ_T and Δ_J^U with Test P at w = 0, a converged solver
+  and large M. The solver/prior and CFG components are measured by
+  switching them off. Quality is reported together with consistency.
+- **Decision rule:** "no new phenomenon" if the gap at w = 0 is not
+  detected, or is explained by the solver/prior component.
+- **Unapproved resources required:**
+  - installing PyTorch (CPU) or at least numpy;
+  - about 1–2 CPU-hours.
+  - Real multimodal data, GPU and a dataset licence decision come later.
+
+---
+
+# History: rounds 1–2 (unchanged)
+
 Last update: 2026-09-26 (round 2: statistical audit, revised test, manuscript v1).
 Round 1 (FIRST RUN) is kept unchanged below, under "History".
 

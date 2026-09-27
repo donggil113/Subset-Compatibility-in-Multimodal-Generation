@@ -15,3 +15,4 @@ date,round,item,kind,seconds,measured,notes
 2026-09-27,3,backend benchmark (loop vs array-at-a-time),timing_smoke,1,approx,20 examples x 50 permutations; target and joint
 2026-09-27,3,scripts/audit_calib_contract.py (3 invocations),analysis,3,approx,closed form + exact binomial OC; no sampling
 2026-09-27,3,calibration timing smoke (seed 999; 1 replicate per cell),timing_smoke,16.6,yes,wall; 31 CPU-s over 2 processes; not reported
+2026-09-27,3,p5_e8_calib_v3,synthetic_run,1192.8,yes,wall seconds; 2381.2 CPU-s over 2 processes; 920 tasks; run once

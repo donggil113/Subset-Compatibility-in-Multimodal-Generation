@@ -439,3 +439,40 @@ exactly 0.05.
 - **Parallelism:** the only speed-up is 2 worker processes over independent
   tasks. Results do not depend on scheduling, because seeds are fixed per
   task.
+
+## 9. P5-E8-CALIB v3 outcome (single run, 2026-09-27; post-run record)
+
+- **Run.** Commit 9ba6ad9, clean code tree, 2 processes, 1192.8 s wall /
+  2381 CPU-s, 920/920 tasks, no timeout. The run is not repeated.
+- **Null validity.**
+  - Primary: 16/400 (one-sided 95% CP [0.025, 0.060]), within tolerance.
+  - Joint exact null: 5/100.
+  - Target correlation null: 5/100.
+  - Markov chain null: 4/100.
+  - No Bonferroni excess flag.
+- **Power.** All four POWERED:
+  - 0.1τ shift: 45/50;
+  - variance ratio 1.25: 26/50;
+  - one-sided collapse: 50/50;
+  - joint correlation flip: 50/50.
+- **Quality control.** collapse_both was rejected 0/10 at the target level
+  and 0/10 at the joint level. The quality flag (CRPS excess CI > 0 and sd
+  ratio 0) holds in 10/10 replicates at each level.
+- **Negative controls.** Always-accept fails G3; always-reject fails G1 and
+  G2.
+- **Gate:** PASS.
+- **Interpretation (engineering, Gaussian probe, this design only).**
+  - The implementation shows no excess rejection at the tested nulls and has
+    power at the tested alternatives.
+  - Size 0.05 is not proven by this.
+  - Distributional correctness and coherent-joint existence are not
+    addressed.
+  - Validity for learned generators rests on A1–A3 holding for their
+    sampling pipelines, which is unchecked.
+- **Descriptive.** The per-replicate CRPS excess CI excludes 0 in only 12%
+  (shift) and 14% (variance) of replicates, versus 90% / 52% rejections by
+  the compatibility test. At N = 200 the proper score is far less sensitive
+  to these small perturbations.
+- **Records.** The v1 EH1 FAIL and the model-stage STOP stay on record. The
+  STOP's lifting condition, "P5-E8-CALIB passes", is now met for the
+  Gaussian probe. The model stage has not started.

@@ -353,6 +353,7 @@ def write_calibration_assets():
 
     n = ""
     n += macro("numOCvTwo", f"{aud2['gate_oc']['P_all_null_cells_pass_if_exactly_valid']:.3f}")
+    n += macro("numOCvTwoFail", f"{1 - aud2['gate_oc']['P_all_null_cells_pass_if_exactly_valid']:.2f}")
     n += macro("numOCvThree", f"{aud['gate_oc']['P_all_null_cells_pass_if_exactly_valid']:.3f}")
     n += macro("numOCvThreeGate", f"{aud['gate_oc']['P_gate_pass_if_valid_and_each_power_0.3']:.3f}")
     c2 = {c["cell"]: c for c in aud2["gate_oc"]["cells"]}

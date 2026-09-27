@@ -88,8 +88,10 @@ This marginalization-consistency condition is not new; it has been measured with
 Diffusion and flow generators expose samples only, and a sampled direct-versus-sequential discrepancy then mixes Monte Carlo error, solver discretization, initialization mismatch, classifier-free guidance and evaluation-design errors with any genuine incompatibility.
 We describe a conditional sampling design that uses the conditioning example as the independent unit and relabels samples only within an example, and a Gaussian probe in which the output law of every sampler, including a guided probability-flow ODE, is available in closed form.
 On the probe, deliberately broken conditionals are detected; a correlation break that preserves the target marginal is invisible at the target level, as it must be; collapse passes the consistency check while its CRPS is \numCRPScollapsePct\% worse; and guidance with exact scores alone creates population gaps up to \numGapCFGFour{} (standardized) against a Monte Carlo floor of \numFloorM.
-Our pre-registered null-calibration gate failed. We report the failure, an audit that attributes it to the gate design rather than to the estimator, and exact small-sample checks of a revised permutation test.
-Calibration at realistic size and all measurements on learned generators remain to be done.
+Our first pre-registered null-calibration gate failed. An audit attributes this to the gate design rather than to the estimator, and we keep the failure on record.
+A revised within-example permutation test passes exact small-sample checks.
+After a contract audit showed that the next calibration gate would itself have failed a valid test with probability $\numOCvTwoFail$, a corrected calibration passed once on the probe: primary null \numCalibPrimK{} rejections, and all four fixed alternatives powered.
+Passing shows non-detection at the tested nulls and power at the tested alternatives. It does not show distributional correctness or the existence of a coherent joint, and no learned generator has been measured.
 \end{abstract}
 
 % ---------------------------------------------------------------------
@@ -127,7 +129,7 @@ Our contributions are limited to the following, and each is either a design, a c
   \item A \textbf{conditional sampling design} (\cref{sec:design}) that fixes the estimand, uses the conditioning example as the independent unit, and states which dependence structures invalidate label exchange: shared intermediates, common random numbers across branches, and pooling across examples.
   \item A \textbf{Gaussian probe with closed-form laws} (\cref{sec:decomp}) for exact samplers and for a probability-flow ODE with exact, optionally guided scores. It predicts the expectation of the estimator for every condition and attributes sampled gaps to Monte Carlo error, discretization, prior mismatch and guidance.
   \item \textbf{Toy evidence} (\cref{sec:exp}). Controls behave as predicted. Guidance dominates the numerical gap. Moderate solver error is below the detection resolution even though the sampler is biased relative to the exact law. Collapse passes the consistency check. Observed intermediates leak information.
-  \item A \textbf{reported failure and audit} (\cref{sec:calib}). The pre-registered null-calibration gate of our first checker failed. We separate the gate's design error from the validity of the estimator, keep the failure on record, and verify a revised within-example permutation test by exact enumeration on small designs. Calibration at realistic size is not yet run.
+  \item A \textbf{reported failure and audit} (\cref{sec:calib}). The pre-registered null-calibration gate of our first checker failed. We separate the gate's design error from the validity of the estimator and keep the failure on record. We then verify a revised within-example permutation test by exact enumeration on small designs. Before running a realistic calibration, we audited its contract and found a second, never-run gate that would have failed a valid test with probability $\numOCvTwoFail$. The corrected calibration passed its pre-registered gate once, on the Gaussian probe only.
 \end{itemize}
 We do not claim as new: the identity~\eqref{eq:identity}; the consistency and compatibility definitions; the fact that marginal-level consistency does not imply joint-level consistency, which is Proposition~2 of \citet{klotergens2026tabular}; guidance distortion; permutation-test validity~\citep{ernst2004permutation,lehmann2005testing}; or energy statistics~\citep{szekely2013energy,baringhaus2004twosample}.
 
@@ -351,7 +353,7 @@ The probe has three scalar variables $(x,y,z)$ with means $(0.5,-1,2)$ and stand
 Splits are independent draws: train ($n=2000$) is used only for standardization, dev ($n=40$) only for a pipeline smoke run, and test ($n=200$) for all reported results. Diffusion experiments use the first $100$ test rows.
 We use $M=256$ samples per branch and example.
 The v1 hypotheses, statistic and stop rule were committed before the test split was run (\cref{app:prereg}). The v1 test run took \numRuntimeVone\,s in single-process pure Python.
-Everything in \cref{sec:exp-estimator,sec:exp-numerics} marked \emph{closed form} was computed after the v1 results were seen and is exploratory. All $p$-values in \cref{tab:controls,tab:numerics} are from Test~S with 999 flips, so $0.001$ is the smallest attainable value.
+Everything in \cref{sec:exp-estimator,sec:exp-numerics} marked \emph{closed form} was computed after the v1 results were seen and is exploratory. All v1 $p$-values (\cref{tab:controls,tab:numerics}) are from Test~S with 999 flips, so $0.001$ is the smallest attainable value.
 
 \begin{table*}[t]
 \centering
@@ -384,14 +386,6 @@ The spread term of \cref{lem:vbias} is visible where it should be. For variance 
 \subsection{Where sampled gaps come from}
 \label{sec:exp-numerics}
 
-\begin{table}[t]
-\centering
-\caption{Numerical components with exact scores ($N=100$, $M=256$, Test~S). $D_{\mathrm{pop}}$ is the closed-form population gap between the direct and sequential sampler laws, and $\E[d]$ is the closed-form expectation of the v1 contrast. All values $\times10^3$, standardized.}
-\label{tab:numerics}
-\scriptsize
-\setlength{\tabcolsep}{3pt}
-\input{generated/tab_numerics}
-\end{table}
 
 \paragraph{Monte Carlo.}
 The floor $\overline{\ED_V(A,B)}$ follows $2\,\E|X-X'|/M$ from $M=32$ to $512$ (\cref{fig:numerics}a).
@@ -399,7 +393,7 @@ A $0.1\tau$ mean shift is detected at every $M$ in that range with $N=200$. At $
 
 \paragraph{Discretization and prior mismatch.}
 With exact scores and $w=0$, the Euler direct-vs-sequential gap is $\numGapEulerFour$ at $4$ steps and is detected ($p=0.014$).
-From about $6$ steps on it is below the one-sided detection resolution of this design, $\numResolution$ (\cref{fig:numerics}b). It plateaus at $\numGapEulerSixtyFour$ at $64$ steps, which equals the closed-form continuous-time limit, $\numGapPrior$. The plateau is therefore prior mismatch at $\sigma_{\max}=80$, not discretization.
+From about $6$ steps on it is below the one-sided detection resolution of this design, $\numResolution$ (\cref{fig:numerics}b; \cref{tab:numerics} in \cref{app:numerics}). It plateaus at $\numGapEulerSixtyFour$ at $64$ steps, which equals the closed-form continuous-time limit, $\numGapPrior$. The plateau is therefore prior mismatch at $\sigma_{\max}=80$, not discretization.
 Over the same range the direct sampler itself stays biased relative to the exact law. At $16$ steps its gap to the exact law is $\numBiasEulerSixteen$, which is detected, and its sd ratio is $0.83$.
 Solver error is thus largely common to the two branches and cancels in the comparison: \emph{passing the consistency check does not certify a correct sampler}, and ``not detected'' is not ``zero''.
 Heun with $4$ steps is unstable on this schedule (sd ratio $4.35$).
@@ -431,24 +425,75 @@ None of this shows that the checker is calibrated. It shows that the evidence do
 \paragraph{The revised test, checked exactly.}
 We replaced Test~S by Test~P, introduced v2 seeds that hash every design factor, and pre-registered a small exact verification (P5-E8-EXACT) and a separate realistic calibration (P5-E8-CALIB) before running either.
 
+On the smallest designs the checks behave as they must (\cref{app:e8}).
+Full enumeration confirms conditional size $\le\alpha$ for all \numEeightAdatasets{} datasets, including ties. Monte Carlo and exact p-values agree and are never $0$. The exact null rejects \numEeightNullK{} times.
+A $2\tau$ shift is powered, but the variance, correlation and collapse alternatives are not powered at $N=M=3$. The always-accept and always-reject rules fail.
+These are implementation checks of a textbook principle at $|G|\le 8000$, not a calibration of the checker at the size used in \cref{sec:exp-controls}.
+
+\paragraph{Auditing the calibration contract before running it.}
+The first realistic calibration design (P5-E8-CALIB v2) was never run.
+A closed-form audit of its null and alternative cells, and of its gate, found three problems.
+\begin{enumerate}
+\item Its tolerance rule, a one-sided Clopper--Pearson upper bound $\le0.10$, would fail a test of exact size $0.05$ with probability $\numOCtolFailHundred$ in a cell with $R=100$ and $\numOCtolFailTwoHundred$ with $R=200$. An exactly valid test would have passed all v2 null cells with probability only $\numOCvTwo$.
+\item The seed key of the small exact verification omitted the test level, so its target- and joint-level cells shared data.
+\item There was no quality-control family, so the check could not show that a compatibility null which is a quality failure is handled correctly.
+\end{enumerate}
+
+\Cref{tab:contract} states what each cell changes, in closed form.
+Three alternatives change the target law, the projected joint law and the distance to the truth. The correlation flip changes only the joint, so it is a null for the target test and an alternative for the joint test. Both-branch collapse changes neither branch law relative to the other, so it is a compatibility null, yet it is far from the truth.
+
+The corrected design (v3) was fixed before any calibration result. It uses $N=200$, $M=64$ and $B=199$, with seeds that include the level, and three separate families.
+\begin{itemize}
+\item \textbf{Null validity:} four cells.
+  \begin{itemize}
+  \item The primary cell, exact sequential at the target level, has $R=400$ and a tolerance rule. A valid test fails it with probability $\numOCprimFail$; a test of size $0.10$ is caught with probability $\numOCprimDetectTen$.
+  \item The other three cells have $R=100$ and are checked only by excess flags at the Bonferroni level over the four cells. They catch a size of $0.10$ with probability only $\numOCsecDetectTen$.
+  \end{itemize}
+\item \textbf{Power:} four fixed alternatives, $R=50$ each, all of which must be powered.
+\item \textbf{Quality control:} both-branch collapse, reported outside the gate.
+\end{itemize}
+In advance, the gate passes a valid test whose alternatives each have power $0.3$ with probability $\numOCvThreeGate$.
+
 \begin{table}[t]
 \centering
-\caption{P5-E8-EXACT, Test~P with exact enumeration of the product permutation group ($N=3$ examples, $M=3$, $|G|=20^3$), nominal $\alpha=0.05$, one-sided 95\% Clopper--Pearson bounds on the rejection rate over independent datasets. ``Excess flagged'' means the lower bound exceeds $\alpha$; ``powered'' means the lower bound exceeds $\alpha$ under an alternative. Two negative-control rules are evaluated with the same criteria.}
-\label{tab:e8}
+\caption{Contract of the calibration cells (closed form, standardized scale). ``Changed'' compares the sequential with the direct branch; ``truth'' compares the sequential branch with the true conditional. $\E\,\Delta$CRPS is the expected CRPS excess over the true conditional.}
+\label{tab:contract}
 \scriptsize
-\setlength{\tabcolsep}{2.5pt}
-\input{generated/tab_e8}
+\setlength{\tabcolsep}{2pt}
+\input{generated/tab_contract}
 \end{table}
 
-\begin{enumerate}
-\item \textbf{Conditional size.} For all \numEeightAdatasets{} small datasets, including tied data from collapsed samplers, full enumeration confirms that the fraction of allocations with $p\le\alpha$ is at most $\alpha$ for $\alpha\in\{0.01,0.05,0.1,0.2,0.5\}$.
-\item \textbf{Monte Carlo agreement.} For \numEeightBdatasets{} datasets, the Monte Carlo p-value with $B=1999$ agrees with the exact one within tolerance and is never below $1/(B+1)$; the smallest observed is $\numEeightBminP$.
-\item \textbf{Size and power (\cref{tab:e8}).} The exact null rejects \numEeightNullK{} (one-sided bounds [\numEeightNullLo, \numEeightNullHi]), and the target-level correlation null and the joint-level null show no excess. A $2\tau$ mean shift is powered (\numEeightShiftK). Variance, correlation and collapse alternatives are \emph{not} powered at this tiny size, as recorded without adjustment.
-\item \textbf{Negative controls.} The always-accept rule fails the power criterion, and the always-reject rule is flagged for excess.
-\end{enumerate}
-These are implementation checks of a textbook principle at $|G|\le 8000$, not a calibration of the checker at the size used in \cref{sec:exp-controls}.
-That calibration is P5-E8-CALIB, pre-registered with $N=200$, $M=64$, $B=199$, $200$ null replicates for the primary endpoint, and four fixed alternatives that must all be powered. It is \notrun{}, because it needs about \numCalibCPUmin{} CPU-minutes in pure Python, beyond the approved budget: \todo{P5-E8-CALIB: null rejection rate with one-sided CP upper bound $\le0.10$ and no excess flag, and all four alternatives powered}.
-Until it passes, the model-stage stop from v1 remains in force.
+\paragraph{Calibration result (single run).}
+The v3 calibration ran once, at the pre-registered commit, in \numCalibWall{} minutes of wall time on two processes (\numCalibCPU{} CPU-minutes). \Cref{tab:calib} lists every cell.
+The gate outcome was \textbf{\numCalibGate}: primary tolerance \numCalibGOne, null-family excess check \numCalibGTwo, power family \numCalibGThree.
+\begin{itemize}
+\item \textbf{Null validity.} The primary null rejected \numCalibPrimK{} times (one-sided 95\% bounds [\numCalibPrimLo, \numCalibPrimHi]). The joint-level exact null, the target-level correlation null and the Markov chain null rejected \numCalibNullJ, \numCalibNullCorrT{} and \numCalibNullChain.
+\item \textbf{Power.} All four fixed alternatives were powered: $0.1\tau$ shift \numCalibPowShift, variance ratio $1.25$ \numCalibPowVar, one-sided collapse \numCalibPowCollInt, joint correlation flip \numCalibPowCorrJ.
+\item \textbf{Quality control.} The compatibility test did not reject both-branch collapse in any replicate, as it should not. The quality metrics flagged every replicate: CRPS excess over the truth about $0.235$, sd ratio $0$ (\cref{tab:calibq}).
+\item \textbf{Negative controls.} The always-accept and always-reject rules fail the gate.
+\end{itemize}
+
+This is an engineering result on the Gaussian probe at this design.
+It shows no excess rejection at the tested nulls and adequate power against the tested alternatives.
+It does not prove size $0.05$; that rests on the permutation argument under \cref{ass:design}.
+It does not show that the checker is calibrated for learned generators, whose samples need not satisfy the same assumptions.
+It also leaves the v1 record unchanged: the v1 gate failed, and the v1 checker was never cleared.
+
+\begin{table}[t]
+\centering
+\caption{P5-E8-CALIB v3, single run: Test~P, $N=200$, $M=64$, $B=199$, one-sided 95\% Clopper--Pearson bounds on the rejection rate over independent replicates. The excess flags use the Bonferroni level over the four null cells.}
+\label{tab:calib}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\input{generated/tab_calib}
+\end{table}
+
+\paragraph{Consistency and quality disagree in both directions.}
+Per-replicate CRPS excess over the true conditional is reported in \cref{tab:calibq} (\cref{app:calibq}).
+At this sample size the proper score is much less sensitive than the compatibility test. Its per-replicate CI excludes $0$ in only 12\% of replicates for the $0.1\tau$ shift, against 90\% rejections by the compatibility test, and in 14\% for the variance alternative.
+Conversely, both-branch collapse passes the compatibility test while failing the quality check in every replicate.
+Neither kind of check substitutes for the other.
+
 
 \subsection{Learned generators}
 \label{sec:real}
@@ -466,7 +511,7 @@ All evidence is from a three-variable Gaussian probe with scalar intermediate an
 The closed-form decomposition relies on Gaussian conditionals and exact scores. For learned scores, discretization, prior mismatch and model error interact, and the components must be estimated by switching them off empirically.
 The joint-level test uses eight fixed projection directions. It is consistent for the Gaussian alternatives used here but can miss non-Gaussian differences that lie between the directions.
 The v1 results carry a seed flaw: identical noise was reused across the two joints. They also share reference draws across conditions, so their $p$-values are dependent.
-The revised test has only been verified at $|G|\le8000$. Its power at that size is poor for variance and correlation alternatives, and realistic calibration is not run.
+The revised test is verified exactly at $|G|\le8000$ and calibrated once at $N=200$, $M=64$, $B=199$ on the Gaussian probe. Its behavior at other designs and on non-Gaussian samples is untested.
 Test~P requires fresh intermediates for every sample and independent randomness across branches. Pipelines that reuse one intermediate for several targets need a different design.
 We treat the target marginal as the unconditional model for guidance, following \citet{bao2023unidiffuser}. Other conventions give other gaps.
 Energy distance is one of several possible discrepancies. Factorization consistency (C2) is not measured.
@@ -480,8 +525,10 @@ The manuscript has not been compiled in our environment, so layout, page count a
 \label{sec:conclusion}
 For samplers without densities, testing whether direct and intermediate-then-target generation agree is mostly a problem of accounting for other sources of error.
 On a probe where every law is known, the design separates Monte Carlo error, discretization, prior mismatch and guidance. It shows that guidance can dominate the gap and that moderate solver error cancels between routes even when the sampler is wrong.
-Our first calibration gate failed for reasons of design. The replacement test passes exact checks at small size but is not yet calibrated at realistic size.
-The substantive question, whether learned any-to-any generators are incompatible beyond these effects, remains open.
+Our first calibration gate failed for reasons of design, and the next one would have failed a valid test most of the time. A contract audit caught that before the run, and the corrected calibration passed once on the probe.
+That establishes a calibrated non-detection check on a toy with known laws, and nothing more.
+Whether learned any-to-any generators are incompatible beyond numerical and guidance effects, whether their samples are correct, and whether they define a coherent joint all remain open (\todo{P5-REAL-01: learned-model measurements}).
+
 
 % ---------------------------------------------------------------------
 \section*{Impact Statement}
@@ -567,6 +614,46 @@ An Euler step $x\mapsto x+h\,v(x,\sigma)$ and a Heun step are compositions of af
 \input{generated/tab_znull}
 \end{table}
 
+\section{Numerical Components: Closed Form Versus Observation}
+\label{app:numerics}
+\begin{table}[h]
+\centering
+\caption{Numerical components with exact scores ($N=100$, $M=256$, Test~S). $D_{\mathrm{pop}}$ is the closed-form population gap between the direct and sequential sampler laws, and $\E[d]$ is the closed-form expectation of the v1 contrast. All values $\times10^3$, standardized.}
+\label{tab:numerics}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\input{generated/tab_numerics}
+\end{table}
+
+\section{Small Exact Verification (P5-E8-EXACT)}
+\label{app:e8}
+\begin{table}[h]
+\centering
+\caption{P5-E8-EXACT, Test~P with exact enumeration of the product permutation group ($N=3$ examples, $M=3$, $|G|=20^3$), nominal $\alpha=0.05$, one-sided 95\% Clopper--Pearson bounds on the rejection rate over independent datasets. ``Excess flagged'' means the lower bound exceeds $\alpha$; ``powered'' means the lower bound exceeds $\alpha$ under an alternative. Two negative-control rules are evaluated with the same criteria.}
+\label{tab:e8}
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\input{generated/tab_e8}
+\end{table}
+
+\begin{enumerate}
+\item \textbf{Conditional size.} For all \numEeightAdatasets{} small datasets, including tied data from collapsed samplers, full enumeration confirms that the fraction of allocations with $p\le\alpha$ is at most $\alpha$ for $\alpha\in\{0.01,0.05,0.1,0.2,0.5\}$.
+\item \textbf{Monte Carlo agreement.} For \numEeightBdatasets{} datasets, the Monte Carlo p-value with $B=1999$ agrees with the exact one within tolerance and is never below $1/(B+1)$; the smallest observed is $\numEeightBminP$.
+\item \textbf{Size and power (\cref{tab:e8}).} The exact null rejects \numEeightNullK{} (one-sided bounds [\numEeightNullLo, \numEeightNullHi]), and the target-level correlation null and the joint-level null show no excess. A $2\tau$ mean shift is powered (\numEeightShiftK). Variance, correlation and collapse alternatives are \emph{not} powered at this tiny size, as recorded without adjustment.
+\item \textbf{Negative controls.} The always-accept rule fails the power criterion, and the always-reject rule is flagged for excess.
+\end{enumerate}
+
+\section{Quality Metrics in the Calibration Run}
+\label{app:calibq}
+\begin{table}[h]
+\centering
+\caption{Quality metrics in the calibration run: mean CRPS excess over the true conditional ($\times10^3$) for each branch, oracle sd ratio of the sequential branch, and the share of replicates whose 95\% CI for the sequential CRPS excess lies above $0$.}
+\label{tab:calibq}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\input{generated/tab_calib_quality}
+\end{table}
+
 \section{Pre-Registration Record and Deviations}
 \label{app:prereg}
 \begin{itemize}
@@ -606,7 +693,8 @@ All runs are single-process pure Python on CPU.
 \item v1 test run: \numRuntimeVone\,s.
 \item P5-E8-EXACT: \numRuntimeEeight\,s.
 \item Development, timing and analysis runs are listed in the supplementary compute ledger.
-\item P5-E8-CALIB is estimated at about \numCalibCPUmin{} CPU-minutes and is not run.
+\item P5-E8-CALIB v3: \numCalibWall{} minutes of wall time on two processes (\numCalibCPU{} CPU-minutes); 920 tasks, run once.
+\item A calibration timing smoke with a different seed is listed in the ledger and not reported.
 \end{itemize}
 
 \section{Reproducibility}
