@@ -1,8 +1,57 @@
 # STATUS — P5: Do Any-to-Any Generators Define a Coherent Joint Distribution?
 
-Last update: 2026-09-27 (round 5: flow-matching arms BLOCKED_DEPENDENCIES;
-pre-execution adapter review; wording corrections). Rounds 3–4 are kept below
-with inline markers on corrected statements; rounds 1–2 are unchanged.
+Last update: 2026-10-02 (round 6: neural flow arms run once under a
+user-delivered limited approval; manuscript v4 compiled). Rounds 3–5 are
+kept below; rounds 1–2 are unchanged.
+
+## Summary (round 6)
+
+| Item | Status |
+|---|---|
+| Approval applied | Limited CPU-only torch install + execution block and a limited local TeX install, both delivered by the user in the round-6 directive. Stage status: **NEURAL_PILOT_AUTHORIZED_THIS_RUN**; method validity/novelty **UNVERIFIED**. |
+| Environment | `.venv-p5` (not committed): torch 2.14.1+cpu (wheel sha256 `5e38154c…`), numpy 2.4.6; CPU, 1 thread verified. TeX Live 2026 minimal (235 MB). |
+| Adapter fixtures | **12/12 pass under torch** (2.1 CPU-s); the earlier SKIPs are now executions. |
+| Contract | A2 registered before training (+ addenda after a static review, still before training); base config and A1 unchanged. |
+| P5-SYN-LEARN-01 FM arms | **RUN once, COMPLETE** (220 CPU-s, 227 wall-s; budget 238/1800 CPU-s incl. fixtures and smokes). Labels EVALUABLE (dev and after test). |
+| INDEPENDENT_CONDITIONAL_FM | **Flagged at the primary endpoint**: p = 0.005 (Holm 0.01), Δ̂_T = 11.9 ×10⁻³ [7.2, 16.6]; direct branch close to truth, sequential route not. |
+| SHARED_CONDITIONAL_NET | **Not flagged at the target** (p = 0.425; Δ̂_T = 0.2 ×10⁻³ [−2.8, 3.2]); **flagged at the projected joint** (p = 0.035, secondary); direct branch less accurate (5.5 vs 1.9 ×10⁻³). |
+| Between arms (primary paired effect) | ED_U(shared) − ED_U(independent) = **−11.65 ×10⁻³ [−16.93, −6.38]** (bootstrap [−16.86, −6.30]); same sign at 32 steps. |
+| Solver sensitivity | All four endpoints flagged (paired differences 0.3–1.1 ×10⁻³): NUMERICS_NOT_SEPARATED at that level; numbers reported in full. |
+| Previous verdicts | All kept: EH1 FAIL; calib v2 NEVER RUN; calib v3 PASS (not re-run; **not** a neural PASS); TRUE/FITTED controls not re-run; STOP record kept. |
+| Manuscript | **v4**, `paper/main.tex`; **compiled locally** (`paper/main.pdf`): see `paper/build_log_summary.json` for pages, overfull boxes and the body-end page. Visual rendering NOT verified (no renderer). SUBMISSION_READY = false; TEMPLATE_YEAR 2026, TARGET_YEAR 2027. |
+
+Categories:
+
+- **Engineering:** fixtures executed; runner reviewed and fixed before the run
+  (2 major defects); seed preflight (2406 effective 32-bit seeds distinct).
+- **Toy results:** Gaussian probe (rounds 1–3); mixture controls (round 4);
+  **neural pilot on the mixture probe (round 6, one model seed per arm).**
+- **Real-data results:** none.
+- **Novelty:** candidate only; UNVERIFIED.
+
+Details: RESEARCH_PACKET §13; raw under `results/raw/p5_syn_learn_01_fm_*`.
+
+## Compute (round 6)
+
+- torch install 58 s wall (196.2 MB wheel + small deps; venv 985 MB); TeX
+  install 110 s wall (235 MB); both recorded separately from the research
+  budget.
+- Research budget (1 thread): fixtures 2.1 + smokes 6.9 + 7.1 + preflight 0.1
+  + dry run 1.9 + run 220.2 = **238.3 CPU-s of 1800**; run wall 226.7 s of
+  2400.
+- PDF builds: about 7 s per three-pass build.
+- Ledger: `results/compute_ledger.csv`.
+
+## Next decision (one)
+
+Whether to replicate the neural pilot over model seeds (e.g. 5 seeds per
+arm, same contract, about 20 CPU-min) before any wording stronger than
+"one seed" is used, or to stop here and keep the pilot as a single-seed
+observation. No further run is started in this round.
+
+---
+
+# History: round 5 (kept)
 
 ## Summary (round 5)
 
