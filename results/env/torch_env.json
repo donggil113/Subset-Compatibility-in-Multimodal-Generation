@@ -1,0 +1,52 @@
+{
+ "approval": "limited install approval delivered by the user in the round-6 directive (CPU-only torch from the official PyTorch CPU index; numpy and required deps from official PyPI; isolated venv)",
+ "venv": ".venv-p5 (gitignored; not committed)",
+ "python": "3.11.15",
+ "platform": "Linux-6.18.44-fc-v51-x86_64-with-glibc2.39",
+ "machine": "x86_64",
+ "torch_version": "2.14.1+cpu",
+ "torch_wheel": "torch-2.14.1+cpu-cp311-cp311-manylinux_2_28_x86_64.whl",
+ "torch_wheel_bytes": 196227172,
+ "torch_wheel_sha256": "5e38154c8896d426a5df58bf2276b603e82184dfae4f54d77dbb212f36e34f37",
+ "torch_index_url": "https://download.pytorch.org/whl/cpu",
+ "deps_index_url": "https://pypi.org/simple",
+ "numpy_version": "2.4.6",
+ "pip_freeze": [
+  "filelock==4.0.9",
+  "fsspec==2026.9.0",
+  "Jinja2==3.1.6",
+  "MarkupSafe==3.0.3",
+  "mpmath==1.3.0",
+  "networkx==3.6.1",
+  "numpy==2.4.6",
+  "sympy==1.14.0",
+  "torch",
+  "@",
+  "file:///tmp/claude-0/-home-user-Subset-Compatibility-in-Multimodal-Generation/d4a31627-ad28-5bbc-8840-5d0a9d5be1c9/scratchpad/wheels/torch-2.14.1%2Bcpu-cp311-cp311-manylinux_2_28_x86_64.whl#sha256=5e38154c8896d426a5df58bf2276b603e82184dfae4f54d77dbb212f36e34f37",
+  "typing_extensions==4.16.0"
+ ],
+ "cuda_available": false,
+ "cuda_built": null,
+ "default_tensor_device": "cpu",
+ "tensor_check": [
+  1.0,
+  1.0,
+  1.0
+ ],
+ "num_threads": 1,
+ "num_interop_threads": 1,
+ "install_wall_seconds": 58,
+ "install_started_utc": "2026-10-02T16:15:00Z",
+ "install_finished_utc": "2026-10-02T16:15:58Z",
+ "venv_disk": "985M",
+ "pip_cache_disk_after": "221M",
+ "network_ingress_bytes_torch": 196227172,
+ "network_ingress_note": "torch wheel 196.2 MB from the CPU index; numpy and 8 small deps from PyPI (sizes in the pip log); total well under the 1.5 GiB cap",
+ "not_installed": [
+  "CUDA builds",
+  "torchvision/torchaudio",
+  "model weights",
+  "datasets"
+ ],
+ "cpu_seconds_this_check": 4.038437986
+}

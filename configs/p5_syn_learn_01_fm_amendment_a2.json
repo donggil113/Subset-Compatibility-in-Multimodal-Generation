@@ -1,0 +1,110 @@
+{
+  "amendment_id": "P5-SYN-LEARN-01-FM-A2",
+  "registered": "2026-10-02, round 6: after the torch fixtures ran and before any flow-matching training",
+  "execution_status": "NEURAL_PILOT_AUTHORIZED_THIS_RUN (limited CPU-only install and execution approval delivered by the user in the round-6 directive); validity and novelty of the method remain UNVERIFIED; the model-stage STOP record and the Gaussian calibration PASS are unchanged and the PASS is not a neural-performance PASS",
+  "base_config": {
+    "path": "configs/p5_syn_learn_01.json",
+    "file_sha256": "89a9c877a7c6bca779e18ef48a951935a8691ea4bb614b9d7360c957e6677294",
+    "unchanged": true
+  },
+  "amendment_a1": {
+    "path": "configs/p5_syn_learn_01_fm_amendment_a1.json",
+    "unchanged": true,
+    "superseded_fields": [
+      "labels.MODEL_FIT_OR_NUMERICS_INCONCLUSIVE",
+      "solver.seeds",
+      "dev_use.allowed[1]"
+    ]
+  },
+  "environment": "results/env/torch_env.json (torch 2.14.1+cpu, numpy 2.4.6, Python 3.11.15, CPU, 1 thread; venv .venv-p5 not committed)",
+  "fixtures": "results/env/fm_fixtures_run.json: tests/test_fm_adapter.py executed under torch before this amendment was written",
+  "d2_clarification": "A single Adam over the four independent MLPs is not an error in general: with gradients reset to None (the zero_grad default since torch 2.0) Adam skips untouched networks. The A1 contract depended on that None-vs-zero distinction; per-network optimizers make the isolation explicit. D2 is a clarification, not a bug fix. D1 (shared role mask) stands as a defect fix.",
+  "dev_loss_rule": {
+    "quantity": "held-out dev flow-matching loss per pattern, with FIXED (x0, t) noise from the dev-loss seed, evaluated at 18000 and 20000 updates (90% and 100%)",
+    "statistic": "rel_decrease = (L_18000 - L_20000) / L_18000 per pattern",
+    "flag": "UNDERTRAINING_FLAG for the arm if rel_decrease > 0.02 for any pattern",
+    "role": "diagnostic of optimization progress and stability only; it never makes an arm FAIL or INVALID; the checkpoint stays the final iterate; it is a loss, not a generative-quality score",
+    "threshold": 0.02
+  },
+  "solver_sensitivity": {
+    "levels": {
+      "primary": 128,
+      "secondary": 32,
+      "rule": "fixed before the run, kept regardless of outcome; no level is chosen by any dev or test outcome"
+    },
+    "pairing": "both levels use the same examples, the same initial noise and the same intermediate draws: the sampling seed keys do NOT contain the step count (this supersedes A1 'solver.seeds'); only the permutation keys carry the step count",
+    "statistic": "per-example difference d_i = ED_U(128)_i - ED_U(32)_i (standardised) at each level and split; mean with the paired normal 95% CI from the sd of d_i over examples; the same for the quality metric",
+    "no_independent_se_sum": "the A1 rule |T_fine - T_coarse| <= 1.645 x sqrt(se_fine^2 + se_coarse^2) is withdrawn: it had no stated hypothesis or level and it treated the two levels as independent",
+    "flag": "SOLVER_SENSITIVE for (arm, split, level) if the paired 95% CI of mean d_i excludes 0; then the arm's gap at that endpoint is marked NUMERICS_NOT_SEPARATED (numerical and learned components not separated); all numbers are still reported",
+    "not_a_convergence_proof": "agreement of the two levels does not prove ODE convergence; the tests concern the output law of the fixed solver, not the ideal continuous-time flow"
+  },
+  "inconclusive_label": "MODEL_FIT_OR_NUMERICS_INCONCLUSIVE only if any training loss or any sample of the arm is non-finite",
+  "incomplete_budget": "INCOMPLETE_BUDGET if the CPU or wall cap is reached before both arms are trained and evaluated on test; partial checkpoints and completed stages are saved and reported; no best-effort substitute is reported as a result",
+  "evaluation": {
+    "examples": "the 200 dev examples for the dev stage and the 200 test examples for the test stage (same rows as the GMM control run, regenerated from the data seed keys)",
+    "design": "Test P, N = 200, M = 64, B = 199, statistic mean ED_V on the standardised scale (y, z divided by train sds), upper tail; 8 fixed projection directions at the joint level",
+    "branches": "direct z|x vs sequential (fresh y from the arm's own y|x for every sample, then z|x,y); separate seed streams per branch; the observed y is never used; CFG off; base N(0, I)",
+    "primary_family": "the two FM target-level Test P p-values at 128 steps on the test split; Holm at alpha = 0.05; the GMM control p-values of round 4 are not part of this family",
+    "secondary_descriptive": [
+      "projected-joint Test P at 128",
+      "all 32-step tests",
+      "paired solver differences",
+      "quality to truth",
+      "diversity",
+      "cost"
+    ],
+    "between_arm_effect": {
+      "statistic": "e_i = ED_U(SHARED)_i - ED_U(INDEPENDENT)_i at the target level, 128 steps, test split; mean with paired normal 95% CI; percentile bootstrap over examples (2000 resamples, seeded) as a check",
+      "direction": "negative means the shared arm has the smaller estimated target gap",
+      "pairing": "example-paired; samples are NOT paired across arms (each arm has its own noise streams keyed by the arm name)",
+      "weighting": "equal weight per example",
+      "unit": "conditioning example; conditional on one model seed per arm",
+      "negative_values": "ED_U is unbiased for a non-negative population distance and may be negative; it is not clipped",
+      "not_a_ranking": "a larger p-value does not rank an arm as more coherent; one arm rejecting and the other not is not evidence of a difference",
+      "n_boot": 2000
+    },
+    "quality_to_truth": "unbiased sample energy distance between the 64 direct samples and the true conditional (closed-form cross and truth terms via the mixture formula; U-statistic within-sample term), standardised, per example; may be negative; this is NOT the closed-form population distance reported for the GMM controls and the two are not compared",
+    "diversity": "sd of the 64 direct z samples divided by the true conditional sd, per example",
+    "cost": "parameters, updates, pattern exposure (updates and rows), training wall-s and CPU-s, sampling and permutation wall-s and CPU-s per block, threads; similar parameters/updates do not mean equal FLOPs",
+    "no_loglik": "the flow arms have no computed density; no log-likelihood is reported for them",
+    "controls": "TRUE/FITTED results of round 4 are reused as reported; per-example control values were not stored, so no neural-vs-control paired comparison is made"
+  },
+  "budget": {
+    "cpu_cap_seconds": 1800,
+    "wall_cap_seconds": 2400,
+    "threads": 1,
+    "processes": 1,
+    "includes": [
+      "fixtures (results/env/fm_fixtures_run.json)",
+      "timing smoke",
+      "training of both arms",
+      "dev evaluation",
+      "test evaluation",
+      "permutation tests",
+      "bootstrap"
+    ],
+    "excluded_and_recorded_separately": [
+      "torch install",
+      "TeX install",
+      "PDF build"
+    ],
+    "smoke": "train-only timing smoke with run seed 999 (<= 60 CPU-s), used only to check that the fixed plan fits the remaining budget; not reported as a result"
+  },
+  "order": [
+    "fixtures",
+    "smoke and budget check",
+    "train INDEPENDENT then SHARED (final iterate, checkpoints hashed)",
+    "dev evaluation and labels written to disk",
+    "test evaluation",
+    "nothing changed after the test split is opened"
+  ],
+  "stored": [
+    "checkpoints with sha256",
+    "per-example results for both splits, levels and step counts",
+    "test-split samples (gzip)",
+    "exposure and cost",
+    "manifest with the torch environment"
+  ],
+  "study_status": "not an untouched study: the round-4 control results on the same test examples were seen before this run; the flow arms were not tuned on anything",
+  "dry_run": "the smoke also runs the evaluation code path on 3 TRAIN conditioning values with 4/2 Euler steps (scratch only) to check the pipeline before any budgeted evaluation; its numbers are discarded"
+}

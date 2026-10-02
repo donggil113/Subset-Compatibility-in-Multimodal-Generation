@@ -31,3 +31,7 @@ date,round,item,kind,seconds,measured,notes
 2026-09-27,5,full unit suite (after adapter fixes),unit_tests,12.7,yes,64 tests; 57 pass; 7 SKIPPED (torch fixtures); 12.5 CPU-s; 1 thread
 2026-09-27,5,INDEPENDENT/SHARED_CONDITIONAL_FM training and evaluation,blocked,0,-,BLOCKED_DEPENDENCIES: no torch/numpy; no resource approval
 2026-09-27,5,PDF build,not_run,0,-,no TeX in environment; installation not approved; no external compile service
+2026-10-02,6,torch CPU install into .venv-p5 (user-delivered limited approval),install,58,yes,wall; torch-2.14.1+cpu wheel 196.2 MB from download.pytorch.org/whl/cpu (sha256 5e38154c...); numpy 2.4.6 + 8 deps from PyPI; venv 985 MB; recorded separately from the research budget
+2026-10-02,6,torch fixtures tests/test_fm_adapter.py (12 run; 1 no-torch test skipped),unit_tests,2.1,yes,CPU-s (wall 2.2 s); 1 thread; charged to the research budget
+2026-10-02,6,FM timing smoke attempt 1 (seed 999; failed: KeyError batch for the shared arm),timing_smoke,6.9,yes,CPU-s user+sys; bug fixed (batch/lr resolution); charged to the research budget; no result looked at
+2026-10-02,6,FM timing smoke attempt 2 (seed 999; 500 updates per arm + sampling benchmark + dry eval on 3 train rows),timing_smoke,7.1,yes,CPU-s (process_time; wall 7.3 s; whole process 9.0+1.0 s incl. torch import); estimate for the full plan 481 CPU-s; charged to the research budget; numbers not reported
