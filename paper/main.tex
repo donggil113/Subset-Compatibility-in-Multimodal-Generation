@@ -1,7 +1,7 @@
 %% =====================================================================
 %% P5 manuscript v3.1 (v1 = 9923d50, v2 = 1814564, v3 = ca0c350). v3: statistical errata E1-E6, coherent-joint
 %% controls (P5-SYN-LEARN-01), calibration history moved to the appendix, body edited toward 8 pages.
-%% v3.1 (round 5): wording corrections only; v4 (neural flow arms) is blocked on dependencies.
+%% v3.1 (round 5): wording corrections only. v4 (round 6): neural flow arms run once; all numbers from generated/numbers.tex.
 %%   TARGET_YEAR      = 2027  (intended venue: ICML 2027)
 %%   TEMPLATE_YEAR    = 2026  (official ICML 2026 style, anonymous review mode;
 %%                             no official ICML 2027 style was found on 2026-09-26)
@@ -92,7 +92,7 @@ We give a conditional sampling design with the conditioning example as the indep
 On a Gaussian probe, guidance with exact scores alone creates population gaps up to \numGapCFGFour{} (standardized), against a Monte Carlo floor of \numFloorM. Moderate solver error, by contrast, cancels between the two routes although the sampler is biased.
 Our first calibration gate failed, and the next one was found defective before use. The test then passed a pre-registered calibration once.
 On a Gaussian-mixture probe, a fitted normalized density, coherent by construction, was not flagged ($p=\numSynFitP$), although its distance to the truth is clearly nonzero.
-Flow-matching learners were not run, and no real multimodal data are used.
+Two neural conditional flow learners, trained once on the same probe with separate or shared networks, are then measured with the same design; no real multimodal data are used.
 \end{abstract}
 
 % ---------------------------------------------------------------------
@@ -138,7 +138,7 @@ This paper is about that separation, on synthetic probes only. We make three con
     \end{itemize}
   \item \textbf{Coherent-joint controls} (\cref{sec:exp-coherent}). Exact and fitted Gaussian mixtures are normalized densities, so their conditionals are coherent by construction while their fit quality varies. This separates coherence from correctness in a learned model.
 \end{itemize}
-The experiment that bears on the central question is not run: comparing separately learned conditionals with a shared conditional network (\cref{sec:exp-real}).
+The experiment that bears on the central question, comparing separately learned conditionals with a shared conditional network, was run once as a small synthetic pilot (\cref{sec:exp-real}); its scope is one probe, one data seed and one model seed per arm.
 We do not claim as new:
 \begin{itemize}
 \item the identity~\eqref{eq:identity};
@@ -220,7 +220,7 @@ This paper measures the first kind of statement for two relations, $\Delta_T$ an
 \toprule
 Claim & Evidence that would support it & Status in this paper \\
 \midrule
-Non-detection of $\Delta_T$, $\Delta_J^U$ & a calibrated, powered test that does not reject; reported with its design & synthetic probes and coherent controls; learned flows \notrun{} \\
+Non-detection of $\Delta_T$, $\Delta_J^U$ & a calibrated, powered test that does not reject; reported with its design & synthetic probes, coherent controls and two neural flow arms (one model seed each) \\
 Distributional correctness & proper scores or distances against a known truth & closed form on the probes \\
 Coherent joint existence & all relations of the model, or a normalized density & by construction for controls only \\
 \bottomrule
@@ -486,33 +486,75 @@ A compatibility test cannot see this by construction; only the quality metrics c
 Question & Status \\
 \midrule
 Coherence vs.\ quality & controls: coherent by construction, not flagged at the primary endpoint; the fitted control's quality is clearly worse \\
-Separate vs.\ shared learners & \notrun{} (no tensor library; installation not approved) \\
-Gap from solver refinement & not applicable to the controls (exact sampling); \notrun{} for learners \\
-Non-detection vs.\ equality, correctness, global joint & for the controls equality and a global joint hold by construction, correctness fails for the fitted one; for the neural flow learners (\notrun) none is established \\
+Separate vs.\ shared learners & measured once on the probe (\cref{tab:fm}); the paired between-arm difference is the decisive quantity, not the two $p$-values \\
+Gap from solver refinement & not applicable to the controls (exact sampling); for the learners the paired 128-vs-32-step difference is reported and flagged when its CI excludes $0$ \\
+Non-detection vs.\ equality, correctness, global joint & for the controls equality and a global joint hold by construction, correctness fails for the fitted one; for the neural flow learners none of the three is established by a non-rejection; a global joint is not implied by parameter sharing \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{Neural flow learners (not run)}
+\subsection{Neural flow learners}
 \label{sec:exp-real}
-The experiment that bears on the central question is designed and coded but not run. It compares independently trained conditional flow-matching models with one shared conditional network, both trained on the mixture probe.
-The environment has no tensor library, and installing one was not approved.
-\Cref{app:mixture} fixes the architecture, update budget, conditioning-pattern exposure and the two solver levels, so that data cannot influence them.
-A static review before any execution found that the shared network could not tell an absent coordinate from a target one; its input now carries a target mask.
-If the two solver levels disagree or training is insufficient, the outcome is labeled inconclusive, not incompatible.
-\todo{P5-REAL-01: $\widehat\Delta_T$, $\widehat\Delta_J^U$, quality and cost for independent vs.\ shared conditional flow matching on the mixture probe}.
+The experiment that bears on the central question was run once, under a limited CPU-only approval, after the controls of \cref{sec:exp-coherent} had been seen.
+Two learners were trained on the mixture probe's training split with linear-path conditional flow matching (\cref{app:mixture}):
+\begin{itemize}
+\item \textsc{independent\_conditional\_fm}: four MLPs, one per conditional ($\numFmIndParams$ parameters, $4\times5000$ updates);
+\item \textsc{shared\_conditional\_net}: one MLP over $(x,y,z)$ whose input marks each coordinate as observed, target or absent ($\numFmShParams$ parameters, $\numFmShUpdates$ updates with uniform pattern sampling).
+\end{itemize}
+Parameter counts and updates are close, but each shared update runs a network about four times larger, so the arms are not equal-compute (\cref{tab:fm-cost}).
+The final iterate is the model; nothing was selected on any outcome.
+Sampling uses Euler from $\mathcal N(0,I)$ with guidance off, at $128$ steps (primary, fixed in advance) and $32$ steps (sensitivity check), with the same noise draws at both levels.
+The sequential branch draws a fresh $y$ from the arm's own $q(y\mid x)$ for every sample; the observed $y$ is never used.
+The design is that of \cref{sec:exp-coherent}: $N=200$ test examples, $M=64$, $B=199$, eight projections at the joint level.
+The primary family is the two target-level tests at $128$ steps, Holm-adjusted; the control $p$-values of \cref{tab:synlearn} are not part of it.
+\Cref{tab:fm} reports the run (\numFmCPU\,CPU-s in total, one thread).
+
+\begin{table*}[t]
+\centering
+\caption{Neural flow learners on the mixture probe (test split, Test~P, $N=200$, $M=64$, $B=199$). $\widehat\Delta_T$ and $\widehat\Delta_J^U$ are mean unbiased energy distances between the direct and sequential branches; $\widehat D_U(\text{direct},\text{truth})$ is the unbiased sample energy distance between the $64$ direct samples and the true $q(z\mid x)$ (closed-form cross and truth terms), which may be negative and is not the closed-form population distance of \cref{tab:synlearn}. All on the standardized scale; intervals are normal 95\% CIs over examples.}
+\label{tab:fm}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\input{generated/tab_fm}
+\end{table*}
+
+\begin{table*}[t]
+\centering
+\caption{Cost and diagnostics of the neural arms. Train CPU-s and test sampling CPU-s are for one thread. ``Dev-loss decrease'' is the relative decrease of the held-out flow-matching loss (fixed noise) between 90\% and 100\% of the updates, a diagnostic of optimization progress only. ``Solver paired'' is the mean per-example difference $\widehat\Delta_T(128)-\widehat\Delta_T(32)$ with its paired 95\% CI; agreement does not prove convergence.}
+\label{tab:fm-cost}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\input{generated/tab_fm_cost}
+\end{table*}
+
+\paragraph{Consistency.}
+%% OUTCOME-DEPENDENT: choose after results. Report p_T (128), Holm, gap CIs, 32-step p, dev p (descriptive), solver flags.
+At the primary endpoint the independent arm gave $p=\numFmIndP$ and the shared arm $p=\numFmShP$ (Holm $\numFmIndHolm$ and $\numFmShHolm$), with gap estimates $\numFmIndD$ and $\numFmShD$ ($\times10^{-3}$).
+At $32$ steps the $p$-values were $\numFmIndPThirtyTwo$ and $\numFmShPThirtyTwo$; the paired solver differences of the gap estimates were $\numFmIndSolver$ and $\numFmShSolver$ ($\times10^{-3}$), flagged solver-sensitive: \numFmIndSolverFlag{} and \numFmShSolverFlag.
+The paired between-arm difference $\widehat\Delta_T(\text{shared})-\widehat\Delta_T(\text{independent})$ over the same examples is $\numFmBetween$ ($\times10^{-3}$; bootstrap $\numFmBetweenBoot$).
+%% SENTENCE A (no rejection, CI of difference contains 0): Neither arm is flagged, and the arms are not distinguished; this is non-detection at this design, conditional on one model seed per arm.
+%% SENTENCE B (rejection): ...
+A larger $p$-value does not rank an arm as more coherent, and one arm rejecting while the other does not would not show that the arms differ; only the paired difference speaks to that.
+
+\paragraph{Correctness and cost.}
+The direct branches lie at $\widehat D_U=\numFmIndQ$ and $\numFmShQ$ ($\times10^{-3}$) from the true conditional, with spread ratios $\numFmIndSdr$ and $\numFmShSdr$.
+%% OUTCOME-DEPENDENT: comment on quality relative to the fitted control (closed-form 30.1e-3), being careful: different estimators.
+Training took $\numFmIndTrainCPU$ and $\numFmShTrainCPU$ CPU-s; sampling for the test split $\numFmIndSampCPU$ and $\numFmShSampCPU$ CPU-s.
+The dev-loss diagnostic decreased by at most $\numFmIndUnder\%$ and $\numFmShUnder\%$ over the last tenth of training (flagged: \numFmIndUnderFlag{} and \numFmShUnderFlag).
+No density is available for these arms, so no likelihood is reported, and parameter sharing does not make the shared arm's conditionals those of one normalized joint: whatever its gap, coherence is not established for it by any test here.
+This is one data seed, one model seed per arm and one synthetic probe; it says nothing about real multimodal generators.
 A consistency regularizer, and any real multimodal data, are outside this paper (\todo{P5-REAL-02: real paired multimodal data}).
 
 % ---------------------------------------------------------------------
 \section{Limitations}
 \label{sec:limits}
 \begin{itemize}
-\item \textbf{Data and models.} All evidence is synthetic. The only learned model is an EM-fitted mixture; no neural flow or diffusion generator has been evaluated. Nothing here shows that such models are, or are not, incompatible.
+\item \textbf{Data and models.} All evidence is synthetic. The learned models are an EM-fitted mixture and two small flow-matching learners on a three-variable probe, one model seed each. Nothing here shows that real any-to-any generators are, or are not, incompatible.
 \item \textbf{Closed-form decomposition.} It relies on Gaussian conditionals and exact scores. With learned scores, discretization, prior mismatch and model error interact and must be separated empirically.
 \item \textbf{Joint test.} It compares eight projections and cannot certify joint equality.
 \item \textbf{Calibration.} It ran once, at one design. Its secondary null cells screen only for gross anti-conservativeness.
 \item \textbf{Validity scope.} The level guarantee requires fresh intermediates and independent branch randomness. Pipelines that reuse one intermediate for several targets need another design.
-\item \textbf{Mixture pilot.} It used one data seed, one model seed and one fitted control.
+\item \textbf{Mixture pilot.} It used one data seed, one model seed per arm and one fitted control; the dev and test stages share sampling and permutation streams by the registered key scheme, so dev is not an independent replicate of test.
 \item \textbf{Guidance convention.} The unconditional model is the target marginal, following \citet{bao2023unidiffuser}; other conventions give other gaps.
 \item \textbf{Scope of the discrepancy.} Energy distance is one of several possible discrepancies. Factorization consistency (C2) is not measured.
 \item \textbf{Build.} The manuscript has not been compiled in our environment.
@@ -789,17 +831,17 @@ The splits are $2000$ train, $200$ dev and $200$ test draws. Data, model and sam
 \paragraph{Fitted control.}
 EM with $K=2$, $500$ maximum iterations, tolerance $10^{-8}$ and covariance regularization $10^{-6}$. It is initialized by $k$-means++ seeding with the model seed.
 All marginals and conditionals are computed from the fitted density.
-\paragraph{Learners (not run).}
+\paragraph{Learners.}
 \begin{itemize}
 \item \textbf{Loss:} linear-path conditional flow matching.
 \item \textbf{Independent arm:} four MLPs (width 64, depth 3), one per pattern $z\mid x$, $y\mid x$, $z\mid x,y$ and $y,z\mid x$, with $5000$ updates each.
 \item \textbf{Shared arm:} one MLP (width 128, depth 3) over $(x,y,z)$ whose input marks each coordinate as observed, target or absent, with $20000$ updates and uniform pattern sampling.
 \item \textbf{Budgets:} both arms get $20000$ updates in total ($4\times5000$ for the independent arm) and equal expected pattern exposure. Parameter counts are close ($34757$ and $34819$), but each shared update runs a network about four times larger, so the arms are not equal-compute.
 \item \textbf{Optimizer:} Adam, learning rate $10^{-3}$, batch size $256$.
-\item \textbf{Solver:} Euler from $\mathcal N(0,I)$ with CFG off. The fine level (128) is primary, fixed in advance; the coarse level (32) is a sensitivity check. An arm is labeled inconclusive if the two levels' gap estimates differ by more than $1.645$ combined standard errors, or if its dev loss has not plateaued. Agreement does not prove convergence.
+\item \textbf{Solver:} Euler from $\mathcal N(0,I)$ with CFG off. The fine level (128) is primary, fixed in advance; the coarse level (32) is a sensitivity check that shares the same noise draws. The per-example difference of the two levels' gap estimates is reported with its paired 95\% CI; an arm is flagged solver-sensitive when that CI excludes $0$. Agreement does not prove convergence. The held-out flow-matching loss at 90\% and 100\% of training (fixed noise) is a diagnostic of optimization progress only.
 \item \textbf{Checkpoint and comparison:} the final iterate, with no selection. The primary comparison is the paired per-example difference of the unbiased gap estimates of the two arms, over the same test examples.
 \item \textbf{Pre-execution fixes:} the shared input gained a target mask, and each independent network got its own optimizer.
-\item \textbf{Blocker:} the adapter is written but untested, because no tensor library is available.
+\item \textbf{Execution:} CPU only, one thread, torch \numFmTorch; the adapter's fixtures (roles, leakage, path direction, optimizer isolation) were executed before training; the run contract was amended twice before training and not afterwards.
 \end{itemize}
 
 \section{Pre-Registration Record and Deviations}

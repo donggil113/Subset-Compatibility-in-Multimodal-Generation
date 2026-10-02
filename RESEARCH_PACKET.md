@@ -657,3 +657,64 @@ Budget:
 
 Controls are reused from the round-4 run. Their per-example values were not
 stored, so no FM-vs-control paired comparison is planned.
+
+## 13. Neural flow arms: first execution (round 6, 2026-10-02)
+
+**Authorization.** The user delivered a limited approval block in the
+round-6 directive: a CPU-only torch install into an isolated venv, numpy from
+PyPI, execution within 1 thread / 1800 CPU-s / 2400 wall-s, and a minimal
+local TeX install for the PDF. Status of this stage:
+NEURAL_PILOT_AUTHORIZED_THIS_RUN. The validity and novelty of the method
+remain UNVERIFIED; the model-stage STOP record and the Gaussian calibration
+PASS are unchanged, and the PASS is not a neural-performance PASS.
+
+**Environment (results/env/torch_env.json).** Python 3.11.15, Linux x86_64,
+torch 2.14.1+cpu (wheel
+`torch-2.14.1+cpu-cp311-cp311-manylinux_2_28_x86_64.whl`, 196.2 MB, sha256
+`5e38154c…34f37`, from https://download.pytorch.org/whl/cpu), numpy 2.4.6
+(PyPI). CPU device and one thread verified with a real tensor. The venv
+(985 MB) is not committed. Install wall time 58 s.
+
+**Fixtures (results/env/fm_fixtures_run.json).** 12 torch fixtures pass
+(2.1 CPU-s): roles distinguishable for all patterns including value 0 and
+t = 0; observed and target roles disjoint; only target dims in loss and
+velocity; conditioning holds exactly the given variables; no leakage of
+unobserved variables (loss invariant to them); path t = 0 noise / t = 1
+data, velocity x1 − x0; Euler forward; per-network parameter and
+optimizer-state isolation; finite forward/backward and real updates on
+small train-only batches (not a quality claim).
+
+**D2 restated.** One Adam over the four independent MLPs is not an error in
+general; the earlier contract relied on the None-vs-zero gradient
+distinction. Per-network optimizers make the isolation explicit.
+
+**Amendment A2** (`configs/p5_syn_learn_01_fm_amendment_a2.json`, registered
+before any training; addenda added after the static review, still before
+training): the dev-loss rule is a diagnostic only (checkpoint = final
+iterate); 32 vs 128 steps compared as a paired per-example difference with
+shared noise (sampling keys omit the step count); the A1 "1.645 × combined
+SE" rule withdrawn; primary 128, secondary 32 regardless of outcome;
+between-arm effect ED_U(SHARED) − ED_U(INDEPENDENT), example-paired,
+samples unpaired; Holm over the fixed family of two FM target tests; no
+log-likelihood for the flow arms; INCONCLUSIVE only for non-finite values;
+INCOMPLETE_BUDGET only when the cap stops a stage.
+
+**Static review before training.** A read-only adversarial review (five
+lenses, two skeptics per finding) confirmed two major defects, fixed before
+the run: a non-finite loss would have been reported as INCOMPLETE_BUDGET and
+aborted the run; the stop-rule guard checked only the test summary. Minor
+fixes: Holm over the fixed family; label after test for non-finite test
+samples; manifest on failure; smoke budget; per-block summaries. Documented
+without code change: dev and test share sampling and permutation streams by
+the registered key scheme. The installed torch CPU generator uses the low 32
+bits of a seed; all 2406 effective seeds of the run were checked distinct
+(`results/env/seed_preflight.json`).
+
+**Smoke.** Train-only timing smoke with run seed 999 (two attempts, 6.9 +
+7.1 CPU-s; the first failed on a config-field bug fixed before anything
+else ran): estimate 481 CPU-s for the full plan against 1782 CPU-s
+remaining; the plan was run unchanged.
+
+**Order actually followed.** fixtures → smoke → A2 addenda → pre-run commit
+7e25f68 → training (INDEPENDENT, then SHARED) → dev evaluation and labels
+written → test evaluation → nothing changed afterwards.
