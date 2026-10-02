@@ -1,0 +1,278 @@
+{
+ "run_id": "p5_syn_learn_01_fm",
+ "experiment_id": "P5-SYN-LEARN-01",
+ "config_path": "configs/p5_syn_learn_01.json",
+ "amendment_path": "configs/p5_syn_learn_01_fm_amendment_a2.json",
+ "started_utc": "2026-10-02T20:55:35Z",
+ "git_commit_at_run": "7e25f68a7a5c984b547f56b2a4856d4b0aafc399",
+ "code_dirty_at_run": false,
+ "processes": 1,
+ "threads": 1,
+ "interop_threads": 1,
+ "python": "3.11.15",
+ "torch": "2.14.1+cpu",
+ "torch_wheel_sha256": "5e38154c8896d426a5df58bf2276b603e82184dfae4f54d77dbb212f36e34f37",
+ "numpy": "2.4.6",
+ "device": "cpu",
+ "cpu_spent_before_seconds": 18.1,
+ "caps": {
+  "cpu_cap_seconds": 1800,
+  "wall_cap_seconds": 2400,
+  "threads": 1,
+  "processes": 1,
+  "includes": [
+   "fixtures (results/env/fm_fixtures_run.json)",
+   "timing smoke",
+   "training of both arms",
+   "dev evaluation",
+   "test evaluation",
+   "permutation tests",
+   "bootstrap"
+  ],
+  "excluded_and_recorded_separately": [
+   "torch install",
+   "TeX install",
+   "PDF build"
+  ],
+  "smoke": "train-only timing smoke with run seed 999 (<= 60 CPU-s), used only to check that the fixed plan fits the remaining budget; not reported as a result"
+ },
+ "stream_note": "sampling and permutation seed keys carry no split field (registered scheme); dev and test share noise and allocations by construction; arms and branches have separate streams",
+ "status": "COMPLETE",
+ "stages": {
+  "train": "COMPLETE",
+  "dev": "COMPLETE",
+  "test": "COMPLETE"
+ },
+ "labels": {
+  "INDEPENDENT_CONDITIONAL_FM": {
+   "arm": "INDEPENDENT_CONDITIONAL_FM",
+   "trained_updates": 20000,
+   "complete": true,
+   "UNDERTRAINING_FLAG": false,
+   "dev_loss_rel_decrease_90_to_100": {
+    "z|x": -0.00419242043080371,
+    "y|x": -0.0056692099985885475,
+    "z|x,y": -0.007956022275429535,
+    "y,z|x": -0.0016068869604483427
+   },
+   "non_finite": false,
+   "dev_SOLVER_SENSITIVE_target": true,
+   "dev_SOLVER_SENSITIVE_joint": true,
+   "dev_target_p_primary_level": 0.005,
+   "label": "EVALUABLE",
+   "note": "labels fixed before the test split is opened; the dev p-value is descriptive and chooses nothing"
+  },
+  "SHARED_CONDITIONAL_FM": {
+   "arm": "SHARED_CONDITIONAL_FM",
+   "trained_updates": 20000,
+   "complete": true,
+   "UNDERTRAINING_FLAG": false,
+   "dev_loss_rel_decrease_90_to_100": {
+    "z|x": -0.014615467199428283,
+    "y|x": 0.010396115663814669,
+    "z|x,y": -0.013647849960914461,
+    "y,z|x": -0.000815273388235695
+   },
+   "non_finite": false,
+   "dev_SOLVER_SENSITIVE_target": false,
+   "dev_SOLVER_SENSITIVE_joint": false,
+   "dev_target_p_primary_level": 0.585,
+   "label": "EVALUABLE",
+   "note": "labels fixed before the test split is opened; the dev p-value is descriptive and chooses nothing"
+  }
+ },
+ "test_primary_family": {
+  "tests": [
+   "INDEPENDENT_CONDITIONAL_FM",
+   "SHARED_CONDITIONAL_FM"
+  ],
+  "raw_p": {
+   "INDEPENDENT_CONDITIONAL_FM": 0.005,
+   "SHARED_CONDITIONAL_FM": 0.425
+  },
+  "holm_p": {
+   "INDEPENDENT_CONDITIONAL_FM": 0.01,
+   "SHARED_CONDITIONAL_FM": 0.425
+  },
+  "alpha": 0.05,
+  "definition": "FM target-level Test P at 128 steps on this split; Holm over the fixed family of 2 tests (a non-computable member counts as p = 1); GMM controls excluded",
+  "is_primary_split": true
+ },
+ "test_non_finite": {
+  "INDEPENDENT_CONDITIONAL_FM": 0,
+  "SHARED_CONDITIONAL_FM": 0
+ },
+ "label_after_test": {
+  "INDEPENDENT_CONDITIONAL_FM": "EVALUABLE",
+  "SHARED_CONDITIONAL_FM": "EVALUABLE"
+ },
+ "training": {
+  "INDEPENDENT_CONDITIONAL_FM": {
+   "updates": 20000,
+   "updates_planned": 20000,
+   "stopped_early": null,
+   "pattern_exposure": {
+    "z|x": 5000,
+    "y|x": 5000,
+    "z|x,y": 5000,
+    "y,z|x": 5000
+   },
+   "rows_seen_per_pattern": {
+    "z|x": 1280000,
+    "y|x": 1280000,
+    "z|x,y": 1280000,
+    "y,z|x": 1280000
+   },
+   "n_params": {
+    "z|x": 8641,
+    "y|x": 8641,
+    "z|x,y": 8705,
+    "y,z|x": 8770,
+    "total": 34757
+   },
+   "all_losses_finite": true,
+   "train_wall_seconds": 33.22710156440735,
+   "train_cpu_seconds": 31.943894305,
+   "torch_threads": 1,
+   "torch_version": "2.14.1+cpu",
+   "timing": {
+    "wall_seconds": 38.681257247924805,
+    "cpu_seconds": 33.694937288000006
+   },
+   "dev_fm_loss_fixed_noise": {
+    "18000": {
+     "z|x": 1.4263871908187866,
+     "y|x": 1.1258331537246704,
+     "z|x,y": 1.198053002357483,
+     "y,z|x": 1.2629506587982178
+    },
+    "20000": {
+     "z|x": 1.432367205619812,
+     "y|x": 1.1322157382965088,
+     "z|x,y": 1.2075847387313843,
+     "y,z|x": 1.2649800777435303
+    }
+   },
+   "dev_loss_rel_decrease_90_to_100": {
+    "z|x": -0.00419242043080371,
+    "y|x": -0.0056692099985885475,
+    "z|x,y": -0.007956022275429535,
+    "y,z|x": -0.0016068869604483427
+   },
+   "UNDERTRAINING_FLAG": false,
+   "seeds": {
+    "model_init": 1753593257668939305,
+    "train_stream": 16624027479824347816,
+    "dev_loss_noise": 9132770175922482508
+   },
+   "design": {
+    "patterns": [
+     "z|x",
+     "y|x",
+     "z|x,y",
+     "y,z|x"
+    ],
+    "mlp_width": 64,
+    "mlp_depth": 3,
+    "optimizer": "Adam lr 1e-3",
+    "batch": 256,
+    "updates_per_pattern": 5000,
+    "total_updates": 20000,
+    "loss": "linear-path conditional flow matching",
+    "code": "src/p5compat/fm_adapter.py (UNTESTED)",
+    "lr": 0.001
+   },
+   "checkpoint": {
+    "path": "p5_syn_learn_01_fm_train/checkpoints/INDEPENDENT_CONDITIONAL_FM.pt",
+    "sha256": "e2e2a5c8918897beae0a8cf9a27f233ad587dab7f391f9fa2519c2376ccf8fb0",
+    "bytes": 150229,
+    "updates": 20000,
+    "final_iterate": true
+   },
+   "complete": true
+  },
+  "SHARED_CONDITIONAL_FM": {
+   "updates": 20000,
+   "updates_planned": 20000,
+   "stopped_early": null,
+   "pattern_exposure": {
+    "z|x": 5052,
+    "y|x": 4985,
+    "z|x,y": 4953,
+    "y,z|x": 5010
+   },
+   "rows_seen_per_pattern": {
+    "z|x": 1293312,
+    "y|x": 1276160,
+    "z|x,y": 1267968,
+    "y,z|x": 1282560
+   },
+   "n_params": {
+    "total": 34819
+   },
+   "all_losses_finite": true,
+   "train_wall_seconds": 47.41147756576538,
+   "train_cpu_seconds": 46.701222857999994,
+   "torch_threads": 1,
+   "torch_version": "2.14.1+cpu",
+   "timing": {
+    "wall_seconds": 47.411744594573975,
+    "cpu_seconds": 46.701482758000004
+   },
+   "dev_fm_loss_fixed_noise": {
+    "18000": {
+     "z|x": 1.0282094478607178,
+     "y|x": 1.102547526359558,
+     "z|x,y": 0.9268825054168701,
+     "y,z|x": 1.112441897392273
+    },
+    "20000": {
+     "z|x": 1.0432372093200684,
+     "y|x": 1.0910853147506714,
+     "z|x,y": 0.939532458782196,
+     "y,z|x": 1.1133488416671753
+    }
+   },
+   "dev_loss_rel_decrease_90_to_100": {
+    "z|x": -0.014615467199428283,
+    "y|x": 0.010396115663814669,
+    "z|x,y": -0.013647849960914461,
+    "y,z|x": -0.000815273388235695
+   },
+   "UNDERTRAINING_FLAG": false,
+   "seeds": {
+    "model_init": 15118115516923835052,
+    "train_stream": 16831906125483595528,
+    "dev_loss_noise": 15167999102607448634
+   },
+   "design": {
+    "mlp_width": 128,
+    "mlp_depth": 3,
+    "total_updates": 20000,
+    "pattern_sampling": "uniform over the 4 patterns (expected 5000 each)",
+    "budget_note": "same total updates as the independent arm; parameter counts differ and are recorded, not equalised",
+    "batch": 256,
+    "optimizer": "Adam lr 1e-3",
+    "lr": 0.001
+   },
+   "checkpoint": {
+    "path": "p5_syn_learn_01_fm_train/checkpoints/SHARED_CONDITIONAL_FM.pt",
+    "sha256": "4f6154f5c426d2330f6b1b5e9a02918829b54a0d5d0569e87769e313d3eb2824",
+    "bytes": 143185,
+    "updates": 20000,
+    "final_iterate": true
+   },
+   "complete": true
+  }
+ },
+ "budget": {
+  "cpu_seconds_total_incl_before": 238.295076457,
+  "cpu_seconds_this_process": 220.19507882,
+  "wall_seconds": 226.69248127937317,
+  "children_cpu_seconds": 0.00462
+ },
+ "scale_from_train": {
+  "y": 1.3062590871260458,
+  "z": 1.0371491514992974
+ }
+}

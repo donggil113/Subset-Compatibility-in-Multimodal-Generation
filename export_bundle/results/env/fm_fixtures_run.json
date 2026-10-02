@@ -1,0 +1,21 @@
+{
+ "tests_run": 13,
+ "failures": 0,
+ "errors": 0,
+ "skipped": 1,
+ "skipped_names": [
+  "test_blocker_message"
+ ],
+ "cpu_seconds": 2.135,
+ "wall_seconds": 2.171,
+ "rusage_self_user_sys": [
+  2.915771,
+  1.008116
+ ],
+ "rusage_children_user_sys": [
+  0.0,
+  0.0
+ ],
+ "threads": 1,
+ "torch": "2.14.1+cpu"
+}

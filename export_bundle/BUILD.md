@@ -1,10 +1,15 @@
 # Building the manuscript (not done in the authoring environment)
 
-**Status:** COMPILE_NOT_RUN.
+**Status:** COMPILED locally in round 6 (`paper/main.pdf`; details in
+`paper/build_log_summary.json`).
 
-- No PDF was produced. The authoring environment has no TeX installation,
-  and installing one was not approved.
-- The 8-page fit is unverified.
+- Built with a minimal TeX Live 2026 installed under a user-delivered
+  limited approval; the official ICML 2026 style was fetched by
+  `fetch_style.sh` (SHA-256 verified) and used unmodified in review mode.
+- 19 pages; the conclusion's last sentence is on page 8 (measured with
+  `\pdfsavepos`); no overfull boxes; no undefined references.
+- The pages were NOT rasterized or viewed (no renderer was available or
+  approved), so legibility at 100% is unverified.
 - SUBMISSION_READY = false.
 - Under the project rules, do not upload this source to an external web
   compile service. Build it on a machine where a local TeX installation is
@@ -75,12 +80,31 @@ them because of their size, so run it from the repository checkout at the
 commit that contains this bundle. The generated files in `paper/generated/`
 are already included, so building the PDF does not need regeneration.
 
-## Tests and runs (Python 3.11, standard library only)
+## Tests and runs
+
+Standard library (GMM controls and the test machinery):
 
 ```sh
-python3 -m unittest discover -s tests         # 64 tests, about 13 s, 1 thread; 7 torch fixtures SKIP without torch
+python3 -m unittest discover -s tests         # about 13 s, 1 thread; the torch fixtures SKIP without torch
 python3 scripts/run_syn_learn.py --config configs/p5_syn_learn_01.json --split test --out /tmp/p5_syn_rerun
 ```
+
+Neural flow arms (round 6) need an isolated venv with a CPU-only torch; the
+exact versions and the wheel hash are in `results/env/torch_env.json`:
+
+```sh
+python3 -m venv .venv-p5 && . .venv-p5/bin/activate
+pip download --no-deps --only-binary=:all: --index-url https://download.pytorch.org/whl/cpu torch==2.14.1+cpu -d wheels
+sha256sum wheels/torch-*.whl                  # expect 5e38154c8896d426a5df58bf2276b603e82184dfae4f54d77dbb212f36e34f37
+pip install --index-url https://pypi.org/simple wheels/torch-*.whl numpy==2.4.6
+OMP_NUM_THREADS=1 python scripts/run_syn_learn_fm.py --smoke --out /tmp/p5_fm_smoke          # train-only timing smoke (seed 999)
+OMP_NUM_THREADS=1 python scripts/run_syn_learn_fm.py --out /tmp/p5_fm_rerun --cpu-spent-before 0   # full re-run into a fresh root
+```
+
+The runner refuses to write into an existing output root. A re-run with the
+same wheel should reproduce `results/raw/p5_syn_learn_01_fm_test/summary.json`
+up to timings (seeds are fixed; CPU kernels of a different torch build may
+differ in the last bits).
 
 `run_syn_learn.py` refuses to overwrite an existing output directory.
 Pre-registered runs must not be repeated for reporting. A re-run into a

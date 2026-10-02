@@ -657,3 +657,125 @@ Budget:
 
 Controls are reused from the round-4 run. Their per-example values were not
 stored, so no FM-vs-control paired comparison is planned.
+
+## 13. Neural flow arms: first execution (round 6, 2026-10-02)
+
+**Authorization.** The user delivered a limited approval block in the
+round-6 directive: a CPU-only torch install into an isolated venv, numpy from
+PyPI, execution within 1 thread / 1800 CPU-s / 2400 wall-s, and a minimal
+local TeX install for the PDF. Status of this stage:
+NEURAL_PILOT_AUTHORIZED_THIS_RUN. The validity and novelty of the method
+remain UNVERIFIED; the model-stage STOP record and the Gaussian calibration
+PASS are unchanged, and the PASS is not a neural-performance PASS.
+
+**Environment (results/env/torch_env.json).** Python 3.11.15, Linux x86_64,
+torch 2.14.1+cpu (wheel
+`torch-2.14.1+cpu-cp311-cp311-manylinux_2_28_x86_64.whl`, 196.2 MB, sha256
+`5e38154c…34f37`, from https://download.pytorch.org/whl/cpu), numpy 2.4.6
+(PyPI). CPU device and one thread verified with a real tensor. The venv
+(985 MB) is not committed. Install wall time 58 s.
+
+**Fixtures (results/env/fm_fixtures_run.json).** 12 torch fixtures pass
+(2.1 CPU-s): roles distinguishable for all patterns including value 0 and
+t = 0; observed and target roles disjoint; only target dims in loss and
+velocity; conditioning holds exactly the given variables; no leakage of
+unobserved variables (loss invariant to them); path t = 0 noise / t = 1
+data, velocity x1 − x0; Euler forward; per-network parameter and
+optimizer-state isolation; finite forward/backward and real updates on
+small train-only batches (not a quality claim).
+
+**D2 restated.** One Adam over the four independent MLPs is not an error in
+general; the earlier contract relied on the None-vs-zero gradient
+distinction. Per-network optimizers make the isolation explicit.
+
+**Amendment A2** (`configs/p5_syn_learn_01_fm_amendment_a2.json`, registered
+before any training; addenda added after the static review, still before
+training): the dev-loss rule is a diagnostic only (checkpoint = final
+iterate); 32 vs 128 steps compared as a paired per-example difference with
+shared noise (sampling keys omit the step count); the A1 "1.645 × combined
+SE" rule withdrawn; primary 128, secondary 32 regardless of outcome;
+between-arm effect ED_U(SHARED) − ED_U(INDEPENDENT), example-paired,
+samples unpaired; Holm over the fixed family of two FM target tests; no
+log-likelihood for the flow arms; INCONCLUSIVE only for non-finite values;
+INCOMPLETE_BUDGET only when the cap stops a stage.
+
+**Static review before training.** A read-only adversarial review (five
+lenses, two skeptics per finding) confirmed two major defects, fixed before
+the run: a non-finite loss would have been reported as INCOMPLETE_BUDGET and
+aborted the run; the stop-rule guard checked only the test summary. Minor
+fixes: Holm over the fixed family; label after test for non-finite test
+samples; manifest on failure; smoke budget; per-block summaries. Documented
+without code change: dev and test share sampling and permutation streams by
+the registered key scheme. The installed torch CPU generator uses the low 32
+bits of a seed; all 2406 effective seeds of the run were checked distinct
+(`results/env/seed_preflight.json`).
+
+**Smoke.** Train-only timing smoke with run seed 999 (two attempts, 6.9 +
+7.1 CPU-s; the first failed on a config-field bug fixed before anything
+else ran): estimate 481 CPU-s for the full plan against 1782 CPU-s
+remaining; the plan was run unchanged.
+
+**Order actually followed.** fixtures → smoke → A2 addenda → pre-run commit
+7e25f68 → training (INDEPENDENT, then SHARED) → dev evaluation and labels
+written → test evaluation → nothing changed afterwards.
+
+### 13.1 Outcome (test split; single run; commit 7e25f68, clean tree)
+
+Raw: `results/raw/p5_syn_learn_01_fm_{train,dev,test}/` (training.json,
+manifest.json, checkpoints with sha256, labels.json, summary.json,
+blocks.jsonl, per_example.jsonl, samples.jsonl.gz).
+
+| Arm | steps | p_T | p_J^U | Δ̂_T ×10³ [95% CI] | Δ̂_J^U ×10³ | D̂_U(direct, truth) ×10³ | D̂_U(seq, truth) ×10³ | sd ratio |
+|---|---|---|---|---|---|---|---|---|
+| INDEPENDENT | 128 (primary) | **0.005** (Holm 0.01) | 0.005 | 11.90 [7.19, 16.61] | 11.83 [7.01, 16.65] | 1.91 [0.02, 3.81] | 9.84 [6.95, 12.74] | 0.980 |
+| INDEPENDENT | 32 | 0.005 | 0.005 | 10.80 [6.26, 15.33] | 11.27 [6.63, 15.91] | 2.19 | 10.18 | 0.952 |
+| SHARED | 128 (primary) | 0.425 (Holm 0.425) | 0.035 | 0.24 [−2.75, 3.24] | 2.52 [0.28, 4.76] | 5.51 [3.52, 7.51] | 2.39 [0.40, 4.38] | 0.932 |
+| SHARED | 32 | 0.295 | 0.010 | 0.59 [−2.35, 3.54] | 2.77 [0.59, 4.96] | 7.00 | 3.28 | 0.905 |
+
+- **Primary family (Holm, 2 tests at 128 steps):** INDEPENDENT 0.01 (rejected),
+  SHARED 0.425 (not flagged).
+- **Between-arm paired effect** ED_U(SHARED) − ED_U(INDEPENDENT), same 200
+  test examples, samples unpaired: target/128 **−11.65 ×10⁻³ [−16.93, −6.38]**
+  (bootstrap [−16.86, −6.30]); target/32 −10.20 [−15.32, −5.09]; joint/128
+  −9.30 [−14.43, −4.18]. Negative = shared arm has the smaller gap.
+- **Solver sensitivity (paired, shared noise):** all four (arm × level)
+  endpoints flagged on test: INDEPENDENT target +1.10 [0.79, 1.41], joint
+  +0.55 [0.31, 0.80]; SHARED target −0.35 [−0.64, −0.06], joint −0.25
+  [−0.42, −0.08] (×10⁻³, 128 minus 32). Quality shifts: SHARED direct
+  −1.48 [−1.76, −1.21] (finer steps more accurate). By the pre-registered
+  rule the numerical and learned components are NUMERICS_NOT_SEPARATED at
+  the 10⁻³ level; the between-arm difference is an order of magnitude
+  larger and has the same sign at both levels.
+- **Dev labels (written before test):** both EVALUABLE; UNDERTRAINING_FLAG
+  false (max relative dev-loss decrease 1.04%); dev target p: INDEPENDENT
+  0.005, SHARED 0.585; SOLVER_SENSITIVE on dev: INDEPENDENT yes, SHARED no.
+  Label after test: both EVALUABLE (no non-finite samples).
+- **Cost:** INDEPENDENT 34 757 params, 20 000 updates (5000 per network),
+  31.9 CPU-s training, 13.5 CPU-s test sampling; SHARED 34 819 params,
+  20 000 updates (exposure 5052/4985/4953/5010), 46.7 CPU-s training,
+  35.4 CPU-s test sampling. Not equal-compute. Whole run 220.2 CPU-s,
+  226.7 wall-s, 1 thread; budget total 238.3 / 1800 CPU-s.
+- **Checkpoints:** INDEPENDENT sha256 `e2e2a5c89188…` (150 229 B); SHARED
+  `4f6154f5c426…` (143 185 B); final iterates.
+
+### 13.2 Reading
+
+- **Separate conditionals are detectably incompatible on this probe.** The
+  independent arm's direct q(z|x) is close to the truth (1.9 ×10⁻³) while
+  its sequential route is not (9.8 ×10⁻³): the gap is error accumulated over
+  two learned conditionals.
+- **The shared network has the smaller target gap, at worse direct quality,
+  and its joint endpoint is flagged.** Non-detection at the target is not
+  equality, and parameter sharing defines no joint (C38 NOT_ESTABLISHED).
+  The joint-level rejection at target-level non-detection is the direction
+  of Klötergens et al. Prop. 2 once more, not a new fact.
+- **p-values are not scores.** The decisive quantity is the paired
+  difference with its interval; one rejecting arm and one non-rejecting arm
+  alone would not show a difference.
+- **What this is not:** evidence about real any-to-any generators; a
+  seed-replicated effect; an equal-compute comparison; a statement about
+  the ideal continuous-time flow (the tests concern the fixed-solver output
+  laws).
+- **Decision table update:** "separate vs shared" is now measured once;
+  "gap explained by solver" is flagged (not separated at 10⁻³);
+  "non-detection vs equality / correctness / global joint" unchanged.

@@ -1,0 +1,38 @@
+{
+ "INDEPENDENT_CONDITIONAL_FM": {
+  "arm": "INDEPENDENT_CONDITIONAL_FM",
+  "trained_updates": 20000,
+  "complete": true,
+  "UNDERTRAINING_FLAG": false,
+  "dev_loss_rel_decrease_90_to_100": {
+   "z|x": -0.00419242043080371,
+   "y|x": -0.0056692099985885475,
+   "z|x,y": -0.007956022275429535,
+   "y,z|x": -0.0016068869604483427
+  },
+  "non_finite": false,
+  "dev_SOLVER_SENSITIVE_target": true,
+  "dev_SOLVER_SENSITIVE_joint": true,
+  "dev_target_p_primary_level": 0.005,
+  "label": "EVALUABLE",
+  "note": "labels fixed before the test split is opened; the dev p-value is descriptive and chooses nothing"
+ },
+ "SHARED_CONDITIONAL_FM": {
+  "arm": "SHARED_CONDITIONAL_FM",
+  "trained_updates": 20000,
+  "complete": true,
+  "UNDERTRAINING_FLAG": false,
+  "dev_loss_rel_decrease_90_to_100": {
+   "z|x": -0.014615467199428283,
+   "y|x": 0.010396115663814669,
+   "z|x,y": -0.013647849960914461,
+   "y,z|x": -0.000815273388235695
+  },
+  "non_finite": false,
+  "dev_SOLVER_SENSITIVE_target": false,
+  "dev_SOLVER_SENSITIVE_joint": false,
+  "dev_target_p_primary_level": 0.585,
+  "label": "EVALUABLE",
+  "note": "labels fixed before the test split is opened; the dev p-value is descriptive and chooses nothing"
+ }
+}

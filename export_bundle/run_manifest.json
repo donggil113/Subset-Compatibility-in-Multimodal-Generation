@@ -1,12 +1,13 @@
 {
  "project": "P5: Do Any-to-Any Generators Define a Coherent Joint Distribution?",
- "updated": "2026-09-27 (round 5)",
+ "updated": "2026-10-02 (round 6)",
  "environment": {
   "python": "3.11.15",
   "platform": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
   "packages": "standard library only (numpy/scipy/torch/pytest not installed; nothing installed)",
   "compute": "CPU, single process (<= 2 threads allowed); no GPU",
-  "network_use": "literature lookup only (read-only web fetch); no uploads, no dataset/model downloads"
+  "network_use": "literature lookup only (read-only web fetch); no uploads, no dataset/model downloads",
+  "packages_round6": "isolated venv .venv-p5 (not committed): torch 2.14.1+cpu (CPU index; wheel sha256 5e38154c...), numpy 2.4.6 (PyPI); minimal TeX Live 2026 in /home/user/texlive-p5 (235 MB); both under user-delivered limited approvals (round 6)"
  },
  "sources": {
   "data": "synthetic Gaussian draws defined in configs/p5_first_run.json (no external data)",
@@ -189,6 +190,84 @@
     "SHARED_CONDITIONAL_FM": "NOT_RUN"
    },
    "role": "reported (single pre-registered run)"
+  },
+  {
+   "run_id": "p5_syn_learn_01_fm",
+   "experiment_id": "P5-SYN-LEARN-01 (flow-matching arms)",
+   "splits": "train (fit), dev (labels), test (reported)",
+   "raw_dirs": [
+    "results/raw/p5_syn_learn_01_fm_train",
+    "results/raw/p5_syn_learn_01_fm_dev",
+    "results/raw/p5_syn_learn_01_fm_test"
+   ],
+   "config_path": "configs/p5_syn_learn_01.json",
+   "amendments": [
+    "configs/p5_syn_learn_01_fm_amendment_a1.json",
+    "configs/p5_syn_learn_01_fm_amendment_a2.json"
+   ],
+   "git_commit_at_run": "7e25f68a7a5c984b547f56b2a4856d4b0aafc399",
+   "git_worktree_dirty_at_run": false,
+   "started_utc": "2026-10-02T20:55:35Z",
+   "cpu_seconds_process": 220.2,
+   "cpu_seconds_budget_total": 238.3,
+   "wall_seconds": 226.7,
+   "caps": {
+    "cpu_cap_seconds": 1800,
+    "wall_cap_seconds": 2400,
+    "threads": 1,
+    "processes": 1,
+    "includes": [
+     "fixtures (results/env/fm_fixtures_run.json)",
+     "timing smoke",
+     "training of both arms",
+     "dev evaluation",
+     "test evaluation",
+     "permutation tests",
+     "bootstrap"
+    ],
+    "excluded_and_recorded_separately": [
+     "torch install",
+     "TeX install",
+     "PDF build"
+    ],
+    "smoke": "train-only timing smoke with run seed 999 (<= 60 CPU-s), used only to check that the fixed plan fits the remaining budget; not reported as a result"
+   },
+   "processes": 1,
+   "threads": 1,
+   "torch": "2.14.1+cpu",
+   "torch_wheel_sha256": "5e38154c8896d426a5df58bf2276b603e82184dfae4f54d77dbb212f36e34f37",
+   "status": "COMPLETE",
+   "stages": {
+    "train": "COMPLETE",
+    "dev": "COMPLETE",
+    "test": "COMPLETE"
+   },
+   "labels_dev": {
+    "INDEPENDENT_CONDITIONAL_FM": "EVALUABLE",
+    "SHARED_CONDITIONAL_FM": "EVALUABLE"
+   },
+   "label_after_test": {
+    "INDEPENDENT_CONDITIONAL_FM": "EVALUABLE",
+    "SHARED_CONDITIONAL_FM": "EVALUABLE"
+   },
+   "checkpoints": {
+    "INDEPENDENT_CONDITIONAL_FM": {
+     "path": "p5_syn_learn_01_fm_train/checkpoints/INDEPENDENT_CONDITIONAL_FM.pt",
+     "sha256": "e2e2a5c8918897beae0a8cf9a27f233ad587dab7f391f9fa2519c2376ccf8fb0",
+     "bytes": 150229,
+     "updates": 20000,
+     "final_iterate": true
+    },
+    "SHARED_CONDITIONAL_FM": {
+     "path": "p5_syn_learn_01_fm_train/checkpoints/SHARED_CONDITIONAL_FM.pt",
+     "sha256": "4f6154f5c426d2330f6b1b5e9a02918829b54a0d5d0569e87769e313d3eb2824",
+     "bytes": 143185,
+     "updates": 20000,
+     "final_iterate": true
+    }
+   },
+   "stream_note": "sampling and permutation seed keys carry no split field (registered scheme); dev and test share noise and allocations by construction; arms and branches have separate streams",
+   "role": "reported (single pre-registered run; NEURAL_PILOT_AUTHORIZED_THIS_RUN)"
   }
  ],
  "verdicts_first_run": {
@@ -204,12 +283,11 @@
  "not_run": [
   "P5-REAL-01 (learned generator gaps)",
   "P5-REAL-02 (consistency regularizer vs baselines)",
-  "SHARED_CONDITIONAL_NET baseline (renamed from shared-joint; P5-SYN-LEARN-01 SHARED_CONDITIONAL_FM arm BLOCKED_DEPENDENCIES)",
+  "SHARED_CONDITIONAL_NET baseline (renamed from shared-joint; P5-SYN-LEARN-01 SHARED_CONDITIONAL_FM arm RUN in round 6)",
   "same-extra-compute baseline",
   "factorization consistency (C2)",
   "real multimodal dataset (NOT_DECIDED)",
-  "PDF build (no TeX; installation not approved; external compile services not used)",
-  "P5-SYN-LEARN-01 INDEPENDENT_CONDITIONAL_FM arm (BLOCKED_DEPENDENCIES)"
+  "visual (rasterized) check of the PDF pages: no renderer available (headless Chromium gives a blank image); layout checked from the LaTeX log and .aux only"
  ],
  "analyses": [
   {
@@ -251,12 +329,13 @@
   "template_year": 2026,
   "style": "official ICML 2026 (anonymous review), not vendored",
   "submission_ready": false,
-  "compile_status": "COMPILE_NOT_RUN (no TeX in environment; installation not approved)",
+  "compile_status": "COMPILED locally with TeX Live 2026 (round 6); see paper/build_log_summary.json",
   "static_check": "scripts/check_tex.py",
   "claims": "paper/claims.csv",
-  "version": "v3.1 (wording corrections; v4 blocked on FM results)",
+  "version": "v4 (neural flow arms + coherent controls)",
   "page_fit_8": "UNVERIFIED (static estimate about 5080 words before the appendix, incl. tables/captions)",
-  "export_bundle": "export_bundle/ (source only; no PDF; style fetched by export_bundle/fetch_style.sh with SHA-256 check)"
+  "export_bundle": "export_bundle/ (source only; no PDF; style fetched by export_bundle/fetch_style.sh with SHA-256 check)",
+  "pdf": "paper/main.pdf"
  },
  "verdicts_round3": {
   "calib_v2": "NOT_RUN; superseded before any run (gate OC defect)",
@@ -295,5 +374,15 @@
    "GMM_coherence": "by construction, not shown by p > 0.05"
   },
   "kept": "EH1 FAIL; calib v2 NEVER RUN; calib v3 PASS (not re-run); TRUE/FITTED control results (not re-run); model-stage STOP record"
+ },
+ "verdicts_round6": {
+  "P5_SYN_LEARN_01_INDEPENDENT_CONDITIONAL_FM": "TOY_RESULT: target Test P p=0.005 (Holm 0.01), gap 11.9e-3 [7.2, 16.6]; joint p=0.005; direct close to truth (1.9e-3), sequential route 9.8e-3; SOLVER_SENSITIVE (paired +1.10e-3 [0.79, 1.41]); label EVALUABLE; one model seed",
+  "P5_SYN_LEARN_01_SHARED_CONDITIONAL_FM": "TOY_RESULT: target p=0.425 (not flagged), gap 0.2e-3 [-2.8, 3.2]; projected-joint p=0.035 (secondary; gap 2.5e-3 [0.3, 4.8]); direct less accurate (5.5e-3; spread ratio 0.93); SOLVER_SENSITIVE (paired -0.35e-3); label EVALUABLE; one model seed",
+  "between_arms_primary": "paired ED_U(SHARED)-ED_U(IND) at target/128 on test: -11.65e-3 [-16.93, -6.38] (bootstrap [-16.86, -6.30]); negative = shared smaller gap; at 32 steps -10.20e-3",
+  "numerics": "all four (arm x level) endpoints flagged SOLVER_SENSITIVE on test by the pre-registered paired rule (differences 0.3-1.1e-3, an order of magnitude below the between-arm difference): NUMERICS_NOT_SEPARATED at that level",
+  "coherent_joint_for_shared": "NOT_ESTABLISHED: parameter sharing defines no joint; the shared arm's joint-level endpoint is flagged",
+  "scope": "synthetic 3-variable probe; one data seed; one model seed per arm; not equal-compute (shared about 1.5x training CPU and 2.6x sampling CPU); not real multimodal data",
+  "kept": "EH1 FAIL; calib v2 NEVER RUN; calib v3 PASS (not re-run; not a neural PASS); TRUE/FITTED control results (not re-run); model-stage STOP record kept (this stage ran under NEURAL_PILOT_AUTHORIZED_THIS_RUN)",
+  "method_validity_novelty": "UNVERIFIED"
  }
 }

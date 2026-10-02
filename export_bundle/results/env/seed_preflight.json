@@ -1,0 +1,9 @@
+{
+ "torch": "2.14.1+cpu",
+ "cpu_generator_uses_low_32_bits_only": true,
+ "n_effective_seeds_checked": 2406,
+ "n_distinct": 2406,
+ "collisions": {},
+ "note": "sampling keys are shared by dev/test and by the two solver levels by design, so those are not counted twice; model-init seeds are passed to torch.manual_seed (same truncation)",
+ "cpu_seconds": 0.06321516999999988
+}

@@ -489,6 +489,98 @@ def write_synlearn_assets():
         f.write(n)
 
 
+def write_fm_assets():
+    """Tables and macros for the P5-SYN-LEARN-01 flow-matching arms (round 6)."""
+    base = os.path.join(ROOT, "results", "raw")
+    tdir, ddir, trdir = (os.path.join(base, f"p5_syn_learn_01_fm_{k}") for k in ("test", "dev", "train"))
+    n = ""
+    if not os.path.exists(os.path.join(tdir, "summary.json")):
+        n += macro("numFmStatus", "NOT RUN")
+        with open(os.path.join(OUT, "numbers.tex"), "a") as f:
+            f.write(n)
+        return
+    s, d, tr = load(os.path.join(tdir, "summary.json")), load(os.path.join(ddir, "summary.json")), load(os.path.join(trdir, "training.json"))
+    man, labels = load(os.path.join(trdir, "manifest.json")), load(os.path.join(ddir, "labels.json"))
+    arms = [("INDEPENDENT_CONDITIONAL_FM", "Ind", "Independent conditional FM"), ("SHARED_CONDITIONAL_FM", "Sh", "Shared conditional net")]
+    prim, sec = 128, 32
+
+    def ci3(c):
+        return f"{1e3 * c['mean']:.2f} [{1e3 * c['lo']:.2f}, {1e3 * c['hi']:.2f}]"
+
+    def ci2(c):
+        return f"{c['mean']:.3f} [{c['lo']:.3f}, {c['hi']:.3f}]"
+
+    # Main results table (test split; both solver levels).
+    t = HEADER + "\\begin{tabular}{llrrrrr}\n\\toprule\n"
+    t += ("Arm & steps & $p_T$ & $p_J^U$ & $\\widehat{\\Delta}_T\\times10^3$ [95\\% CI] & $\\widehat{\\Delta}_J^U\\times10^3$ [95\\% CI] & $\\widehat{D}_U(\\text{direct},\\text{truth})\\times10^3$ [95\\% CI] \\\\\n\\midrule\n")
+    for arm, short, lab in arms:
+        for steps in (prim, sec):
+            bt, bj = s["blocks"][f"{arm}|target|{steps}"], s["blocks"][f"{arm}|joint|{steps}"]
+            t += (f"{lab} & {steps}{' (primary)' if steps == prim else ''} & {bt['p']:.3f} & {bj['p']:.3f} & {ci3(bt['effect_ED_U'])} & "
+                  f"{ci3(bj['effect_ED_U'])} & {ci3(bt['quality_direct_ED_U_to_truth'])} \\\\\n")
+    t += "\\bottomrule\n\\end{tabular}\n"
+    open(os.path.join(OUT, "tab_fm.tex"), "w").write(t)
+    # Cost and diagnostics table.
+    t = HEADER + "\\begin{tabular}{lrrrrrr}\n\\toprule\n"
+    t += "Arm & params & updates & train CPU-s & sampling CPU-s (test) & dev-loss decrease 90$\\to$100\\% (max) & solver paired $\\times10^3$ [95\\% CI] \\\\\n\\midrule\n"
+    for arm, short, lab in arms:
+        ti = tr[arm]
+        samp = sum(b["timing_sampling"]["cpu_seconds"] for k, b in s["blocks"].items() if k.startswith(arm + "|"))
+        rel = max(ti["dev_loss_rel_decrease_90_to_100"].values())
+        sol = s["solver_sensitivity"][f"{arm}|target"]["paired_ED_U_fine_minus_coarse"]
+        t += (f"{lab} & {ti['n_params']['total']} & {ti['updates']} & {ti['train_cpu_seconds']:.0f} & {samp:.0f} & "
+              f"{100 * rel:.2f}\\% & {ci3(sol)} \\\\\n")
+    t += "\\bottomrule\n\\end{tabular}\n"
+    open(os.path.join(OUT, "tab_fm_cost.tex"), "w").write(t)
+    n += macro("numFmStatus", man["status"])
+    for arm, short, lab in arms:
+        bt, bj = s["blocks"][f"{arm}|target|{prim}"], s["blocks"][f"{arm}|joint|{prim}"]
+        b32 = s["blocks"][f"{arm}|target|{sec}"]
+        n += macro(f"numFm{short}P", f"{bt['p']:.3f}")
+        n += macro(f"numFm{short}PJ", f"{bj['p']:.3f}")
+        n += macro(f"numFm{short}PThirtyTwo", f"{b32['p']:.3f}")
+        n += macro(f"numFm{short}Holm", f"{s['primary_family']['holm_p'][arm]:.3f}")
+        n += macro(f"numFm{short}D", ci3(bt["effect_ED_U"]))
+        n += macro(f"numFm{short}DJ", ci3(bj["effect_ED_U"]))
+        n += macro(f"numFm{short}Q", ci3(bt["quality_direct_ED_U_to_truth"]))
+        n += macro(f"numFm{short}QSeq", ci3(bt["quality_seq_ED_U_to_truth"]))
+        n += macro(f"numFm{short}QJ", ci3(bj["quality_direct_projected_ED_U_to_truth"]))
+        n += macro(f"numFm{short}Sdr", ci2(bt["sd_ratio_direct"]))
+        n += macro(f"numFm{short}Shift", ci2(bt["mean_shift_direct_std"]))
+        n += macro(f"numFm{short}MinDistinct", str(bt["min_distinct_intermediates"]))
+        sol = s["solver_sensitivity"][f"{arm}|target"]
+        n += macro(f"numFm{short}Solver", ci3(sol["paired_ED_U_fine_minus_coarse"]))
+        n += macro(f"numFm{short}SolverFlag", "yes" if sol["SOLVER_SENSITIVE"] else "no")
+        solj = s["solver_sensitivity"][f"{arm}|joint"]
+        n += macro(f"numFm{short}SolverJ", ci3(solj["paired_ED_U_fine_minus_coarse"]))
+        n += macro(f"numFm{short}SolverQ", ci3(sol["paired_quality_fine_minus_coarse"]))
+        ti = tr[arm]
+        n += macro(f"numFm{short}Params", str(ti["n_params"]["total"]))
+        n += macro(f"numFm{short}Updates", str(ti["updates"]))
+        n += macro(f"numFm{short}TrainCPU", f"{ti['train_cpu_seconds']:.0f}")
+        n += macro(f"numFm{short}TrainWall", f"{ti['train_wall_seconds']:.0f}")
+        n += macro(f"numFm{short}Under", f"{100 * max(ti['dev_loss_rel_decrease_90_to_100'].values()):.2f}")
+        n += macro(f"numFm{short}UnderFlag", "yes" if ti.get("UNDERTRAINING_FLAG") else "no")
+        n += macro(f"numFm{short}Label", labels[arm]["label"].replace("_", "\\_"))
+        n += macro(f"numFm{short}DevP", f"{d['blocks'][f'{arm}|target|{prim}']['p']:.3f}")
+        samp = sum(b["timing_sampling"]["cpu_seconds"] for k, b in s["blocks"].items() if k.startswith(arm + "|"))
+        n += macro(f"numFm{short}SampCPU", f"{samp:.0f}")
+        n += macro(f"numFm{short}Exposure", ", ".join(f"{k}: {v}" for k, v in ti["pattern_exposure"].items()).replace("|", "$\\mid$"))
+    bw = s["between_arms"][f"target|{prim}"]
+    n += macro("numFmBetween", ci3(bw["paired_normal"]))
+    n += macro("numFmBetweenBoot", f"[{1e3 * bw['bootstrap']['lo']:.2f}, {1e3 * bw['bootstrap']['hi']:.2f}]")
+    n += macro("numFmBetweenN", str(bw["paired_normal"]["n_pairs"]))
+    bwj = s["between_arms"][f"joint|{prim}"]
+    n += macro("numFmBetweenJ", ci3(bwj["paired_normal"]))
+    bw32 = s["between_arms"][f"target|{sec}"]
+    n += macro("numFmBetweenThirtyTwo", ci3(bw32["paired_normal"]))
+    n += macro("numFmCPU", f"{man['budget']['cpu_seconds_total_incl_before']:.0f}")
+    n += macro("numFmWall", f"{man['budget']['wall_seconds']:.0f}")
+    n += macro("numFmTorch", man["torch"].replace("+", "{+}"))
+    with open(os.path.join(OUT, "numbers.tex"), "a") as f:
+        f.write(n)
+
+
 def write_reference_lines():
     """Horizontal reference line data (detection resolution) for the figure."""
     num = open(os.path.join(OUT, "numbers.tex")).read()
@@ -502,3 +594,4 @@ if __name__ == "__main__":
     write_reference_lines()
     write_calibration_assets()
     write_synlearn_assets()
+    write_fm_assets()

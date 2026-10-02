@@ -14,6 +14,7 @@ Excluded on purpose (available in the repository at the recorded commit):
 * The official ICML 2026 style files (no redistribution licence; fetched by
   export_bundle/fetch_style.sh with a SHA-256 check).
 * paper/p5_skeleton.tex (the round-1 skeleton, superseded by main.tex).
+* The PDF built in round 6 is copied separately by the build step (paper/main.pdf) when it exists.
 
 Usage: python3 scripts/make_export_bundle.py
 """
@@ -29,7 +30,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "export_bundle")
 
 PATTERNS = [
-    "paper/main.tex", "paper/fig_numerics.tex", "paper/references.bib", "paper/claims.csv",
+    "paper/main.tex", "paper/fig_numerics.tex", "paper/references.bib", "paper/claims.csv", "paper/main.pdf", "paper/build_log_summary.json",
     "paper/generated/*",
     "configs/*.json",
     "src/p5compat/*.py", "scripts/*.py", "tests/*.py",
@@ -39,6 +40,9 @@ PATTERNS = [
     "results/raw/p5_first_run_v1_test/summary.json", "results/raw/p5_first_run_v1_test/manifest.json",
     "results/raw/p5_e8_exact_v1/*", "results/raw/p5_e8_calib_v3/*",
     "results/raw/p5_syn_learn_01_dev/*", "results/raw/p5_syn_learn_01_test/*",
+    "results/raw/p5_syn_learn_01_fm_train/*", "results/raw/p5_syn_learn_01_fm_train/checkpoints/*",
+    "results/raw/p5_syn_learn_01_fm_dev/*", "results/raw/p5_syn_learn_01_fm_test/*",
+    "results/env/*",
     "STATUS.md", "RESEARCH_PACKET.md", "RELATED_WORK.md", "run_manifest.json",
 ]
 

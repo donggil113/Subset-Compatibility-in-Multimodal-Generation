@@ -1,0 +1,73 @@
+{
+ "built_utc": "2026-10-02T21:07:44Z",
+ "engine": "3.141592653-2.6-1.40.29",
+ "texlive": "TeX Live 2026 (minimal, /home/user/texlive-p5, installed under the round-6 limited approval)",
+ "style": "official icml2026.zip (sha256 8b29290f5828e176debb57ea9cc00252502973d55ea561a2f18a7f0a326bfc6c), anonymous review mode, unmodified; TEMPLATE_YEAR 2026, TARGET_YEAR 2027; SUBMISSION_READY false",
+ "commands": [
+  "pdflatex -interaction=nonstopmode -halt-on-error main.tex",
+  "bibtex main",
+  "pdflatex ... x2"
+ ],
+ "pages_total": 19,
+ "body_end_page_conclusion_last_sentence": 8,
+ "page_of": {
+  "sec:intro": 1,
+  "sec:related": 2,
+  "sec:setup": 3,
+  "sec:method": 4,
+  "sec:exp": 5,
+  "sec:exp-real": 7,
+  "sec:limits": 8,
+  "sec:conclusion": 8,
+  "app:proofs": 11,
+  "tab:calib": 7,
+  "tab:synlearn": 7,
+  "tab:fm": 8,
+  "tab:fm-cost": 17,
+  "tab:claims": 18,
+  "tab:decision": 18
+ },
+ "conclusion_end_position_pt_from_page_bottom": 77.2,
+ "note_on_position": "measured with \\pdfsavepos in a scratch copy: the last line of the conclusion is the last line of page 8, right column",
+ "overfull_hbox": 0,
+ "overfull_vbox": 0,
+ "underfull_hbox": 5,
+ "undefined_references": 0,
+ "multiply_defined": 0,
+ "latex_warnings": [
+  "`h' float specifier changed to `ht'."
+ ],
+ "embedded_type1_fonts": [
+  "cmex10.pfb",
+  "cmex7.pfb",
+  "cmmi10.pfb",
+  "cmmi5.pfb",
+  "cmmi6.pfb",
+  "cmmi7.pfb",
+  "cmmi9.pfb",
+  "cmr10.pfb",
+  "cmr5.pfb",
+  "cmr6.pfb",
+  "cmr7.pfb",
+  "cmr9.pfb",
+  "cmsy10.pfb",
+  "cmsy5.pfb",
+  "cmsy6.pfb",
+  "cmsy7.pfb",
+  "cmsy9.pfb",
+  "msbm10.pfb",
+  "msbm7.pfb",
+  "ucrr8a.pfb",
+  "utmb8a.pfb",
+  "utmr8a.pfb",
+  "utmri8a.pfb"
+ ],
+ "pdf_bytes": 401300,
+ "pdf_sha256": "7dd4a681a9392452aa1d9bb738ba95af4043fcb6184a1fe5eb56b7fa08fde1c8",
+ "pdf_metadata_author": "Anonymous Authors (set by the ICML style in review mode)",
+ "visual_check": "NOT PERFORMED: no PDF rasterizer available (headless Chromium returned a blank image; no poppler/ghostscript; none approved); legibility at 100% is therefore unverified; layout checked from the log (no overfull boxes, no undefined references) and the .aux page numbers",
+ "todo_markers_in_body": [
+  "P5-REAL-02 (real paired multimodal data; intentionally kept)"
+ ],
+ "font_size_margins": "unchanged from the style (no \\small, no geometry changes); fit obtained by moving three tables to the appendix and trimming prose"
+}

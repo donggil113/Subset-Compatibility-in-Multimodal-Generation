@@ -1,9 +1,10 @@
 """Tiny fixtures for the flow-matching adapter (implementation checks only).
 
-They check dimensions, role encoding, path direction, parameter sharing and
-that one optimizer step changes exactly the intended parameters. They are not
-a search for good training settings. Without torch every test is SKIPPED,
-which is not a pass.
+They check dimensions, role encoding, path direction, parameter sharing,
+leakage of unobserved variables, and that one optimizer step changes exactly
+the intended parameters and optimizer state. They are not a search for good
+training settings, and a decreasing loss here says nothing about generative
+quality. Without torch every torch test is SKIPPED, which is not a pass.
 """
 
 import os
@@ -47,14 +48,60 @@ class TestAdapterWithTorch(unittest.TestCase):
 
     def test_shared_role_encoding_distinguishes_patterns_and_observed_zero(self):
         torch = fa.torch
-        one = torch.zeros(1, 1)
+        one = torch.zeros(1, 1)  # t = 0, all values 0
         enc = {k: fa.SharedConditionalFM.encode(k, torch.zeros(1, len(t)), one, torch.zeros(1, len(g)))
                for k, (g, t) in fa.PATTERNS.items()}
         roles = {k: tuple(v[0, 3:9].tolist()) for k, v in enc.items()}
-        self.assertEqual(len(set(roles.values())), 4)  # all values 0, yet four distinct inputs
+        self.assertEqual(len(set(roles.values())), 4)  # all values 0 and t = 0, yet four distinct inputs
+        for k, (g, t) in fa.PATTERNS.items():
+            obs, tgt = enc[k][0, 3:6], enc[k][0, 6:9]
+            self.assertEqual((obs * tgt).sum().item(), 0.0)  # no coordinate is both observed and target
+            self.assertEqual(obs.sum().item(), len(g))
+            self.assertEqual(tgt.sum().item(), len(t))
         # observed y = 0 (z|x,y) vs absent y (z|x): same state, different observed mask
         self.assertEqual(enc["z|x,y"][0, 1].item(), 0.0)
         self.assertNotEqual(roles["z|x,y"], roles["z|x"])
+
+    def test_shared_velocity_returns_target_dims_only_and_state_holds_xt(self):
+        torch = fa.torch
+        m = fa.SharedConditionalFM(8, 1, seed=0)
+        for k, (g, t) in fa.PATTERNS.items():
+            xt = torch.randn(3, len(t))
+            cond = torch.randn(3, len(g))
+            out = m.velocity(k, xt, torch.rand(3, 1), cond)
+            self.assertEqual(tuple(out.shape), (3, len(t)))
+            enc = fa.SharedConditionalFM.encode(k, xt, torch.zeros(3, 1), cond)
+            for j, v in enumerate(t):
+                self.assertTrue(torch.equal(enc[:, fa.VARS.index(v)], xt[:, j]))  # target slot carries x_t, not data
+            for j, v in enumerate(g):
+                self.assertTrue(torch.equal(enc[:, fa.VARS.index(v)], cond[:, j]))
+
+    def test_loss_inputs_have_given_and_target_columns_only(self):
+        torch = fa.torch
+        seen = {}
+
+        class Capture:
+            def velocity(self, pattern, xt, t, cond):
+                seen[pattern] = (xt.shape, t.shape, cond.shape, cond)
+                return torch.zeros_like(xt)
+        gen = torch.Generator().manual_seed(0)
+        for k, (g, t) in fa.PATTERNS.items():
+            fa.fm_loss(Capture(), k, ROWS[:5], gen)
+            xs, ts, cs, cond = seen[k]
+            self.assertEqual((xs[1], ts[1], cs[1]), (len(t), 1, len(g)))
+            expected = torch.tensor([[r[v] for v in g] for r in ROWS[:5]], dtype=torch.float32)
+            self.assertTrue(torch.equal(cond, expected))  # conditioning holds exactly the given variables
+
+    def test_no_leakage_of_unobserved_variables(self):
+        # For z|x the loss must not depend on y; for y|x it must not depend on z (same noise draws).
+        torch = fa.torch
+        for m in (fa.IndependentConditionalFM(8, 1, seed=1), fa.SharedConditionalFM(8, 1, seed=1)):
+            for pattern, hidden in (("z|x", "y"), ("y|x", "z")):
+                rows_a = [dict(r) for r in ROWS[:6]]
+                rows_b = [dict(r, **{hidden: r[hidden] + 7.0}) for r in ROWS[:6]]
+                la = fa.fm_loss(m, pattern, rows_a, torch.Generator().manual_seed(3))
+                lb = fa.fm_loss(m, pattern, rows_b, torch.Generator().manual_seed(3))
+                self.assertEqual(la.item(), lb.item(), (type(m).__name__, pattern))
 
     def test_path_direction(self):
         torch = fa.torch
@@ -64,26 +111,31 @@ class TestAdapterWithTorch(unittest.TestCase):
         self.assertTrue(torch.equal(xt0, x0) and torch.equal(xt1, x1))
         self.assertTrue(torch.equal(u, x1 - x0))
 
-    def test_euler_integrates_forward_in_time(self):
+    def test_euler_integrates_forward_in_time_and_noise_is_step_independent(self):
         class Const:
             def velocity(self, pattern, x, t, cond):
                 return fa.torch.full_like(x, 2.0)
-        s = fa.FMSampler(Const(), "z|x", 8)
-        rng1, rng2 = random.Random(5), random.Random(5)
-        out = s.sample_batch(rng1, [[0.0]] * 3)
-        base = fa.torch.randn(3, 1, generator=fa.torch.Generator().manual_seed(rng2.getrandbits(63)))
-        for a, b in zip(out, base.tolist()):
-            self.assertAlmostEqual(a[0], b[0] + 2.0, places=5)
+        out8 = fa.FMSampler(Const(), "z|x", 8).sample_batch(random.Random(5), [[0.0]] * 3)
+        out32 = fa.FMSampler(Const(), "z|x", 32).sample_batch(random.Random(5), [[0.0]] * 3)
+        base = fa.torch.randn(3, 1, generator=fa.torch.Generator().manual_seed(random.Random(5).getrandbits(63)))
+        for a, b, c in zip(out8, out32, base.tolist()):
+            self.assertAlmostEqual(a[0], c[0] + 2.0, places=5)  # x(1) = x(0) + integral of velocity 2
+            self.assertAlmostEqual(a[0], b[0], places=5)  # same initial noise at both step counts
 
-    def test_one_step_updates_only_the_trained_network(self):
+    def test_one_step_updates_only_the_trained_network_and_its_optimizer(self):
         m = fa.IndependentConditionalFM(8, 1, seed=1)
         before = {k: [p.detach().clone() for p in n.parameters()] for k, n in m.nets.items()}
-        info = fa.train(m, ROWS, list(fa.PATTERNS), total_updates=1, batch=4, lr=1e-2, seed=2, log_every=1)
+        opts = m.optimizers(1e-2)
+        info = fa.train(m, ROWS, list(fa.PATTERNS), total_updates=1, batch=4, lr=1e-2, seed=2, log_every=1, opts=opts)
         self.assertTrue(info["all_losses_finite"])
+        self.assertEqual(info["updates"], 1)
         first = list(fa.PATTERNS)[0]
         for k, n in m.nets.items():
             changed = any(not fa.torch.equal(a, b) for a, b in zip(before[k], n.parameters()))
             self.assertEqual(changed, k == first, k)
+            steps = [int(s["step"]) for s in opts[k].state.values()]
+            self.assertEqual(steps, [1] * len(steps) if k == first else [], k)  # untouched optimizers hold no state
+        self.assertEqual(info["pattern_exposure"][first], 1)
 
     def test_shared_gradients_finite_and_shared_across_patterns(self):
         torch = fa.torch
@@ -97,6 +149,24 @@ class TestAdapterWithTorch(unittest.TestCase):
             self.assertTrue(torch.isfinite(loss))
             self.assertTrue(torch.isfinite(w.grad).all())
             self.assertGreater(w.grad.abs().sum().item(), 0.0)
+
+    def test_small_train_only_batch_updates_and_stays_finite(self):
+        # Optimizer updates happen and losses stay finite on a few train-only batches (not a quality claim).
+        for m in (fa.IndependentConditionalFM(8, 1, seed=6), fa.SharedConditionalFM(8, 1, seed=6)):
+            p0 = [p.detach().clone() for p in m.parameters()]
+            info = fa.train(m, ROWS, list(fa.PATTERNS), total_updates=8, batch=4, lr=1e-2, seed=7, log_every=4)
+            self.assertTrue(info["all_losses_finite"])
+            self.assertEqual(info["updates"], 8)
+            self.assertTrue(any(not fa.torch.equal(a, b) for a, b in zip(p0, m.parameters())))
+            self.assertEqual(len(info["loss_trace"]), 2)
+
+    def test_held_out_loss_uses_fixed_noise(self):
+        m = fa.SharedConditionalFM(8, 1, seed=8)
+        a = fa.held_out_fm_loss(m, "z|x", ROWS, 11)
+        b = fa.held_out_fm_loss(m, "z|x", ROWS, 11)
+        c = fa.held_out_fm_loss(m, "z|x", ROWS, 12)
+        self.assertEqual(a, b)
+        self.assertNotEqual(a, c)
 
 
 if __name__ == "__main__":

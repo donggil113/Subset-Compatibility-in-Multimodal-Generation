@@ -211,3 +211,13 @@ Read: §3 (Eqs. 4, 5, 7 and the ConsistencyError) and the conclusion.
    mismatch and CFG components from incompatibility. It is validated in
    closed form on a Gaussian probe.
 3. \todo{P5-REAL-01}: measurements on learned multimodal generators — NOT_RUN.
+
+**Round 6 note (2026-10-02).** A synthetic, single-seed neural pilot ran on
+the three-variable mixture probe (RESEARCH_PACKET §13): separately trained
+conditional flow learners were detectably incompatible, a shared conditional
+network was not flagged at the target level but was at the projected joint,
+and was less accurate. This is a measurement on a probe, not on a learned
+multimodal generator, so item 3 (P5-REAL-01) stays NOT_RUN and the novelty
+accounting above is unchanged (UNVERIFIED). The direction "target-level
+non-detection with a joint-level rejection" is consistent with Klötergens et
+al. Prop. 2 and is not claimed as new.

@@ -1,0 +1,34 @@
+start_utc=2026-10-02T16:25:18Z
+-rw-r--r-- 1 root root 5272247 Oct  2 16:25 install-tl-unx.tar.gz
+f1e264ada2f96150a302532b18b8aa81ccce6d69078c9f94dc106d5dffed13d8  install-tl-unx.tar.gz
+step=install-tl infraonly t=2s
+Welcome to TeX Live!
+See /home/user/texlive-p5/index.html for links to documentation.
+
+The TeX Live web site (https://tug.org/texlive/) provides all updates
+and corrections. TeX Live is a joint project of the TeX user groups
+around the world; please consider supporting it by joining the group
+best for you. The list of groups is available on the web
+at https://tug.org/usergroups.html.
+
+Add /home/user/texlive-p5/texmf-dist/doc/man to MANPATH.
+Add /home/user/texlive-p5/texmf-dist/doc/info to INFOPATH.
+Most importantly, add /home/user/texlive-p5/bin/x86_64-linux
+to your PATH for current and future sessions.
+
+Logfile: /home/user/texlive-p5/install-tl.log
+step=tlmgr install packages t=13s
+  OK: pdftex.fmt/pdftex pdfetex.fmt/pdftex latex.fmt/pdftex pdflatex.fmt/pdftex etex.fmt/pdftex
+running fmtutil-sys --byengine luatex --no-error-if-no-format --no-error-if-no-engine=luametatex,luajithbtex,luajittex,mfluajit,xetex --status-file=/tmp/oDIFbWuNLZ/jVq2cvGD8g ...
+  OK: luatex.fmt/luatex dvilualatex.fmt/luatex dviluatex.fmt/luatex
+running fmtutil-sys --byengine luahbtex --no-error-if-no-format --no-error-if-no-engine=luametatex,luajithbtex,luajittex,mfluajit,xetex --status-file=/tmp/oDIFbWuNLZ/jVq2cvGD8g ...
+tlmgr: An error has occurred. See above messages. Exiting.
+  OK: luahbtex.fmt/luahbtex lualatex.fmt/luahbtex
+tlmgr: package log updated: /home/user/texlive-p5/texmf-var/web2c/tlmgr.log
+tlmgr: command log updated: /home/user/texlive-p5/texmf-var/web2c/tlmgr-commands.log
+step=done t=89s
+pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026)
+tlmgr revision 79639 (2026-07-10 18:45:34 +0200)
+tlmgr using installation: /home/user/texlive-p5
+163M	/home/user/texlive-p5
+end_utc=2026-10-02T16:26:47Z
