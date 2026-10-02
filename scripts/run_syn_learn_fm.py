@@ -43,24 +43,34 @@ def main():
         print(json.dumps({"estimate_cpu_seconds": out["estimate_cpu_seconds"], "smoke_cost": out["smoke_cost"]}, indent=1))
         return
     out_root = args.out or os.path.join(ROOT, "results", "raw")
-    if os.path.exists(os.path.join(out_root, "p5_syn_learn_01_fm_test", "summary.json")):
-        sys.exit("flow-matching test results exist; this experiment is run once (stop rule)")
+    for prior in ("p5_syn_learn_01_fm_train", "p5_syn_learn_01_fm_dev", "p5_syn_learn_01_fm_test"):
+        if os.path.exists(os.path.join(out_root, prior)):
+            sys.exit(f"{prior} exists under {out_root}: this experiment is run once, and a partial run is kept as it is (stop rule)")
     started = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT).decode().strip()
     dirty = bool(subprocess.check_output(["git", "status", "--porcelain", "src", "configs", "scripts"], cwd=ROOT).decode().strip())
-    budget = fm.Budget(a2["budget"]["cpu_cap_seconds"], a2["budget"]["wall_cap_seconds"], args.cpu_spent_before)
-    status = fm.run(cfg, a2, out_root, budget)
     env = json.load(open(os.path.join(ROOT, "results", "env", "torch_env.json")))
     man = {"run_id": "p5_syn_learn_01_fm", "experiment_id": cfg["experiment_id"], "config_path": os.path.relpath(args.config, ROOT),
            "amendment_path": os.path.relpath(args.amendment, ROOT), "started_utc": started, "git_commit_at_run": commit,
            "code_dirty_at_run": dirty, "processes": 1, "threads": torch.get_num_threads(), "interop_threads": torch.get_num_interop_threads(),
            "python": sys.version.split()[0], "torch": torch.__version__, "torch_wheel_sha256": env["torch_wheel_sha256"],
            "numpy": env["numpy_version"], "device": str(torch.zeros(1).device), "cpu_spent_before_seconds": args.cpu_spent_before,
-           "caps": a2["budget"], **status}
-    os.makedirs(os.path.join(out_root, "p5_syn_learn_01_fm_train"), exist_ok=True)
-    with open(os.path.join(out_root, "p5_syn_learn_01_fm_train", "manifest.json"), "w") as f:
+           "caps": a2["budget"],
+           "stream_note": "sampling and permutation seed keys carry no split field (registered scheme); dev and test share noise and allocations by construction; arms and branches have separate streams"}
+    train_dir = os.path.join(out_root, "p5_syn_learn_01_fm_train")
+    os.makedirs(train_dir, exist_ok=True)
+    budget = fm.Budget(a2["budget"]["cpu_cap_seconds"], a2["budget"]["wall_cap_seconds"], args.cpu_spent_before)
+    try:
+        status = fm.run(cfg, a2, out_root, budget)
+    except BaseException as e:  # any other failure: record what was spent, then re-raise
+        man.update({"status": "FAILED", "error": repr(e), "budget": budget.snapshot()})
+        with open(os.path.join(train_dir, "manifest.json"), "w") as f:
+            json.dump(man, f, indent=1)
+        raise
+    man.update(status)
+    with open(os.path.join(train_dir, "manifest.json"), "w") as f:
         json.dump(man, f, indent=1)
-    print(json.dumps({k: man[k] for k in ("status", "stages", "budget", "labels") if k in man}, indent=1, default=str))
+    print(json.dumps({k: man[k] for k in ("status", "stages", "budget", "labels", "label_after_test", "test_primary_family") if k in man}, indent=1, default=str))
 
 
 if __name__ == "__main__":

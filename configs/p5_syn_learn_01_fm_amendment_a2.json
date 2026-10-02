@@ -5,7 +5,10 @@
   "base_config": {
     "path": "configs/p5_syn_learn_01.json",
     "file_sha256": "89a9c877a7c6bca779e18ef48a951935a8691ea4bb614b9d7360c957e6677294",
-    "unchanged": true
+    "unchanged": true,
+    "superseded_rules": [
+      "fm_outcome_labels (replaced by A2 dev_loss_rule, solver_sensitivity and inconclusive_label)"
+    ]
   },
   "amendment_a1": {
     "path": "configs/p5_syn_learn_01_fm_amendment_a1.json",
@@ -13,7 +16,9 @@
     "superseded_fields": [
       "labels.MODEL_FIT_OR_NUMERICS_INCONCLUSIVE",
       "solver.seeds",
-      "dev_use.allowed[1]"
+      "dev_use.allowed",
+      "evaluation.primary_comparison (sign convention: A1 registered ED_U(IND) - ED_U(SHARED); A2 registers ED_U(SHARED) - ED_U(INDEPENDENT) and the code follows A2; the two are negatives of each other)",
+      "budget.scope (A2 charges fixtures and the timing smoke to the same cap)"
     ]
   },
   "environment": "results/env/torch_env.json (torch 2.14.1+cpu, numpy 2.4.6, Python 3.11.15, CPU, 1 thread; venv .venv-p5 not committed)",
@@ -106,5 +111,18 @@
     "manifest with the torch environment"
   ],
   "study_status": "not an untouched study: the round-4 control results on the same test examples were seen before this run; the flow arms were not tuned on anything",
-  "dry_run": "the smoke also runs the evaluation code path on 3 TRAIN conditioning values with 4/2 Euler steps (scratch only) to check the pipeline before any budgeted evaluation; its numbers are discarded"
+  "dry_run": "the smoke also runs the evaluation code path on 3 TRAIN conditioning values with 4/2 Euler steps (scratch only) to check the pipeline before any budgeted evaluation; its numbers are discarded",
+  "addenda_pre_run": {
+    "registered": "2026-10-02, after an adversarial static review of the runner and before any flow-matching training; commit of A2 v1 = 22963ed",
+    "streams": "the per-example sampling keys and the permutation keys carry no split field (the registered seeds.sampling scheme of the base config, also used by the round-4 GMM run): dev example i and test example i draw the same initial noise, and the dev and test permutation tests of one (arm, level, steps) use the same allocation sequence; the dev stage is therefore not an independent Monte Carlo replicate of the test stage; no information flows from dev to test; arms and branches have separate streams; the between-arm bootstrap key does carry the split",
+    "dev_tests": "Test P is also run on dev (descriptive, chooses nothing); only the dev loss diagnostic, the solver-sensitivity flag and the non-finite check define labels",
+    "label_after_test": "a non-finite test sample re-labels the arm MODEL_FIT_OR_NUMERICS_INCONCLUSIVE after the fact (recorded as label_after_test in the manifest; the dev-time labels.json is not changed); a test block with non-finite examples reports its test on the finite examples with n_finite stated",
+    "holm": "Holm is applied over the fixed family of 2 tests; a member whose p cannot be computed counts as p = 1",
+    "incomplete_vs_inconclusive": "INCOMPLETE_BUDGET only when the update count is not reached or the cap stops a stage; a non-finite training loss does not stop the run and yields the INCONCLUSIVE label",
+    "stop_rule_guard": "the runner refuses to start if any prior output directory of this run exists under results/raw; a partial run is kept as it is",
+    "failure_manifest": "if the run fails for any other reason, a manifest with status FAILED and the budget spent is written before the error propagates",
+    "budget_accounting": "process CPU is counted from process start (torch import included) plus the CPU already charged (fixtures 2.1 s, smokes 6.9 s + 7.1 s); the wall cap is per invocation",
+    "smoke": "the smoke is training timing plus a sampling benchmark and a scratch dry run of the evaluation path on 3 train conditioning values; its 60 CPU-s bound is enforced; it ran before these addenda (see ledger)",
+    "torch_seed_width": "see results/env/seed_preflight.json: the CPU generator of the installed torch uses the low 32 bits of a seed; all effective 32-bit seeds of this run were checked for distinctness before the run"
+  }
 }

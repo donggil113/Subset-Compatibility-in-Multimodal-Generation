@@ -47,6 +47,8 @@
 \newtheorem{assumption}[theorem]{Assumption}
 \theoremstyle{remark}
 \newtheorem{remark}[theorem]{Remark}
+\crefname{assumption}{Assumption}{Assumptions}
+\Crefname{assumption}{Assumption}{Assumptions}
 
 \newcommand{\todo}[1]{\textcolor{red}{\textbf{[TODO: #1]}}}
 \newcommand{\notrun}{\textsc{not run}}
@@ -193,10 +195,10 @@ $\Delta_J$ compares the sequential pair with a direct joint sampler. It is not t
 
 In practice we estimate a \emph{projected} joint gap. For a fixed set $U$ of eight unit directions,
 \begin{equation}
-  \Delta_J^{U}(x)=\frac{1}{|U|}\sum_{u\in U}D\big(u^{\top}_{\#}\qd(\cdot,\cdot\mid x),\,u^{\top}_{\#}\,q(y\mid x)q(z\mid x,y)\big),
+  \Delta_J^{U}(x)=\frac{1}{|U|}\sum_{u\in U}D\big(\pi_u\qd(\cdot,\cdot\mid x),\,\pi_u\,q_{\mathrm{s}}(\cdot,\cdot\mid x)\big),
   \label{eq:projected}
 \end{equation}
-where $u^\top_\#$ denotes the law of the projection $u^\top(y,z)$.
+where $\pi_u$ maps a law on $(y,z)$ to the law of $u^\top(y,z)$ and $q_{\mathrm{s}}(y,z\mid x)=q(y\mid x)q(z\mid x,y)$.
 $\Delta_J^U=0$ is implied by joint equality but does not imply it: two joints can agree on finitely many projections and differ elsewhere.
 Within the Gaussian family used below, eight directions identify the law; in general they do not.
 
@@ -428,14 +430,14 @@ The route to this result included a failed gate and a gate withdrawn before use,
 \item The next gate, audited before use, would have failed a test with null rejection rate $0.05$ with probability $\numOCvTwoFail$.
 \end{enumerate}
 
-\begin{table}[t]
+\begin{table*}[t]
 \centering
 \caption{Calibration of Test~P (single run). Rejection counts over independent replicates, with the one-sided 95\% bounds used by the gate (together an equal-tailed two-sided 90\% interval) and the two-sided 95\% Clopper--Pearson interval.}
 \label{tab:calib}
 \scriptsize
 \setlength{\tabcolsep}{2pt}
 \input{generated/tab_calib}
-\end{table}
+\end{table*}
 
 \subsection{Coherent-joint controls on the mixture probe}
 \label{sec:exp-coherent}
@@ -448,14 +450,14 @@ All conditionals of each model come from its own density and are sampled exactly
 The primary endpoint is the target test. The projected-joint test is secondary.
 \Cref{tab:synlearn} reports the single pre-registered run (\numSynWall\,s).
 
-\begin{table}[t]
+\begin{table*}[t]
 \centering
 \caption{Coherent-joint controls on the mixture probe (Test~P, $N=200$, $M=64$, $B=199$). $\widehat\Delta_T$ is the mean unbiased energy distance between the two branches. $D(\text{model},\text{truth})$ is the closed-form energy distance between the model's and the true conditional of $z$ given $x$, averaged over test examples. Both are standardized.}
 \label{tab:synlearn}
 \scriptsize
 \setlength{\tabcolsep}{2pt}
 \input{generated/tab_synlearn}
-\end{table}
+\end{table*}
 
 \paragraph{Coherence.}
 Neither control is flagged by the primary target test: $p=\numSynTrueP$ and $\numSynFitP$, Holm-adjusted over the primary family $\numSynHolmTrue$ and $\numSynHolmFit$. The gap estimates contain $0$.
@@ -523,7 +525,7 @@ For samplers without densities, checking whether direct and intermediate-then-ta
 On probes whose laws are known, guidance can dominate the gap, and moderate solver error cancels between routes even when the sampler is wrong.
 A permutation test with the conditioning example as the unit passed a pre-registered calibration once, after one failed gate and one gate design withdrawn before use.
 Coherent-by-construction controls are not flagged even when their fit is poor. Consistency is therefore neither correctness nor evidence of a global joint.
-Whether learned any-to-any generators are incompatible beyond these effects remains open.
+Whether learned any-to-any generators are incompatible beyond these effects remains open.\label{conc:end}
 
 % ---------------------------------------------------------------------
 \section*{Impact Statement}

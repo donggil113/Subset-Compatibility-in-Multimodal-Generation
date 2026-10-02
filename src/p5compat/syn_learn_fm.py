@@ -44,7 +44,7 @@ class Budget:
 
     def __init__(self, cpu_cap: float, wall_cap: float, cpu_spent_before: float = 0.0):
         self.cpu_cap, self.wall_cap, self.before = cpu_cap, wall_cap, cpu_spent_before
-        self.w0, self.c0 = time.time(), time.process_time()
+        self.w0, self.c0 = time.time(), 0.0  # process_time() counts from process start (torch import included)
 
     def cpu(self) -> float:
         return self.before + time.process_time() - self.c0
@@ -153,7 +153,7 @@ def train_arm(arm: str, cfg, a2, train_rows, dev_rows, budget: Budget, ckpt_dir:
     info["design"] = d
     os.makedirs(ckpt_dir, exist_ok=True)
     info["checkpoint"] = save_checkpoint(model, arm, info, os.path.join(ckpt_dir, f"{arm}.pt"))
-    info["complete"] = info["updates"] == total and info["all_losses_finite"]
+    info["complete"] = info["updates"] == total  # finiteness is reported separately (all_losses_finite -> label)
     return model, info
 
 
@@ -307,6 +307,8 @@ def evaluate_split(arms: Dict[str, Any], cfg, a2, split: str, rows, scale, truth
                 blk, per, samples = evaluate_block(arm, model, cfg, split, level, steps, rows, scale, truth, budget, keep)
                 blocks[f"{arm}|{level}|{steps}"] = blk
                 per_all[f"{arm}|{level}|{steps}"] = per
+                with open(os.path.join(out_dir, "blocks.jsonl"), "a") as fblk:  # completed blocks survive a budget stop
+                    fblk.write(json.dumps(blk) + "\n")
                 for r in per:
                     fper.write(json.dumps(r) + "\n")
                 for smp in samples:
@@ -337,10 +339,10 @@ def evaluate_split(arms: Dict[str, Any], cfg, a2, split: str, rows, scale, truth
                                                "paired_normal": dd, "bootstrap": bootstrap_mean_ci(d, rng_b, a2["evaluation"]["between_arm_effect"]["n_boot"]),
                                                "primary": level == "target" and steps == prim and split == "test"}
     fam = {arm: blocks[f"{arm}|target|{prim}"]["p"] for arm in arms}
-    fam_ok = {k: v for k, v in fam.items() if v is not None}
+    fam_filled = {k: (v if v is not None else 1.0) for k, v in fam.items()}  # missing member counts as p = 1 (family size fixed at 2)
     summary = {"split": split, "blocks": blocks, "solver_sensitivity": solver, "between_arms": between,
-               "primary_family": {"tests": sorted(fam_ok), "raw_p": fam_ok, "holm_p": holm(fam_ok) if fam_ok else {}, "alpha": 0.05,
-                                  "definition": f"FM target-level Test P at {prim} steps on this split; Holm; GMM controls excluded",
+               "primary_family": {"tests": sorted(fam), "raw_p": fam, "holm_p": holm(fam_filled), "alpha": 0.05,
+                                  "definition": f"FM target-level Test P at {prim} steps on this split; Holm over the fixed family of {len(fam)} tests (a non-computable member counts as p = 1); GMM controls excluded",
                                   "is_primary_split": split == "test"},
                "budget_after": budget.snapshot()}
     with open(os.path.join(out_dir, "summary.json"), "w") as f:
@@ -389,8 +391,11 @@ def smoke(cfg, a2, out_dir: str, n_updates: int = 500, run_seed: int = 999) -> D
         d = design(cfg, arm)
         model = build_model(arm, cfg, arm_seed(dict(cfg, seed=run_seed), arm, "model_init"))
         stage = Stage()
-        info = fa.train(model, rows["train"], PATTERNS, n_updates, d["batch"], d["lr"], run_seed, log_every=100)
+        info = fa.train(model, rows["train"], PATTERNS, n_updates, d["batch"], d["lr"], run_seed, log_every=100,
+                        check=lambda s: budget.reason())
         t = stage.done()
+        if info.get("stopped_early"):
+            out["stopped"] = info["stopped_early"]
         # Sampling benchmark on train conditioning values: 4 examples x 64 samples x 128 steps per pattern.
         stage = Stage()
         n_passes = 0
@@ -416,10 +421,13 @@ def smoke(cfg, a2, out_dir: str, n_updates: int = 500, run_seed: int = 999) -> D
     a2_dry["solver_sensitivity"]["levels"].update({"primary": 4, "secondary": 2})
     a2_dry["evaluation"]["between_arm_effect"]["n_boot"] = 50
     models = {arm: build_model(arm, cfg, arm_seed(dict(cfg, seed=run_seed), arm, "model_init")) for arm in ARMS}
-    dry = evaluate_split(models, cfg, a2_dry, "test", rows["train"][:3], scale, truth, budget, os.path.join(out_dir, "dry_eval"))
-    fake_train = {"all_losses_finite": True, "updates": 0, "complete": False, "updates_planned": 0}
-    out["dry_eval_labels"] = {arm: arm_labels(fake_train, dry, arm, a2_dry) for arm in ARMS}
-    out["dry_eval_blocks"] = sorted(dry["blocks"])
+    try:
+        dry = evaluate_split(models, cfg, a2_dry, "test", rows["train"][:3], scale, truth, budget, os.path.join(out_dir, "dry_eval"))
+        fake_train = {"all_losses_finite": True, "updates": 0, "complete": False, "updates_planned": 0}
+        out["dry_eval_labels"] = {arm: arm_labels(fake_train, dry, arm, a2_dry) for arm in ARMS}
+        out["dry_eval_blocks"] = sorted(dry["blocks"])
+    except BudgetExceeded as e:
+        out["dry_eval_stopped"] = str(e)
     out["smoke_cost"] = budget.snapshot()
     with open(os.path.join(out_dir, "smoke.json"), "w") as f:
         json.dump(out, f, indent=1)
@@ -442,7 +450,7 @@ def run(cfg, a2, out_root: str, budget: Budget) -> Dict[str, Any]:
             train_info[arm] = info
             with open(os.path.join(train_dir, "training.json"), "w") as f:
                 json.dump(train_info, f, indent=1)
-            if not info["complete"]:
+            if info["updates"] != info["updates_planned"]:
                 raise BudgetExceeded(f"{arm}: {info['updates']}/{info['updates_planned']} updates ({info.get('stopped_early')})")
             arms[arm] = model
         status["stages"]["train"] = "COMPLETE"
@@ -456,6 +464,10 @@ def run(cfg, a2, out_root: str, budget: Budget) -> Dict[str, Any]:
         status["stages"]["test"] = "COMPLETE"
         status["status"] = "COMPLETE"
         status["test_primary_family"] = test["primary_family"]
+        # Non-finite test samples re-label the arm after the fact (a numerics failure, not a choice on outcomes); dev labels.json is untouched.
+        status["test_non_finite"] = {arm: sum(b["n_examples"] - b["n_finite"] for k, b in test["blocks"].items() if k.startswith(arm + "|")) for arm in ARMS}
+        status["label_after_test"] = {arm: ("MODEL_FIT_OR_NUMERICS_INCONCLUSIVE" if labels[arm]["label"] != "EVALUABLE" or status["test_non_finite"][arm] > 0
+                                            else "EVALUABLE") for arm in ARMS}
     except BudgetExceeded as e:
         status["status"] = "INCOMPLETE_BUDGET"
         status["reason"] = str(e)
