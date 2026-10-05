@@ -1,8 +1,62 @@
 # STATUS — P5: Do Any-to-Any Generators Define a Coherent Joint Distribution?
 
-Last update: 2026-10-02 (round 6: neural flow arms run once under a
-user-delivered limited approval; manuscript v4 compiled). Rounds 3–5 are
-kept below; rounds 1–2 are unchanged.
+Last update: 2026-10-05 (round 7: four fixed training replicates with
+solver sensitivity 128/256/512 on a new test set; manuscript v5). Rounds 3–6
+are kept below; rounds 1–2 are unchanged.
+
+## Summary (round 7)
+
+| Item | Status |
+|---|---|
+| Approval applied | User-delivered round-7 block: existing CPU torch/numpy/TeX environment, four fit-pairs, 1 thread, 3600 CPU-s / 4500 wall-s; PyMuPDF for local raster inspection. Pilot of round 6 preserved as **DEVELOPMENT_NEURAL_PILOT** (not re-scored). |
+| Registration | `configs/p5_syn_learn_01_fm_replicates_r7.json` committed before training (fc1dbd1): integer seeds R1–R4 (init / minibatch stream / dev-loss noise), keyed randomness (split, replicate, arm, pattern, example, branch, sample_id, purpose; step count excluded), new test set of 200 examples (digest `1c09b198…`, disjoint from the pilot test), families, Θ definition, caps. |
+| Run | **COMPLETE**, single run at fc1dbd1 (clean; code hashes matched registration): 1494.3 CPU-s process, 1517 wall-s; round-7 budget 1500.1 / 3600 CPU-s. All 8 arms EVALUABLE; no non-finite samples. |
+| Target family (8 tests at 128, Holm) | Independent arm flagged in **R1, R2, R3** (Holm 0.04 each; raw 0.005), not in R4 (raw 0.23). Shared arm flagged in **none** (raw 0.085, 0.95, 0.90, 0.035; Holm ≥ 0.175). Resolution: min attainable p 0.005 vs first threshold 0.00625. |
+| Joint family (8 tests at 128, Holm, secondary) | Independent flagged in all four (Holm 0.04); shared flagged in R2 and R4 (Holm 0.04), not R1 (0.10) and R3 (0.11). |
+| Primary effect Θ₁₂₈ | **−9.70 ×10⁻³ [−12.57, −6.83]** (normal over examples; bootstrap [−12.47, −6.89]), conditional on the four fits. Per replicate d̄_r(128): R1 −11.18 [−17.70, −4.66], R2 −22.81 [−29.58, −16.04], R3 −8.15 [−13.11, −3.19], **R4 +3.35 [−1.98, 8.67]**. |
+| Pre-registered outcome label | **MIXED_REPLICATION** (three of four favour the shared arm with CIs excluding 0; one sign reversal with CI including 0). Not a population effect. |
+| Joint-level Θ | −5.51 ×10⁻³ [−7.64, −3.37]; all four replicate means negative (no reversal), but the shared arm's joint endpoint is flagged in 2/4. |
+| Solver sensitivity (512 vs 128, paired) | Flagged in 4 of 8 arms (differences −0.21 to +0.06 ×10⁻³); Θ₁₂₈/Θ₂₅₆/Θ₅₁₂ = −9.70 / −9.66 / −9.65. NUMERICS_NOT_SEPARATED kept for the flagged arms at that level; no selection. |
+| Quality (direct / sequential ED_U to truth, ×10⁻³) | Independent: direct 2.4–4.6, sequential 2.2–14.5. Shared: direct 2.8–9.7, sequential 4.5–13.0. The pilot's "mirror" pattern does not hold uniformly (R2 shared direct 9.7; R4 independent sequential 2.2). |
+| Cost | Train CPU-s: independent 26.5–29.1, shared 37.3–40.3; test sampling at 128/256/512: independent ≈13/24/45, shared ≈26/49/97 CPU-s. Not equal-compute. |
+| Diagnostics | UNDERTRAINING_FLAG (dev loss decreased > 2% in the last tenth): R1 shared, R3 independent; final iterates kept. |
+| Manuscript | **v5** (`paper/main.tex`, `paper/main.pdf`): see `paper/build_log_summary.json`; pages rasterized with PyMuPDF and inspected (see the summary's `visual_check`). SUBMISSION_READY = false; TEMPLATE_YEAR 2026 / TARGET_YEAR 2027. |
+| Kept | EH1 FAIL; calib v2 NEVER RUN; calib v3 PASS (not a neural PASS); controls; pilot joint p = 0.035 (unadjusted secondary; not re-scored); STOP record. Method validity/novelty UNVERIFIED. |
+
+Reading (conditional on this probe and these fits):
+
+- Separately trained conditionals are flagged in 3 of 4 initializations; the
+  4th (R4) has a small gap and a sequential route close to the truth, so the
+  incompatibility of the independent arm varies with the initialization.
+- The shared arm's smaller target gap replicates in 3 of 4 and reverses in
+  R4; its direct branch is worse in some replicates (R2) and not in others.
+  This is consistent with multi-stage error for the independent arm, but the
+  causes were not attributed per route (conditional errors can also cancel).
+- Sharing does not define a joint: the joint endpoint of the shared arm is
+  flagged in 2 of 4.
+- p-values are not scores; the paired difference with its interval is the
+  comparison, and 4 × 200 values are not 800 independent observations.
+
+Details: RESEARCH_PACKET §14; raw under `results/raw/p5_syn_learn_01_fm_r7/`
+(derived labels in `derived_labels.json`).
+
+## Compute (round 7)
+
+- Research budget (1 thread): fixtures 1.6 + smoke 4.2 + run 1494.3 =
+  **1500.1 CPU-s of 3600**; wall 1517 s of 4500. No installs except PyMuPDF
+  (6 s wall, 25.8 MB; recorded separately).
+- Ledger: `results/compute_ledger.csv`.
+
+## Next decision (one)
+
+None is started automatically. The open choice for a human is whether a
+single-probe, four-initialization MIXED_REPLICATION is worth reporting as
+is (with the reversal) or whether the paper should stop at the coherent
+controls and the pilot; no further seeds, probes or losses are planned.
+
+---
+
+# History: round 6 (kept)
 
 ## Summary (round 6)
 

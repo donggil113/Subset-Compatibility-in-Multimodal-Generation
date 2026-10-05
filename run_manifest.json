@@ -1,6 +1,6 @@
 {
  "project": "P5: Do Any-to-Any Generators Define a Coherent Joint Distribution?",
- "updated": "2026-10-02 (round 6)",
+ "updated": "2026-10-05 (round 7)",
  "environment": {
   "python": "3.11.15",
   "platform": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
@@ -270,6 +270,115 @@
    },
    "stream_note": "sampling and permutation seed keys carry no split field (registered scheme); dev and test share noise and allocations by construction; arms and branches have separate streams",
    "role": "reported (single pre-registered run; NEURAL_PILOT_AUTHORIZED_THIS_RUN)"
+  },
+  {
+   "run_id": "p5_syn_learn_01_fm_r7",
+   "experiment_id": "P5-SYN-LEARN-01-R7",
+   "raw_dir": "results/raw/p5_syn_learn_01_fm_r7",
+   "config_path": "configs/p5_syn_learn_01_fm_replicates_r7.json",
+   "config_sha256": "13d45e986b4e6686fd94f9c3ed29de5e957801f9c84b21d24cb98b24c1f1607e",
+   "git_commit_at_run": "fc1dbd1a61e2ccdc365369f2de53c2e638f2c3a2",
+   "git_worktree_dirty_at_run": false,
+   "code_hashes_match_registration": true,
+   "started_utc": "2026-10-05T06:33:20Z",
+   "cpu_seconds_process": 1494.3,
+   "cpu_seconds_budget_total": 1500.1,
+   "wall_seconds": 1517.2,
+   "caps": {
+    "cpu_cap_seconds": 3600,
+    "wall_cap_seconds": 4500,
+    "threads": 1,
+    "ram_gib": 8,
+    "includes": [
+     "fixtures",
+     "timing smoke",
+     "training",
+     "generation",
+     "permutation",
+     "bootstrap",
+     "failures"
+    ],
+    "blocked": "BLOCKED_BUDGET before any result if the smoke estimate exceeds the remaining cap; N, M and seeds are not reduced",
+    "incomplete": "INCOMPLETE_BUDGET with saved checkpoints and completed replicates; no seed substitution or arm selection"
+   },
+   "processes": 1,
+   "threads": 1,
+   "torch": "2.14.1+cpu",
+   "status": "COMPLETE",
+   "replicates": {
+    "R1": {
+     "train": "COMPLETE",
+     "dev": "COMPLETE",
+     "test": "COMPLETE"
+    },
+    "R2": {
+     "train": "COMPLETE",
+     "dev": "COMPLETE",
+     "test": "COMPLETE"
+    },
+    "R3": {
+     "train": "COMPLETE",
+     "dev": "COMPLETE",
+     "test": "COMPLETE"
+    },
+    "R4": {
+     "train": "COMPLETE",
+     "dev": "COMPLETE",
+     "test": "COMPLETE"
+    }
+   },
+   "outcome_label": "MIXED_REPLICATION",
+   "checkpoints": {
+    "R1|INDEPENDENT_CONDITIONAL_FM": {
+     "path": "p5_syn_learn_01_fm_r7/checkpoints/R1_INDEPENDENT_CONDITIONAL_FM.pt",
+     "sha256": "4304b91f8e856dd480614541b0ed0cdcca750caefe2eb2e49a53466ce9b88cd0",
+     "bytes": 150407,
+     "final_iterate": true
+    },
+    "R1|SHARED_CONDITIONAL_FM": {
+     "path": "p5_syn_learn_01_fm_r7/checkpoints/R1_SHARED_CONDITIONAL_FM.pt",
+     "sha256": "387f9305957618dfcdd99949506931507df7c3beb2ba73d2102a3cb7a5abe4af",
+     "bytes": 143355,
+     "final_iterate": true
+    },
+    "R2|INDEPENDENT_CONDITIONAL_FM": {
+     "path": "p5_syn_learn_01_fm_r7/checkpoints/R2_INDEPENDENT_CONDITIONAL_FM.pt",
+     "sha256": "b8fbe9fc55e34f2ce4aacc2304f6ee2b5c133e001b109ff03d6552ae9eff5a86",
+     "bytes": 150407,
+     "final_iterate": true
+    },
+    "R2|SHARED_CONDITIONAL_FM": {
+     "path": "p5_syn_learn_01_fm_r7/checkpoints/R2_SHARED_CONDITIONAL_FM.pt",
+     "sha256": "50d39de92ced32dc8860e0b790d3f31b3d2207b72549f47bab5fadc379e56068",
+     "bytes": 143355,
+     "final_iterate": true
+    },
+    "R3|INDEPENDENT_CONDITIONAL_FM": {
+     "path": "p5_syn_learn_01_fm_r7/checkpoints/R3_INDEPENDENT_CONDITIONAL_FM.pt",
+     "sha256": "b453a1d20486ee17ab8d1dd0e1c5fb25af8fb6c69e2fc7e5c5250b3982b1ee5d",
+     "bytes": 150407,
+     "final_iterate": true
+    },
+    "R3|SHARED_CONDITIONAL_FM": {
+     "path": "p5_syn_learn_01_fm_r7/checkpoints/R3_SHARED_CONDITIONAL_FM.pt",
+     "sha256": "b6beb8292acb285e81b42d39e224ee7b7854a4adf9ff10afd48d658117e30983",
+     "bytes": 143355,
+     "final_iterate": true
+    },
+    "R4|INDEPENDENT_CONDITIONAL_FM": {
+     "path": "p5_syn_learn_01_fm_r7/checkpoints/R4_INDEPENDENT_CONDITIONAL_FM.pt",
+     "sha256": "24867da90e00181b2645c88f64d34cf0ce81a5844ff001b2b0ca209945eba145",
+     "bytes": 150407,
+     "final_iterate": true
+    },
+    "R4|SHARED_CONDITIONAL_FM": {
+     "path": "p5_syn_learn_01_fm_r7/checkpoints/R4_SHARED_CONDITIONAL_FM.pt",
+     "sha256": "575d46bf0e701c31793517af1bece07fdb7923933b6183e0de5befd6bf6b32b9",
+     "bytes": 143355,
+     "final_iterate": true
+    }
+   },
+   "role": "reported (single registered run; four fit-pairs; test set disjoint from the pilot)"
   }
  ],
  "verdicts_first_run": {
@@ -331,10 +440,10 @@
   "template_year": 2026,
   "style": "official ICML 2026 (anonymous review), not vendored",
   "submission_ready": false,
-  "compile_status": "COMPILED locally with TeX Live 2026 (round 6); see paper/build_log_summary.json",
+  "compile_status": "see paper/build_log_summary.json (round 7 build)",
   "static_check": "scripts/check_tex.py",
   "claims": "paper/claims.csv",
-  "version": "v4 (neural flow arms + coherent controls)",
+  "version": "v5 (four training replicates with solver sensitivity)",
   "page_fit_8": "body ends on page 8 (last line; measured with \\pdfsavepos; paper/build_log_summary.json); 19 pages total; visual rendering NOT verified",
   "export_bundle": "export_bundle/ (source + compiled paper/main.pdf and build_log_summary.json; checkpoints and env records; style fetched by export_bundle/fetch_style.sh with SHA-256 check)",
   "pdf": "paper/main.pdf"
@@ -387,5 +496,16 @@
   "kept": "EH1 FAIL; calib v2 NEVER RUN; calib v3 PASS (not re-run; not a neural PASS); TRUE/FITTED control results (not re-run); model-stage STOP record kept (this stage ran under NEURAL_PILOT_AUTHORIZED_THIS_RUN)",
   "method_validity_novelty": "UNVERIFIED"
  },
- "compute_ledger_note_round6": "research budget 238.3 CPU-s = pre-run 18.1 (fixtures, smokes, preflight, dry run) + run 220.2; a post-run regression test run (about 2 CPU-s of torch fixtures) is listed in the ledger and not included in that figure"
+ "compute_ledger_note_round6": "research budget 238.3 CPU-s = pre-run 18.1 (fixtures, smokes, preflight, dry run) + run 220.2; a post-run regression test run (about 2 CPU-s of torch fixtures) is listed in the ledger and not included in that figure",
+ "verdicts_round7": {
+  "status": "COMPLETE",
+  "outcome_label": "MIXED_REPLICATION (pre-registered rule)",
+  "Theta_128": "-9.70e-3 [-12.57, -6.83] (bootstrap [-12.47, -6.89]); per replicate -11.18, -22.81, -8.15, +3.35 (R4 CI includes 0); conditional on the four fits",
+  "target_family": "independent flagged R1-R3 (Holm 0.04), not R4 (raw 0.23); shared flagged none (raw 0.085/0.95/0.90/0.035)",
+  "joint_family": "independent flagged 4/4; shared flagged R2, R4 (Holm 0.04)",
+  "solver": "512 vs 128 paired differences -0.21 to +0.06e-3; 4 of 8 arms flagged; Theta changes < 0.06e-3; NUMERICS_NOT_SEPARATED kept for flagged arms",
+  "quality": "direct ED_U to truth: independent 2.4-4.6e-3, shared 2.8-9.7e-3; sequential: independent 2.2-14.5e-3, shared 4.5-13.0e-3; pilot mirror pattern not uniform",
+  "scope": "single probe; four initializations; not equal-compute; no real data; validity/novelty UNVERIFIED; pilot kept as DEVELOPMENT_NEURAL_PILOT; nothing re-scored",
+  "kept": "all earlier verdicts"
+ }
 }

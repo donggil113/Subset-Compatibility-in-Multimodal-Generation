@@ -625,6 +625,14 @@ def write_fm_r7_assets():
     t += "bootstrap 95\\% (examples; replicates bundled) & " + " & ".join(f"[{1e3 * an['target'][str(h)]['bootstrap_percentile_95']['lo']:.2f}, {1e3 * an['target'][str(h)]['bootstrap_percentile_95']['hi']:.2f}]" for h in (128, 256, 512)) + " \\\\\n"
     t += "\\bottomrule\n\\end{tabular}\n"
     open(os.path.join(OUT, "tab_r7_theta.tex"), "w").write(t)
+    t = HEADER + "\\begin{tabular}{lrr}\n\\toprule\n"
+    t += "Quantity & $h=128$ (primary) & $h=512$ \\\\\n\\midrule\n"
+    for rep in reps:
+        t += f"$\\bar d_{{{rep}}}(h)$ & " + " & ".join(ci3(an["target"][str(h)]["per_replicate_mean_d"][rep]) for h in (128, 512)) + " \\\\\n"
+    t += "$\\widehat\\Theta_h$ (normal) & " + " & ".join(ci3(an["target"][str(h)]["Theta"]) for h in (128, 512)) + " \\\\\n"
+    t += "$\\widehat\\Theta_h$ (bootstrap) & " + " & ".join(f"[{1e3 * an['target'][str(h)]['bootstrap_percentile_95']['lo']:.2f}, {1e3 * an['target'][str(h)]['bootstrap_percentile_95']['hi']:.2f}]" for h in (128, 512)) + " \\\\\n"
+    t += "\\bottomrule\n\\end{tabular}\n"
+    open(os.path.join(OUT, "tab_r7_theta_body.tex"), "w").write(t)
     # Table 3: solver sensitivity (paired, target level), per replicate and arm
     t = HEADER + "\\begin{tabular}{llrrr}\n\\toprule\n"
     t += "Rep. & Arm & $\\widehat\\Delta_T(256)-\\widehat\\Delta_T(128)$ & $\\widehat\\Delta_T(512)-\\widehat\\Delta_T(128)$ & $\\widehat D_U(512)-\\widehat D_U(128)$ \\\\\n\\midrule\n"
@@ -668,12 +676,12 @@ def write_fm_r7_assets():
     for arm, short, lab in arms:
         qd = [s["blocks"][f"{rep}|{arm}|target|{prim}"]["q_direct_truth_ed_u"]["mean"] for rep in reps]
         qs = [s["blocks"][f"{rep}|{arm}|target|{prim}"]["q_seq_truth_ed_u"]["mean"] for rep in reps]
-        n += macro(f"numRseven{short}QdRange", f"{1e3 * min(qd):.1f} to {1e3 * max(qd):.1f}")
-        n += macro(f"numRseven{short}QsRange", f"{1e3 * min(qs):.1f} to {1e3 * max(qs):.1f}")
+        n += macro(f"numRseven{short}QdRange", f"{1e3 * min(qd):.1f}\\text{{ to }}{1e3 * max(qd):.1f}")
+        n += macro(f"numRseven{short}QsRange", f"{1e3 * min(qs):.1f}\\text{{ to }}{1e3 * max(qs):.1f}")
         sens = [an["solver_sensitivity"][f"{rep}|{arm}|target"]["512_minus_128"]["SOLVER_SENSITIVE"] for rep in reps]
         n += macro(f"numRseven{short}SolverFlags", str(sum(sens)))
         trc = [tr[f"{rep}|{arm}"]["train_cpu_seconds"] for rep in reps]
-        n += macro(f"numRseven{short}TrainCPU", f"{min(trc):.0f} to {max(trc):.0f}")
+        n += macro(f"numRseven{short}TrainCPU", f"{min(trc):.0f}\\text{{ to }}{max(trc):.0f}")
         under = [tr[f"{rep}|{arm}"].get("UNDERTRAINING_FLAG") for rep in reps]
         n += macro(f"numRseven{short}UnderFlags", str(sum(1 for u in under if u)))
     n += macro("numRsevenCPU", f"{man['budget']['cpu_seconds_this_process']:.0f}")

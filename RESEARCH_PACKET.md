@@ -779,3 +779,91 @@ blocks.jsonl, per_example.jsonl, samples.jsonl.gz).
 - **Decision table update:** "separate vs shared" is now measured once;
   "gap explained by solver" is flagged (not separated at 10⁻³);
   "non-detection vs equality / correctness / global joint" unchanged.
+
+
+## 14. Four fixed training replicates with solver sensitivity (round 7, 2026-10-05)
+
+**Registration before training** (`configs/p5_syn_learn_01_fm_replicates_r7.json`,
+commit fc1dbd1): replicate IDs R1–R4 with explicit integer seeds
+(model_init 7101/7102 … 7401/7402; train_stream 7111/7112 … ; dev_loss_noise
+7121/7122 …), excluding the pilot's hash-derived seeds; keyed randomness over
+split / replicate / arm / pattern / conditioning example / branch / sample_id /
+purpose with the step count deliberately excluded (128/256/512 share every
+sample's initial noise); direct and sequential branches on disjoint streams;
+a fresh y per z sample; a new test set of 200 examples (data branch key
+`test_r7`, digest `1c09b1987908aa89…`, zero x-overlap with the
+pilot test); train and dev rows unchanged; families: 8 target tests at 128
+(auxiliary, Holm; min attainable p 0.005 vs first threshold 0.00625) and 8
+joint tests (secondary, Holm, separate); no permutation test at 256/512;
+Θ₁₂₈ = mean_i mean_r d_ri(128), conditional on the four fits; caps 3600
+CPU-s / 4500 wall-s. The round-6 pilot is DEVELOPMENT_NEURAL_PILOT: its
+stream keys (no split field; dev and test shared noise; a descriptive dev
+Test P was seen before the test stage; no score-based selection was
+performed, but independence of that reading is not assumed) are recorded in
+the config.
+
+**Execution.** Fixtures re-executed on the snapshot (16 run; 1.6 CPU-s);
+timing smoke 4.2 CPU-s (estimate 1376 CPU-s); single run at fc1dbd1 with
+code hashes matching registration: status COMPLETE, 1494.3 CPU-s process,
+1517.2 wall-s; all 8 arms EVALUABLE; no non-finite values.
+
+### 14.1 Results (test set r7; 128 steps unless stated; ×10⁻³, standardised)
+
+| Rep. | Arm | p_T (Holm) | p_J (Holm) | Δ̂_T [95% CI] | D̂_U direct | D̂_U sequential | sd ratio dir/seq |
+|---|---|---|---|---|---|---|---|
+| R1 | Ind | 0.005 (0.040) | 0.005 (0.04) | 13.52 [8.03, 19.00] | 4.63 | 10.47 | 0.918/0.949 |
+| R1 | Shared | 0.085 (0.340) | 0.050 (0.10) | 2.34 [-1.28, 5.97] | 3.78 | 4.47 | 0.934/0.998 |
+| R2 | Ind | 0.005 (0.040) | 0.005 (0.04) | 19.44 [13.50, 25.38] | 3.28 | 14.54 | 0.973/0.999 |
+| R2 | Shared | 0.950 (1.000) | 0.010 (0.04) | -3.37 [-6.29, -0.45] | 9.72 | 7.67 | 1.034/1.039 |
+| R3 | Ind | 0.005 (0.040) | 0.005 (0.04) | 6.23 [2.16, 10.30] | 2.67 | 8.55 | 0.961/0.944 |
+| R3 | Shared | 0.900 (1.000) | 0.110 (0.11) | -1.93 [-4.90, 1.05] | 2.84 | 5.07 | 0.957/0.936 |
+| R4 | Ind | 0.230 (0.690) | 0.005 (0.04) | 1.27 [-2.64, 5.18] | 2.41 | 2.19 | 0.986/0.977 |
+| R4 | Shared | 0.035 (0.175) | 0.010 (0.04) | 4.61 [0.81, 8.42] | 4.71 | 12.95 | 0.964/0.913 |
+
+- **Θ₁₂₈ = -9.70 [-12.57, -6.83]** (normal over the 200 per-example replicate
+  means; bootstrap over examples with replicates bundled
+  [-12.47, -6.89]); per replicate
+  d̄_r(128): R1 -11.18 [-17.70, -4.66], R2 -22.81 [-29.58, -16.04], R3 -8.15 [-13.11, -3.19], R4 3.35 [-1.98, 8.67].
+  Θ₂₅₆ = -9.66 [-12.54, -6.79], Θ₅₁₂ = -9.65 [-12.53, -6.77].
+- **Outcome label (pre-registered rule): MIXED_REPLICATION** — one sign
+  reversal (R4) whose interval includes 0; three replicates favour the shared
+  arm with intervals excluding 0. Conditional on these fits; not a
+  population effect.
+- **Joint level:** Θ^J₁₂₈ = -5.51 [-7.64, -3.37]; all four replicate
+  means negative; the shared arm's joint endpoint is flagged in R2 and R4
+  after Holm, the independent arm's in all four.
+- **Solver sensitivity (paired, shared noise):** 512 − 128 differences of the
+  target gap between −0.21 and +0.06 ×10⁻³; CI excludes 0 for R1 (both arms),
+  R2 independent, R4 shared → NUMERICS_NOT_SEPARATED for those arms at that
+  level. Θ changes by < 0.06 ×10⁻³ across 128/256/512. Agreement is not an
+  ODE-limit proof; the results describe the implemented sampler.
+- **Quality:** the pilot's mirror pattern (independent: direct close,
+  sequential far; shared: the reverse) does not hold uniformly: R2's shared
+  direct branch is at 9.7 and R4's independent sequential route at 2.2.
+  "Consistent with multi-stage error, causes not attributed per route".
+- **Comparability with the GMM controls:** the per-example estimand (ED
+  between a branch's law and the true conditional, standardised) is the same
+  as the closed-form control distance; the estimators differ (64-sample
+  unbiased vs closed form) and this round's test examples differ from the
+  controls' examples, so means are comparable as estimates of the same
+  population quantity, not example-paired. No control was re-fitted or
+  re-run.
+- **Cost:** training CPU-s independent 26.5–29.1, shared 37.3–40.3; test
+  sampling independent ≈13/24/45, shared ≈26/49/97 CPU-s at 128/256/512;
+  parameters 34 757 vs 34 819; update counts equal; not equal-compute.
+- **Diagnostics:** UNDERTRAINING_FLAG for R1 shared and R3 independent
+  (dev loss still decreasing > 2% over the last tenth); final iterates kept.
+- **Pilot joint p = 0.035:** kept as an unadjusted secondary result; not
+  merged into the new families.
+
+### 14.2 What this does and does not establish
+
+- Establishes, on this probe and for these fits: separately trained
+  conditionals are detectably incompatible in 3 of 4 initializations; the
+  shared network's target gap is smaller on average with one reversal; the
+  shared network's joint endpoint is flagged in 2 of 4; step-count effects
+  are an order of magnitude below the gaps.
+- Does not establish: joint coherence of the shared network; general
+  superiority of shared training; a pure "neural distribution error"
+  attribution; any statement about real multimodal generators or about a
+  population of training runs.

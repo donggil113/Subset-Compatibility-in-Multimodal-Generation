@@ -1,0 +1,38 @@
+launch_utc=2026-10-05T06:33:18Z commit=fc1dbd1
+{
+ "status": "COMPLETE",
+ "replicates": {
+  "R1": {
+   "train": "COMPLETE",
+   "dev": "COMPLETE",
+   "test": "COMPLETE"
+  },
+  "R2": {
+   "train": "COMPLETE",
+   "dev": "COMPLETE",
+   "test": "COMPLETE"
+  },
+  "R3": {
+   "train": "COMPLETE",
+   "dev": "COMPLETE",
+   "test": "COMPLETE"
+  },
+  "R4": {
+   "train": "COMPLETE",
+   "dev": "COMPLETE",
+   "test": "COMPLETE"
+  }
+ },
+ "budget": {
+  "cpu_seconds_total_incl_before": 1500.147598285,
+  "cpu_seconds_this_process": 1494.347600197,
+  "wall_seconds": 1517.1657383441925,
+  "children_cpu_seconds": 0.006121
+ }
+}
+
+real	25m18.771s
+user	24m54.031s
+sys	0m0.785s
+exit=0
+end_utc=2026-10-05T06:58:37Z

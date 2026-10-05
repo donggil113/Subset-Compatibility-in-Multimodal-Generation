@@ -1,0 +1,14 @@
+{
+ "package": "PyMuPDF",
+ "version": "1.28.2",
+ "mupdf": "1.28.2",
+ "wheel": "pymupdf-1.28.2-cp310-abi3-manylinux_2_28_x86_64.whl",
+ "wheel_bytes": 25762500,
+ "wheel_sha256": "397d6715c1f0df7548a92d0afd8ce370fc48fa47aeefac16be2bc04a16a8227f",
+ "index": "https://pypi.org/simple",
+ "license_metadata": "Dual Licensed - GNU AFFERO GPL 3.0 or Artifex Commercial License",
+ "license_classifiers": [],
+ "requires": null,
+ "approval": "round-7 directive: local PDF raster inspection only; <= 100 MiB; wall <= 5 min",
+ "purpose": "rasterize manuscript pages for visual inspection; not redistributed"
+}

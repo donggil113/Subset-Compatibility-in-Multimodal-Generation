@@ -15,6 +15,7 @@ Excluded on purpose (available in the repository at the recorded commit):
   export_bundle/fetch_style.sh with a SHA-256 check).
 * paper/p5_skeleton.tex (the round-1 skeleton, superseded by main.tex).
 * The PDF built in round 6 is copied separately by the build step (paper/main.pdf) when it exists.
+* results/raw/p5_syn_learn_01_fm_r7/test/samples.jsonl.gz (8.8 MB of raw samples) is left in the repository; per_example.jsonl (4 MB) is included.
 
 Usage: python3 scripts/make_export_bundle.py
 """
@@ -42,6 +43,8 @@ PATTERNS = [
     "results/raw/p5_syn_learn_01_dev/*", "results/raw/p5_syn_learn_01_test/*",
     "results/raw/p5_syn_learn_01_fm_train/*", "results/raw/p5_syn_learn_01_fm_train/checkpoints/*",
     "results/raw/p5_syn_learn_01_fm_dev/*", "results/raw/p5_syn_learn_01_fm_test/*",
+    "results/raw/p5_syn_learn_01_fm_r7/*.json", "results/raw/p5_syn_learn_01_fm_r7/checkpoints/*",
+    "results/raw/p5_syn_learn_01_fm_r7/dev/*", "results/raw/p5_syn_learn_01_fm_r7/test/blocks.jsonl", "results/raw/p5_syn_learn_01_fm_r7/test/per_example.jsonl",
     "results/env/*",
     "STATUS.md", "RESEARCH_PACKET.md", "RELATED_WORK.md", "run_manifest.json",
 ]

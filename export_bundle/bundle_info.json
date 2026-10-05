@@ -1,9 +1,9 @@
 {
- "built_from_head": "876cf3364d28a941b34d378acbc5ab2ba4fb5055",
+ "built_from_head": "2554a76593334b5637a4877b6c7831ee2b73408d",
  "branch": "claude/bold-feynman-qohhel",
  "worktree_dirty_at_build": true,
  "note": "files are copied from the working tree; the bundle is committed in the same commit as these sources, so that commit (not built_from_head) is the exact source",
  "pdf_included": true,
  "compile_status": "COMPILED locally (see paper/build_log_summary.json)",
- "n_files_copied": 115
+ "n_files_copied": 145
 }

@@ -1,0 +1,714 @@
+{
+ "run_id": "p5_syn_learn_01_fm_r7",
+ "experiment_id": "P5-SYN-LEARN-01-R7",
+ "started_utc": "2026-10-05T06:33:20Z",
+ "git_commit_at_run": "fc1dbd1a61e2ccdc365369f2de53c2e638f2c3a2",
+ "code_dirty_at_run": false,
+ "code_hashes_match_registration": true,
+ "config_sha256": "13d45e986b4e6686fd94f9c3ed29de5e957801f9c84b21d24cb98b24c1f1607e",
+ "processes": 1,
+ "threads": 1,
+ "interop_threads": 1,
+ "python": "3.11.15",
+ "torch": "2.14.1+cpu",
+ "torch_wheel_sha256": "5e38154c8896d426a5df58bf2276b603e82184dfae4f54d77dbb212f36e34f37",
+ "numpy": "2.4.6",
+ "device": "cpu",
+ "cpu_spent_before_seconds": 5.8,
+ "caps": {
+  "cpu_cap_seconds": 3600,
+  "wall_cap_seconds": 4500,
+  "threads": 1,
+  "ram_gib": 8,
+  "includes": [
+   "fixtures",
+   "timing smoke",
+   "training",
+   "generation",
+   "permutation",
+   "bootstrap",
+   "failures"
+  ],
+  "blocked": "BLOCKED_BUDGET before any result if the smoke estimate exceeds the remaining cap; N, M and seeds are not reduced",
+  "incomplete": "INCOMPLETE_BUDGET with saved checkpoints and completed replicates; no seed substitution or arm selection"
+ },
+ "status": "COMPLETE",
+ "replicates": {
+  "R1": {
+   "train": "COMPLETE",
+   "dev": "COMPLETE",
+   "test": "COMPLETE"
+  },
+  "R2": {
+   "train": "COMPLETE",
+   "dev": "COMPLETE",
+   "test": "COMPLETE"
+  },
+  "R3": {
+   "train": "COMPLETE",
+   "dev": "COMPLETE",
+   "test": "COMPLETE"
+  },
+  "R4": {
+   "train": "COMPLETE",
+   "dev": "COMPLETE",
+   "test": "COMPLETE"
+  }
+ },
+ "scale_from_train": {
+  "y": 1.3062590871260458,
+  "z": 1.0371491514992974
+ },
+ "budget_after_R1": {
+  "cpu_seconds_total_incl_before": 369.066149404,
+  "cpu_seconds_this_process": 363.266152688,
+  "wall_seconds": 367.38261222839355,
+  "children_cpu_seconds": 0.006121
+ },
+ "budget_after_R2": {
+  "cpu_seconds_total_incl_before": 736.9069741159999,
+  "cpu_seconds_this_process": 731.106978006,
+  "wall_seconds": 740.5461630821228,
+  "children_cpu_seconds": 0.006121
+ },
+ "budget_after_R3": {
+  "cpu_seconds_total_incl_before": 1117.985328059,
+  "cpu_seconds_this_process": 1112.185332123,
+  "wall_seconds": 1128.1358733177185,
+  "children_cpu_seconds": 0.006121
+ },
+ "budget_after_R4": {
+  "cpu_seconds_total_incl_before": 1499.587533267,
+  "cpu_seconds_this_process": 1493.787538925,
+  "wall_seconds": 1516.594872713089,
+  "children_cpu_seconds": 0.006121
+ },
+ "training": {
+  "R1|INDEPENDENT_CONDITIONAL_FM": {
+   "updates": 20000,
+   "updates_planned": 20000,
+   "stopped_early": null,
+   "pattern_exposure": {
+    "z|x": 5000,
+    "y|x": 5000,
+    "z|x,y": 5000,
+    "y,z|x": 5000
+   },
+   "rows_seen_per_pattern": {
+    "z|x": 1280000,
+    "y|x": 1280000,
+    "z|x,y": 1280000,
+    "y,z|x": 1280000
+   },
+   "n_params": {
+    "z|x": 8641,
+    "y|x": 8641,
+    "z|x,y": 8705,
+    "y,z|x": 8770,
+    "total": 34757
+   },
+   "all_losses_finite": true,
+   "train_wall_seconds": 26.786231517791748,
+   "train_cpu_seconds": 26.465128226,
+   "torch_threads": 1,
+   "torch_version": "2.14.1+cpu",
+   "timing": {
+    "wall_seconds": 28.016453742980957,
+    "cpu_seconds": 27.653783289000003
+   },
+   "dev_fm_loss_fixed_noise": {
+    "18000": {
+     "z|x": 1.167056679725647,
+     "y|x": 1.3382779359817505,
+     "z|x,y": 1.0777314901351929,
+     "y,z|x": 1.385087013244629
+    },
+    "20000": {
+     "z|x": 1.1538491249084473,
+     "y|x": 1.3184586763381958,
+     "z|x,y": 1.0691783428192139,
+     "y,z|x": 1.3701424598693848
+    }
+   },
+   "dev_loss_rel_decrease_90_to_100": {
+    "z|x": 0.011316978041121837,
+    "y|x": 0.014809524322774872,
+    "z|x,y": 0.00793625072132399,
+    "y,z|x": 0.010789613383375713
+   },
+   "UNDERTRAINING_FLAG": false,
+   "seeds": {
+    "model_init": 7101,
+    "train_stream": 7111,
+    "dev_loss_noise": 7121
+   },
+   "design": {
+    "patterns": [
+     "z|x",
+     "y|x",
+     "z|x,y",
+     "y,z|x"
+    ],
+    "mlp_width": 64,
+    "mlp_depth": 3,
+    "optimizer": "Adam lr 1e-3",
+    "batch": 256,
+    "updates_per_pattern": 5000,
+    "total_updates": 20000,
+    "loss": "linear-path conditional flow matching",
+    "code": "src/p5compat/fm_adapter.py (UNTESTED)",
+    "lr": 0.001
+   },
+   "checkpoint": {
+    "path": "p5_syn_learn_01_fm_r7/checkpoints/R1_INDEPENDENT_CONDITIONAL_FM.pt",
+    "sha256": "4304b91f8e856dd480614541b0ed0cdcca750caefe2eb2e49a53466ce9b88cd0",
+    "bytes": 150407,
+    "final_iterate": true
+   },
+   "complete": true
+  },
+  "R1|SHARED_CONDITIONAL_FM": {
+   "updates": 20000,
+   "updates_planned": 20000,
+   "stopped_early": null,
+   "pattern_exposure": {
+    "z|x": 4992,
+    "y|x": 5054,
+    "z|x,y": 4946,
+    "y,z|x": 5008
+   },
+   "rows_seen_per_pattern": {
+    "z|x": 1277952,
+    "y|x": 1293824,
+    "z|x,y": 1266176,
+    "y,z|x": 1282048
+   },
+   "n_params": {
+    "total": 34819
+   },
+   "all_losses_finite": true,
+   "train_wall_seconds": 37.93357849121094,
+   "train_cpu_seconds": 37.325270061,
+   "torch_threads": 1,
+   "torch_version": "2.14.1+cpu",
+   "timing": {
+    "wall_seconds": 37.93372368812561,
+    "cpu_seconds": 37.32543372800001
+   },
+   "dev_fm_loss_fixed_noise": {
+    "18000": {
+     "z|x": 1.3421542644500732,
+     "y|x": 1.4037915468215942,
+     "z|x,y": 1.0678633451461792,
+     "y,z|x": 1.14448881149292
+    },
+    "20000": {
+     "z|x": 1.3706027269363403,
+     "y|x": 1.3812543153762817,
+     "z|x,y": 1.046379804611206,
+     "y,z|x": 1.1371060609817505
+    }
+   },
+   "dev_loss_rel_decrease_90_to_100": {
+    "z|x": -0.021196119730635735,
+    "y|x": 0.016054542781896892,
+    "z|x,y": 0.0201182488682878,
+    "y,z|x": 0.006450696972335675
+   },
+   "UNDERTRAINING_FLAG": true,
+   "seeds": {
+    "model_init": 7102,
+    "train_stream": 7112,
+    "dev_loss_noise": 7122
+   },
+   "design": {
+    "mlp_width": 128,
+    "mlp_depth": 3,
+    "total_updates": 20000,
+    "pattern_sampling": "uniform over the 4 patterns (expected 5000 each)",
+    "budget_note": "same total updates as the independent arm; parameter counts differ and are recorded, not equalised",
+    "batch": 256,
+    "optimizer": "Adam lr 1e-3",
+    "lr": 0.001
+   },
+   "checkpoint": {
+    "path": "p5_syn_learn_01_fm_r7/checkpoints/R1_SHARED_CONDITIONAL_FM.pt",
+    "sha256": "387f9305957618dfcdd99949506931507df7c3beb2ba73d2102a3cb7a5abe4af",
+    "bytes": 143355,
+    "final_iterate": true
+   },
+   "complete": true
+  },
+  "R2|INDEPENDENT_CONDITIONAL_FM": {
+   "updates": 20000,
+   "updates_planned": 20000,
+   "stopped_early": null,
+   "pattern_exposure": {
+    "z|x": 5000,
+    "y|x": 5000,
+    "z|x,y": 5000,
+    "y,z|x": 5000
+   },
+   "rows_seen_per_pattern": {
+    "z|x": 1280000,
+    "y|x": 1280000,
+    "z|x,y": 1280000,
+    "y,z|x": 1280000
+   },
+   "n_params": {
+    "z|x": 8641,
+    "y|x": 8641,
+    "z|x,y": 8705,
+    "y,z|x": 8770,
+    "total": 34757
+   },
+   "all_losses_finite": true,
+   "train_wall_seconds": 28.006877899169922,
+   "train_cpu_seconds": 27.591764571999988,
+   "torch_threads": 1,
+   "torch_version": "2.14.1+cpu",
+   "timing": {
+    "wall_seconds": 28.007213354110718,
+    "cpu_seconds": 27.592098548000024
+   },
+   "dev_fm_loss_fixed_noise": {
+    "18000": {
+     "z|x": 1.179734230041504,
+     "y|x": 1.3368422985076904,
+     "z|x,y": 1.06598699092865,
+     "y,z|x": 1.2886282205581665
+    },
+    "20000": {
+     "z|x": 1.1889433860778809,
+     "y|x": 1.3150906562805176,
+     "z|x,y": 1.0489238500595093,
+     "y,z|x": 1.2774981260299683
+    }
+   },
+   "dev_loss_rel_decrease_90_to_100": {
+    "z|x": -0.007806127686956213,
+    "y|x": 0.0162709111250101,
+    "z|x,y": 0.016006894093778597,
+    "y,z|x": 0.008637164971738137
+   },
+   "UNDERTRAINING_FLAG": false,
+   "seeds": {
+    "model_init": 7201,
+    "train_stream": 7211,
+    "dev_loss_noise": 7221
+   },
+   "design": {
+    "patterns": [
+     "z|x",
+     "y|x",
+     "z|x,y",
+     "y,z|x"
+    ],
+    "mlp_width": 64,
+    "mlp_depth": 3,
+    "optimizer": "Adam lr 1e-3",
+    "batch": 256,
+    "updates_per_pattern": 5000,
+    "total_updates": 20000,
+    "loss": "linear-path conditional flow matching",
+    "code": "src/p5compat/fm_adapter.py (UNTESTED)",
+    "lr": 0.001
+   },
+   "checkpoint": {
+    "path": "p5_syn_learn_01_fm_r7/checkpoints/R2_INDEPENDENT_CONDITIONAL_FM.pt",
+    "sha256": "b8fbe9fc55e34f2ce4aacc2304f6ee2b5c133e001b109ff03d6552ae9eff5a86",
+    "bytes": 150407,
+    "final_iterate": true
+   },
+   "complete": true
+  },
+  "R2|SHARED_CONDITIONAL_FM": {
+   "updates": 20000,
+   "updates_planned": 20000,
+   "stopped_early": null,
+   "pattern_exposure": {
+    "z|x": 5029,
+    "y|x": 4920,
+    "z|x,y": 5105,
+    "y,z|x": 4946
+   },
+   "rows_seen_per_pattern": {
+    "z|x": 1287424,
+    "y|x": 1259520,
+    "z|x,y": 1306880,
+    "y,z|x": 1266176
+   },
+   "n_params": {
+    "total": 34819
+   },
+   "all_losses_finite": true,
+   "train_wall_seconds": 39.65183639526367,
+   "train_cpu_seconds": 39.03310899400003,
+   "torch_threads": 1,
+   "torch_version": "2.14.1+cpu",
+   "timing": {
+    "wall_seconds": 39.65196776390076,
+    "cpu_seconds": 39.03323715000005
+   },
+   "dev_fm_loss_fixed_noise": {
+    "18000": {
+     "z|x": 1.2430022954940796,
+     "y|x": 1.4549994468688965,
+     "z|x,y": 1.09748113155365,
+     "y,z|x": 1.3315778970718384
+    },
+    "20000": {
+     "z|x": 1.277646541595459,
+     "y|x": 1.454252004623413,
+     "z|x,y": 1.1141740083694458,
+     "y,z|x": 1.360787034034729
+    }
+   },
+   "dev_loss_rel_decrease_90_to_100": {
+    "z|x": -0.027871425681968424,
+    "y|x": 0.0005137062059314632,
+    "z|x,y": -0.015210172034725205,
+    "y,z|x": -0.021935732807762877
+   },
+   "UNDERTRAINING_FLAG": false,
+   "seeds": {
+    "model_init": 7202,
+    "train_stream": 7212,
+    "dev_loss_noise": 7222
+   },
+   "design": {
+    "mlp_width": 128,
+    "mlp_depth": 3,
+    "total_updates": 20000,
+    "pattern_sampling": "uniform over the 4 patterns (expected 5000 each)",
+    "budget_note": "same total updates as the independent arm; parameter counts differ and are recorded, not equalised",
+    "batch": 256,
+    "optimizer": "Adam lr 1e-3",
+    "lr": 0.001
+   },
+   "checkpoint": {
+    "path": "p5_syn_learn_01_fm_r7/checkpoints/R2_SHARED_CONDITIONAL_FM.pt",
+    "sha256": "50d39de92ced32dc8860e0b790d3f31b3d2207b72549f47bab5fadc379e56068",
+    "bytes": 143355,
+    "final_iterate": true
+   },
+   "complete": true
+  },
+  "R3|INDEPENDENT_CONDITIONAL_FM": {
+   "updates": 20000,
+   "updates_planned": 20000,
+   "stopped_early": null,
+   "pattern_exposure": {
+    "z|x": 5000,
+    "y|x": 5000,
+    "z|x,y": 5000,
+    "y,z|x": 5000
+   },
+   "rows_seen_per_pattern": {
+    "z|x": 1280000,
+    "y|x": 1280000,
+    "z|x,y": 1280000,
+    "y,z|x": 1280000
+   },
+   "n_params": {
+    "z|x": 8641,
+    "y|x": 8641,
+    "z|x,y": 8705,
+    "y,z|x": 8770,
+    "total": 34757
+   },
+   "all_losses_finite": true,
+   "train_wall_seconds": 27.757431745529175,
+   "train_cpu_seconds": 27.404500167000037,
+   "torch_threads": 1,
+   "torch_version": "2.14.1+cpu",
+   "timing": {
+    "wall_seconds": 27.757726192474365,
+    "cpu_seconds": 27.40479019600002
+   },
+   "dev_fm_loss_fixed_noise": {
+    "18000": {
+     "z|x": 1.2434415817260742,
+     "y|x": 1.1585208177566528,
+     "z|x,y": 1.1332234144210815,
+     "y,z|x": 1.2659285068511963
+    },
+    "20000": {
+     "z|x": 1.2108705043792725,
+     "y|x": 1.1520678997039795,
+     "z|x,y": 1.096734881401062,
+     "y,z|x": 1.2517033815383911
+    }
+   },
+   "dev_loss_rel_decrease_90_to_100": {
+    "z|x": 0.02619429639918303,
+    "y|x": 0.005569962968096422,
+    "z|x,y": 0.032198887311784025,
+    "y,z|x": 0.011236910485717714
+   },
+   "UNDERTRAINING_FLAG": true,
+   "seeds": {
+    "model_init": 7301,
+    "train_stream": 7311,
+    "dev_loss_noise": 7321
+   },
+   "design": {
+    "patterns": [
+     "z|x",
+     "y|x",
+     "z|x,y",
+     "y,z|x"
+    ],
+    "mlp_width": 64,
+    "mlp_depth": 3,
+    "optimizer": "Adam lr 1e-3",
+    "batch": 256,
+    "updates_per_pattern": 5000,
+    "total_updates": 20000,
+    "loss": "linear-path conditional flow matching",
+    "code": "src/p5compat/fm_adapter.py (UNTESTED)",
+    "lr": 0.001
+   },
+   "checkpoint": {
+    "path": "p5_syn_learn_01_fm_r7/checkpoints/R3_INDEPENDENT_CONDITIONAL_FM.pt",
+    "sha256": "b453a1d20486ee17ab8d1dd0e1c5fb25af8fb6c69e2fc7e5c5250b3982b1ee5d",
+    "bytes": 150407,
+    "final_iterate": true
+   },
+   "complete": true
+  },
+  "R3|SHARED_CONDITIONAL_FM": {
+   "updates": 20000,
+   "updates_planned": 20000,
+   "stopped_early": null,
+   "pattern_exposure": {
+    "z|x": 4917,
+    "y|x": 5112,
+    "z|x,y": 5039,
+    "y,z|x": 4932
+   },
+   "rows_seen_per_pattern": {
+    "z|x": 1258752,
+    "y|x": 1308672,
+    "z|x,y": 1289984,
+    "y,z|x": 1262592
+   },
+   "n_params": {
+    "total": 34819
+   },
+   "all_losses_finite": true,
+   "train_wall_seconds": 39.28173756599426,
+   "train_cpu_seconds": 38.766389135000054,
+   "torch_threads": 1,
+   "torch_version": "2.14.1+cpu",
+   "timing": {
+    "wall_seconds": 39.281877279281616,
+    "cpu_seconds": 38.7665253319999
+   },
+   "dev_fm_loss_fixed_noise": {
+    "18000": {
+     "z|x": 1.0889145135879517,
+     "y|x": 1.1177316904067993,
+     "z|x,y": 0.8554900288581848,
+     "y,z|x": 1.2306023836135864
+    },
+    "20000": {
+     "z|x": 1.0817034244537354,
+     "y|x": 1.1230475902557373,
+     "z|x,y": 0.8602012395858765,
+     "y,z|x": 1.2170767784118652
+    }
+   },
+   "dev_loss_rel_decrease_90_to_100": {
+    "z|x": 0.006622272955528817,
+    "y|x": -0.004755971307392441,
+    "z|x,y": -0.005507031723069482,
+    "y,z|x": 0.010991044208775301
+   },
+   "UNDERTRAINING_FLAG": false,
+   "seeds": {
+    "model_init": 7302,
+    "train_stream": 7312,
+    "dev_loss_noise": 7322
+   },
+   "design": {
+    "mlp_width": 128,
+    "mlp_depth": 3,
+    "total_updates": 20000,
+    "pattern_sampling": "uniform over the 4 patterns (expected 5000 each)",
+    "budget_note": "same total updates as the independent arm; parameter counts differ and are recorded, not equalised",
+    "batch": 256,
+    "optimizer": "Adam lr 1e-3",
+    "lr": 0.001
+   },
+   "checkpoint": {
+    "path": "p5_syn_learn_01_fm_r7/checkpoints/R3_SHARED_CONDITIONAL_FM.pt",
+    "sha256": "b6beb8292acb285e81b42d39e224ee7b7854a4adf9ff10afd48d658117e30983",
+    "bytes": 143355,
+    "final_iterate": true
+   },
+   "complete": true
+  },
+  "R4|INDEPENDENT_CONDITIONAL_FM": {
+   "updates": 20000,
+   "updates_planned": 20000,
+   "stopped_early": null,
+   "pattern_exposure": {
+    "z|x": 5000,
+    "y|x": 5000,
+    "z|x,y": 5000,
+    "y,z|x": 5000
+   },
+   "rows_seen_per_pattern": {
+    "z|x": 1280000,
+    "y|x": 1280000,
+    "z|x,y": 1280000,
+    "y,z|x": 1280000
+   },
+   "n_params": {
+    "z|x": 8641,
+    "y|x": 8641,
+    "z|x,y": 8705,
+    "y,z|x": 8770,
+    "total": 34757
+   },
+   "all_losses_finite": true,
+   "train_wall_seconds": 29.483999490737915,
+   "train_cpu_seconds": 29.054950579999968,
+   "torch_threads": 1,
+   "torch_version": "2.14.1+cpu",
+   "timing": {
+    "wall_seconds": 29.484371662139893,
+    "cpu_seconds": 29.05531994299986
+   },
+   "dev_fm_loss_fixed_noise": {
+    "18000": {
+     "z|x": 1.3302476406097412,
+     "y|x": 1.3028732538223267,
+     "z|x,y": 1.0340431928634644,
+     "y,z|x": 1.347671627998352
+    },
+    "20000": {
+     "z|x": 1.3362034559249878,
+     "y|x": 1.301889181137085,
+     "z|x,y": 1.0154554843902588,
+     "y,z|x": 1.3344755172729492
+    }
+   },
+   "dev_loss_rel_decrease_90_to_100": {
+    "z|x": -0.004477222987230133,
+    "y|x": 0.0007553096069434684,
+    "z|x,y": 0.017975756333478324,
+    "y,z|x": 0.00979178492093251
+   },
+   "UNDERTRAINING_FLAG": false,
+   "seeds": {
+    "model_init": 7401,
+    "train_stream": 7411,
+    "dev_loss_noise": 7421
+   },
+   "design": {
+    "patterns": [
+     "z|x",
+     "y|x",
+     "z|x,y",
+     "y,z|x"
+    ],
+    "mlp_width": 64,
+    "mlp_depth": 3,
+    "optimizer": "Adam lr 1e-3",
+    "batch": 256,
+    "updates_per_pattern": 5000,
+    "total_updates": 20000,
+    "loss": "linear-path conditional flow matching",
+    "code": "src/p5compat/fm_adapter.py (UNTESTED)",
+    "lr": 0.001
+   },
+   "checkpoint": {
+    "path": "p5_syn_learn_01_fm_r7/checkpoints/R4_INDEPENDENT_CONDITIONAL_FM.pt",
+    "sha256": "24867da90e00181b2645c88f64d34cf0ce81a5844ff001b2b0ca209945eba145",
+    "bytes": 150407,
+    "final_iterate": true
+   },
+   "complete": true
+  },
+  "R4|SHARED_CONDITIONAL_FM": {
+   "updates": 20000,
+   "updates_planned": 20000,
+   "stopped_early": null,
+   "pattern_exposure": {
+    "z|x": 5050,
+    "y|x": 5003,
+    "z|x,y": 4988,
+    "y,z|x": 4959
+   },
+   "rows_seen_per_pattern": {
+    "z|x": 1292800,
+    "y|x": 1280768,
+    "z|x,y": 1276928,
+    "y,z|x": 1269504
+   },
+   "n_params": {
+    "total": 34819
+   },
+   "all_losses_finite": true,
+   "train_wall_seconds": 40.84838390350342,
+   "train_cpu_seconds": 40.29632182299997,
+   "torch_threads": 1,
+   "torch_version": "2.14.1+cpu",
+   "timing": {
+    "wall_seconds": 40.84854078292847,
+    "cpu_seconds": 40.29647552200004
+   },
+   "dev_fm_loss_fixed_noise": {
+    "18000": {
+     "z|x": 1.1831932067871094,
+     "y|x": 1.1079214811325073,
+     "z|x,y": 0.9797360897064209,
+     "y,z|x": 1.144606351852417
+    },
+    "20000": {
+     "z|x": 1.1667648553848267,
+     "y|x": 1.1198205947875977,
+     "z|x,y": 0.9712940454483032,
+     "y,z|x": 1.1453267335891724
+    }
+   },
+   "dev_loss_rel_decrease_90_to_100": {
+    "z|x": 0.013884758049695809,
+    "y|x": -0.010740033348687459,
+    "z|x,y": 0.00861665130723861,
+    "y,z|x": -0.0006293707313344138
+   },
+   "UNDERTRAINING_FLAG": false,
+   "seeds": {
+    "model_init": 7402,
+    "train_stream": 7412,
+    "dev_loss_noise": 7422
+   },
+   "design": {
+    "mlp_width": 128,
+    "mlp_depth": 3,
+    "total_updates": 20000,
+    "pattern_sampling": "uniform over the 4 patterns (expected 5000 each)",
+    "budget_note": "same total updates as the independent arm; parameter counts differ and are recorded, not equalised",
+    "batch": 256,
+    "optimizer": "Adam lr 1e-3",
+    "lr": 0.001
+   },
+   "checkpoint": {
+    "path": "p5_syn_learn_01_fm_r7/checkpoints/R4_SHARED_CONDITIONAL_FM.pt",
+    "sha256": "575d46bf0e701c31793517af1bece07fdb7923933b6183e0de5befd6bf6b32b9",
+    "bytes": 143355,
+    "final_iterate": true
+   },
+   "complete": true
+  }
+ },
+ "budget": {
+  "cpu_seconds_total_incl_before": 1500.147598285,
+  "cpu_seconds_this_process": 1494.347600197,
+  "wall_seconds": 1517.1657383441925,
+  "children_cpu_seconds": 0.006121
+ }
+}

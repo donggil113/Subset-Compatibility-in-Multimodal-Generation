@@ -1,0 +1,122 @@
+{
+ "R1": {
+  "INDEPENDENT_CONDITIONAL_FM": {
+   "trained_updates": 20000,
+   "complete": true,
+   "UNDERTRAINING_FLAG": false,
+   "dev_loss_rel_decrease_90_to_100": {
+    "z|x": 0.011316978041121837,
+    "y|x": 0.014809524322774872,
+    "z|x,y": 0.00793625072132399,
+    "y,z|x": 0.010789613383375713
+   },
+   "non_finite": false,
+   "label": "EVALUABLE",
+   "note": "written before the test split of this replicate is opened; no dev test statistic is computed; nothing is selected"
+  },
+  "SHARED_CONDITIONAL_FM": {
+   "trained_updates": 20000,
+   "complete": true,
+   "UNDERTRAINING_FLAG": true,
+   "dev_loss_rel_decrease_90_to_100": {
+    "z|x": -0.021196119730635735,
+    "y|x": 0.016054542781896892,
+    "z|x,y": 0.0201182488682878,
+    "y,z|x": 0.006450696972335675
+   },
+   "non_finite": false,
+   "label": "EVALUABLE",
+   "note": "written before the test split of this replicate is opened; no dev test statistic is computed; nothing is selected"
+  }
+ },
+ "R2": {
+  "INDEPENDENT_CONDITIONAL_FM": {
+   "trained_updates": 20000,
+   "complete": true,
+   "UNDERTRAINING_FLAG": false,
+   "dev_loss_rel_decrease_90_to_100": {
+    "z|x": -0.007806127686956213,
+    "y|x": 0.0162709111250101,
+    "z|x,y": 0.016006894093778597,
+    "y,z|x": 0.008637164971738137
+   },
+   "non_finite": false,
+   "label": "EVALUABLE",
+   "note": "written before the test split of this replicate is opened; no dev test statistic is computed; nothing is selected"
+  },
+  "SHARED_CONDITIONAL_FM": {
+   "trained_updates": 20000,
+   "complete": true,
+   "UNDERTRAINING_FLAG": false,
+   "dev_loss_rel_decrease_90_to_100": {
+    "z|x": -0.027871425681968424,
+    "y|x": 0.0005137062059314632,
+    "z|x,y": -0.015210172034725205,
+    "y,z|x": -0.021935732807762877
+   },
+   "non_finite": false,
+   "label": "EVALUABLE",
+   "note": "written before the test split of this replicate is opened; no dev test statistic is computed; nothing is selected"
+  }
+ },
+ "R3": {
+  "INDEPENDENT_CONDITIONAL_FM": {
+   "trained_updates": 20000,
+   "complete": true,
+   "UNDERTRAINING_FLAG": true,
+   "dev_loss_rel_decrease_90_to_100": {
+    "z|x": 0.02619429639918303,
+    "y|x": 0.005569962968096422,
+    "z|x,y": 0.032198887311784025,
+    "y,z|x": 0.011236910485717714
+   },
+   "non_finite": false,
+   "label": "EVALUABLE",
+   "note": "written before the test split of this replicate is opened; no dev test statistic is computed; nothing is selected"
+  },
+  "SHARED_CONDITIONAL_FM": {
+   "trained_updates": 20000,
+   "complete": true,
+   "UNDERTRAINING_FLAG": false,
+   "dev_loss_rel_decrease_90_to_100": {
+    "z|x": 0.006622272955528817,
+    "y|x": -0.004755971307392441,
+    "z|x,y": -0.005507031723069482,
+    "y,z|x": 0.010991044208775301
+   },
+   "non_finite": false,
+   "label": "EVALUABLE",
+   "note": "written before the test split of this replicate is opened; no dev test statistic is computed; nothing is selected"
+  }
+ },
+ "R4": {
+  "INDEPENDENT_CONDITIONAL_FM": {
+   "trained_updates": 20000,
+   "complete": true,
+   "UNDERTRAINING_FLAG": false,
+   "dev_loss_rel_decrease_90_to_100": {
+    "z|x": -0.004477222987230133,
+    "y|x": 0.0007553096069434684,
+    "z|x,y": 0.017975756333478324,
+    "y,z|x": 0.00979178492093251
+   },
+   "non_finite": false,
+   "label": "EVALUABLE",
+   "note": "written before the test split of this replicate is opened; no dev test statistic is computed; nothing is selected"
+  },
+  "SHARED_CONDITIONAL_FM": {
+   "trained_updates": 20000,
+   "complete": true,
+   "UNDERTRAINING_FLAG": false,
+   "dev_loss_rel_decrease_90_to_100": {
+    "z|x": 0.013884758049695809,
+    "y|x": -0.010740033348687459,
+    "z|x,y": 0.00861665130723861,
+    "y,z|x": -0.0006293707313344138
+   },
+   "non_finite": false,
+   "label": "EVALUABLE",
+   "note": "written before the test split of this replicate is opened; no dev test statistic is computed; nothing is selected"
+  }
+ }
+}

@@ -587,6 +587,110 @@ def write_fm_assets():
         f.write(n)
 
 
+def write_fm_r7_assets():
+    """Tables and macros for the round-7 replicate run (four fit-pairs; 128/256/512)."""
+    base = os.path.join(ROOT, "results", "raw", "p5_syn_learn_01_fm_r7")
+    n = ""
+    if not os.path.exists(os.path.join(base, "summary.json")):
+        n += macro("numRsevenStatus", "NOT RUN")
+        with open(os.path.join(OUT, "numbers.tex"), "a") as f:
+            f.write(n)
+        return
+    s, tr, man = load(os.path.join(base, "summary.json")), load(os.path.join(base, "training.json")), load(os.path.join(base, "manifest.json"))
+    r7 = load(os.path.join(ROOT, "configs", "p5_syn_learn_01_fm_replicates_r7.json"))
+    reps = s["replicates_complete"]
+    prim = r7["solver"]["primary"]
+    arms = [("INDEPENDENT_CONDITIONAL_FM", "Ind", "Independent"), ("SHARED_CONDITIONAL_FM", "Sh", "Shared")]
+
+    def ci3(c):
+        return f"{1e3 * c['mean']:.2f} [{1e3 * c['lo']:.2f}, {1e3 * c['hi']:.2f}]"
+
+    # Table 1: per replicate and arm at the primary solver (test split)
+    t = HEADER + "\\begin{tabular}{llrrrrrr}\n\\toprule\n"
+    t += ("Rep. & Arm & $p_T$ & $p_J^U$ & $\\widehat{\\Delta}_T\\times10^3$ [95\\% CI] & $\\widehat D_U(\\text{dir},\\text{truth})\\times10^3$ & $\\widehat D_U(\\text{seq},\\text{truth})\\times10^3$ & sd ratio dir/seq \\\\\n\\midrule\n")
+    for rep in reps:
+        for arm, short, lab in arms:
+            bt, bj = s["blocks"][f"{rep}|{arm}|target|{prim}"], s["blocks"][f"{rep}|{arm}|joint|{prim}"]
+            t += (f"{rep} & {lab} & {bt['p']:.3f} & {bj['p']:.3f} & {ci3(bt['effect_ED_U'])} & {1e3 * bt['q_direct_truth_ed_u']['mean']:.2f} & "
+                  f"{1e3 * bt['q_seq_truth_ed_u']['mean']:.2f} & {bt['sd_ratio_direct']['mean']:.3f}/{bt['sd_ratio_seq']['mean']:.3f} \\\\\n")
+    t += "\\bottomrule\n\\end{tabular}\n"
+    open(os.path.join(OUT, "tab_r7_reps.tex"), "w").write(t)
+    # Table 2: paired between-arm difference per replicate and overall, by step count (target level)
+    an = s["analysis"]
+    t = HEADER + "\\begin{tabular}{lrrr}\n\\toprule\n"
+    t += "Quantity ($\\times10^3$) & $h=128$ (primary) & $h=256$ & $h=512$ \\\\\n\\midrule\n"
+    for rep in reps:
+        t += f"$\\bar d_{{{rep}}}(h)$ [pointwise 95\\% CI] & " + " & ".join(ci3(an["target"][str(h)]["per_replicate_mean_d"][rep]) for h in (128, 256, 512)) + " \\\\\n"
+    t += "$\\widehat\\Theta_h$ [normal 95\\% CI over examples] & " + " & ".join(ci3(an["target"][str(h)]["Theta"]) for h in (128, 256, 512)) + " \\\\\n"
+    t += "bootstrap 95\\% (examples; replicates bundled) & " + " & ".join(f"[{1e3 * an['target'][str(h)]['bootstrap_percentile_95']['lo']:.2f}, {1e3 * an['target'][str(h)]['bootstrap_percentile_95']['hi']:.2f}]" for h in (128, 256, 512)) + " \\\\\n"
+    t += "\\bottomrule\n\\end{tabular}\n"
+    open(os.path.join(OUT, "tab_r7_theta.tex"), "w").write(t)
+    t = HEADER + "\\begin{tabular}{lrr}\n\\toprule\n"
+    t += "Quantity & $h=128$ (primary) & $h=512$ \\\\\n\\midrule\n"
+    for rep in reps:
+        t += f"$\\bar d_{{{rep}}}(h)$ & " + " & ".join(ci3(an["target"][str(h)]["per_replicate_mean_d"][rep]) for h in (128, 512)) + " \\\\\n"
+    t += "$\\widehat\\Theta_h$ (normal) & " + " & ".join(ci3(an["target"][str(h)]["Theta"]) for h in (128, 512)) + " \\\\\n"
+    t += "$\\widehat\\Theta_h$ (bootstrap) & " + " & ".join(f"[{1e3 * an['target'][str(h)]['bootstrap_percentile_95']['lo']:.2f}, {1e3 * an['target'][str(h)]['bootstrap_percentile_95']['hi']:.2f}]" for h in (128, 512)) + " \\\\\n"
+    t += "\\bottomrule\n\\end{tabular}\n"
+    open(os.path.join(OUT, "tab_r7_theta_body.tex"), "w").write(t)
+    # Table 3: solver sensitivity (paired, target level), per replicate and arm
+    t = HEADER + "\\begin{tabular}{llrrr}\n\\toprule\n"
+    t += "Rep. & Arm & $\\widehat\\Delta_T(256)-\\widehat\\Delta_T(128)$ & $\\widehat\\Delta_T(512)-\\widehat\\Delta_T(128)$ & $\\widehat D_U(512)-\\widehat D_U(128)$ \\\\\n\\midrule\n"
+    for rep in reps:
+        for arm, short, lab in arms:
+            e = an["solver_sensitivity"][f"{rep}|{arm}|target"]
+            t += f"{rep} & {lab} & {ci3(e['256_minus_128']['gap_ED_U'])} & {ci3(e['512_minus_128']['gap_ED_U'])} & {ci3(e['512_minus_128']['quality_direct'])} \\\\\n"
+    t += "\\bottomrule\n\\end{tabular}\n"
+    open(os.path.join(OUT, "tab_r7_solver.tex"), "w").write(t)
+    # Table 4: cost per replicate and arm
+    t = HEADER + "\\begin{tabular}{llrrrr}\n\\toprule\n"
+    t += "Rep. & Arm & params & train CPU-s & test sampling CPU-s (128/256/512) & dev-loss decrease (max) \\\\\n\\midrule\n"
+    for rep in reps:
+        for arm, short, lab in arms:
+            ti = tr[f"{rep}|{arm}"]
+            samp = [sum(b["timing_sampling"]["cpu_seconds"] for k, b in s["blocks"].items() if k.startswith(f"{rep}|{arm}|") and b["steps"] == h) for h in (128, 256, 512)]
+            t += (f"{rep} & {lab} & {ti['n_params']['total']} & {ti['train_cpu_seconds']:.0f} & {samp[0]:.0f}/{samp[1]:.0f}/{samp[2]:.0f} & "
+                  f"{100 * max(ti['dev_loss_rel_decrease_90_to_100'].values()):.2f}\\% \\\\\n")
+    t += "\\bottomrule\n\\end{tabular}\n"
+    open(os.path.join(OUT, "tab_r7_cost.tex"), "w").write(t)
+    n += macro("numRsevenStatus", s["status"].replace("_", "\\_"))
+    n += macro("numRsevenNreps", str(len(reps)))
+    th = an["target"][str(prim)]
+    n += macro("numRsevenTheta", ci3(th["Theta"]))
+    n += macro("numRsevenThetaBoot", f"[{1e3 * th['bootstrap_percentile_95']['lo']:.2f}, {1e3 * th['bootstrap_percentile_95']['hi']:.2f}]")
+    n += macro("numRsevenRepMeans", ", ".join(f"{1e3 * v:.2f}" for v in th["replicate_means_sorted"]))
+    n += macro("numRsevenRepSd", f"{1e3 * th['between_replicate_sd_of_means']:.2f}")
+    n += macro("numRsevenReversal", "yes" if th["sign_reversal_across_replicates"] else "no")
+    n += macro("numRsevenThetaJ", ci3(an["joint"][str(prim)]["Theta"]))
+    n += macro("numRsevenThetaFiveTwelve", ci3(an["target"]["512"]["Theta"]))
+    fam = s["families"]["target_auxiliary"]
+    n += macro("numRsevenTargetRejected", str(sum(1 for v in fam["holm_p"].values() if v <= 0.05)))
+    n += macro("numRsevenTargetRejectedInd", str(sum(1 for k, v in fam["holm_p"].items() if v <= 0.05 and "INDEP" in k)))
+    n += macro("numRsevenTargetRejectedSh", str(sum(1 for k, v in fam["holm_p"].items() if v <= 0.05 and "SHARED" in k)))
+    famj = s["families"]["joint_secondary"]
+    n += macro("numRsevenJointRejectedInd", str(sum(1 for k, v in famj["holm_p"].items() if v <= 0.05 and "INDEP" in k)))
+    n += macro("numRsevenJointRejectedSh", str(sum(1 for k, v in famj["holm_p"].items() if v <= 0.05 and "SHARED" in k)))
+    n += macro("numRsevenJointRawSh", ", ".join(f"{famj['raw_p'][f'{rep}|SHARED_CONDITIONAL_FM']:.3f}" for rep in reps))
+    n += macro("numRsevenTargetRawSh", ", ".join(f"{fam['raw_p'][f'{rep}|SHARED_CONDITIONAL_FM']:.3f}" for rep in reps))
+    n += macro("numRsevenTargetRawInd", ", ".join(f"{fam['raw_p'][f'{rep}|INDEPENDENT_CONDITIONAL_FM']:.3f}" for rep in reps))
+    for arm, short, lab in arms:
+        qd = [s["blocks"][f"{rep}|{arm}|target|{prim}"]["q_direct_truth_ed_u"]["mean"] for rep in reps]
+        qs = [s["blocks"][f"{rep}|{arm}|target|{prim}"]["q_seq_truth_ed_u"]["mean"] for rep in reps]
+        n += macro(f"numRseven{short}QdRange", f"{1e3 * min(qd):.1f}\\text{{ to }}{1e3 * max(qd):.1f}")
+        n += macro(f"numRseven{short}QsRange", f"{1e3 * min(qs):.1f}\\text{{ to }}{1e3 * max(qs):.1f}")
+        sens = [an["solver_sensitivity"][f"{rep}|{arm}|target"]["512_minus_128"]["SOLVER_SENSITIVE"] for rep in reps]
+        n += macro(f"numRseven{short}SolverFlags", str(sum(sens)))
+        trc = [tr[f"{rep}|{arm}"]["train_cpu_seconds"] for rep in reps]
+        n += macro(f"numRseven{short}TrainCPU", f"{min(trc):.0f}\\text{{ to }}{max(trc):.0f}")
+        under = [tr[f"{rep}|{arm}"].get("UNDERTRAINING_FLAG") for rep in reps]
+        n += macro(f"numRseven{short}UnderFlags", str(sum(1 for u in under if u)))
+    n += macro("numRsevenCPU", f"{man['budget']['cpu_seconds_this_process']:.0f}")
+    n += macro("numRsevenBudgetCPU", f"{man['budget']['cpu_seconds_total_incl_before']:.0f}")
+    n += macro("numRsevenWall", f"{man['budget']['wall_seconds']:.0f}")
+    with open(os.path.join(OUT, "numbers.tex"), "a") as f:
+        f.write(n)
+
+
 def write_reference_lines():
     """Horizontal reference line data (detection resolution) for the figure."""
     num = open(os.path.join(OUT, "numbers.tex")).read()
@@ -601,3 +705,4 @@ if __name__ == "__main__":
     write_calibration_assets()
     write_synlearn_assets()
     write_fm_assets()
+    write_fm_r7_assets()

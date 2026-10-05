@@ -1,14 +1,15 @@
 {
- "built_utc": "2026-10-05T02:58:48Z",
+ "manuscript_version": "v5 (round 7: four training replicates with solver sensitivity)",
+ "built_utc": "2026-10-05T07:11:06Z",
  "engine": "3.141592653-2.6-1.40.29",
- "texlive": "TeX Live 2026 (minimal, /home/user/texlive-p5, installed under the round-6 limited approval)",
+ "texlive": "TeX Live 2026 (minimal, /home/user/texlive-p5, installed under the round-6 limited approval; reused)",
  "style": "official icml2026.zip (sha256 8b29290f5828e176debb57ea9cc00252502973d55ea561a2f18a7f0a326bfc6c), anonymous review mode, unmodified; TEMPLATE_YEAR 2026, TARGET_YEAR 2027; SUBMISSION_READY false",
  "commands": [
   "pdflatex -interaction=nonstopmode -halt-on-error main.tex",
   "bibtex main",
   "pdflatex ... x2"
  ],
- "pages_total": 19,
+ "pages_total": 21,
  "body_end_page_conclusion_last_sentence": 8,
  "page_of": {
   "sec:intro": 1,
@@ -16,27 +17,33 @@
   "sec:setup": 3,
   "sec:method": 3,
   "sec:exp": 5,
+  "sec:exp-coherent": 6,
   "sec:exp-real": 7,
+  "sec:exp-reps": 7,
   "sec:limits": 8,
   "sec:conclusion": 8,
   "app:proofs": 11,
-  "tab:calib": 7,
+  "app:pilot": 18,
   "tab:synlearn": 7,
-  "tab:fm": 8,
-  "tab:fm-cost": 17,
-  "tab:claims": 18,
-  "tab:decision": 18
+  "tab:r7theta": 7,
+  "tab:r7reps": 19,
+  "tab:r7solver": 19,
+  "tab:r7cost": 20,
+  "tab:fm": 18,
+  "tab:calib": 15,
+  "tab:claims": 21,
+  "tab:decision": 21
  },
- "conclusion_end_position_pt_from_page_bottom": 77.2,
- "note_on_position": "measured with \\pdfsavepos in a scratch copy: the last line of the conclusion is the last line of page 8, right column",
+ "conclusion_end_position_pt_from_page_bottom": 336.5,
+ "note_on_position": "measured with \\pdfsavepos in a scratch copy after the final trims: the conclusion ends in the right column of page 8 (about two thirds down); the last line of page 8 is unused slack, so no further trimming was needed",
  "overfull_hbox": 0,
  "overfull_vbox": 0,
- "underfull_hbox": 6,
- "underfull_vbox": 3,
+ "underfull_hbox": 10,
+ "underfull_vbox": 2,
  "undefined_references": 0,
  "multiply_defined": 0,
  "latex_and_package_warnings": [
-  "Ignoring empty anchor on input line 86.",
+  "Ignoring empty anchor on input line 87.",
   "Token not allowed in a PDF string (Unicode):",
   "`h' float specifier changed to `ht'."
  ],
@@ -65,13 +72,13 @@
   "utmr8a.pfb",
   "utmri8a.pfb"
  ],
- "pdf_bytes": 402026,
- "pdf_sha256": "668d0d507043cc70e98291f35ace79f0060db14cc7b5188cfb81405f96940774",
+ "pdf_bytes": 417182,
+ "pdf_sha256": "2ec371478dd1e44a36e19aa8c2ad0e7fc1e6c2098f81bd256bdf5081c6b81981",
  "pdf_metadata_author": "Anonymous Authors (set by the ICML style in review mode)",
- "visual_check": "NOT PERFORMED: no PDF rasterizer available (headless Chromium returned a blank image; no poppler/ghostscript; none approved); legibility at 100% is therefore unverified; layout checked from the log (no overfull boxes, no undefined references) and the .aux page numbers",
+ "visual_check": "PERFORMED with PyMuPDF 1.28.2 (results/env/pymupdf_env.json): all 21 pages rasterized at 100 dpi; pages 1, 7, 8, 9, 15, 18, 19, 20 viewed directly (abstract; coherent controls and replicate section; Theta table, limitations, conclusion; references; calibration table; pilot record and replicate tables; claims and decision tables). Defects found and fixed during inspection: math-mode range macros rendered without spaces ('2.4to4.6'); the pilot's design description was duplicated on page 7; appendix run-in headings appeared after their tables (orphaned). After the fixes the tables are legible at 100% (scriptsize), no text is clipped, no overfull boxes, and the PDF metadata author is 'Anonymous Authors'. Pages 2-6, 10-14, 16-17, 21 were rasterized but not viewed individually (unchanged layout relative to v4 apart from reflow).",
  "todo_markers_in_body": [
   "P5-REAL-02 (real paired multimodal data; intentionally kept)"
  ],
- "font_size_margins": "unchanged from the style (no \\small, no geometry changes); fit obtained by moving three tables to the appendix and trimming prose",
- "revision": "rebuilt on 2026-10-05 after the manuscript review (stale controls-table rows removed; wording corrections)"
+ "font_size_margins": "unchanged from the style (no \\small, no geometry changes); fit obtained by moving the pilot's detail, the calibration table and the per-replicate table to the appendix and trimming prose",
+ "revision": "v5 built and inspected on 2026-10-05 (round 7)"
 }

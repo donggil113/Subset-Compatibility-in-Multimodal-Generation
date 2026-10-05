@@ -1,0 +1,202 @@
+{
+  "experiment_id": "P5-SYN-LEARN-01-R7",
+  "registered_utc": "2026-10-05T06:32:20Z",
+  "status": "REGISTERED_NOT_RUN",
+  "base_config": {
+    "path": "configs/p5_syn_learn_01.json",
+    "file_sha256": "89a9c877a7c6bca779e18ef48a951935a8691ea4bb614b9d7360c957e6677294",
+    "unchanged": true
+  },
+  "amendments_unchanged": {
+    "a1": "077e5490b166d603521d9acca25ede9abb5a485c59668a46da72225cd1a9d382",
+    "a2": "58dfdd101c7764e4d60d8174627d79fe96040a43b5a8157a58476effc0fde748"
+  },
+  "code_hashes_at_registration": {
+    "src/p5compat/fm_adapter.py": "5449a25400b3591d78dabf52950a969bd0956471f9364953cca33309e30155eb",
+    "src/p5compat/syn_learn_fm.py": "3a1c8beb718070c2512cea48e77d9ad698e3bef057d48ee22f6753a6fdcb0cc9",
+    "src/p5compat/syn_learn_fm_r7.py": "ce2120d7091e1c64e748345f46421956a5ee1eee5a3c5e1dcb42657f82a12fa3",
+    "src/p5compat/gmm.py": "f1bd04593a12b2db2413bb2d9d98b9bc7d67542862bc9e82764bb1f9bf44ff87",
+    "src/p5compat/permutation.py": "fc0bad2ead47613a300f563bf4387faa761052072b9eae47eea6b0899442cdfa",
+    "src/p5compat/metrics.py": "6ec57f30fd90ffe141c2528bba6d96077971052fc2cb524106af51bdbc92cf84",
+    "src/p5compat/seeds.py": "20154c453bad12ef5e690b4b9648451aa265a7637c7f5e13ab5d2934f5a37907",
+    "tests/test_fm_adapter.py": "54c0bbc04fb0eb0c425d880aa18944fe98f66562ddc61a997add88a1a1990602",
+    "tests/test_fm_r7.py": "edd29c677c300f435d78cce26535f3bb849a3f1f99c0a69d1b79645925abaef3"
+  },
+  "pilot": {
+    "status": "DEVELOPMENT_NEURAL_PILOT (round 6, commit 7e25f68); preserved; not re-scored; its model seeds are excluded below",
+    "pilot_model_seeds": {
+      "INDEPENDENT_CONDITIONAL_FM": {
+        "model_init": 1753593257668939305,
+        "train_stream": 16624027479824347816,
+        "dev_loss_noise": 9132770175922482508
+      },
+      "SHARED_CONDITIONAL_FM": {
+        "model_init": 15118115516923835052,
+        "train_stream": 16831906125483595528,
+        "dev_loss_noise": 15167999102607448634
+      }
+    },
+    "pilot_streams": {
+      "sampling_keys": "seed_v2(seed, experiment, joint, condition=<arm>, level=<target|joint>, example=i, replicate=0, branch=<direct|sequential>) -> random.Random -> getrandbits(63) -> torch.Generator (low 32 bits used): no split field, so dev example i and test example i drew identical initial noise; no step-count field, so 128 and 32 shared noise",
+      "permutation_keys": "... branch='permutation', solver=<steps>: no split field",
+      "dev_uses": "dev-loss diagnostic at 90/100% (fixed noise key branch='dev_loss'); labels UNDERTRAINING_FLAG, SOLVER_SENSITIVE (dev 128 vs 32), non-finite; a descriptive dev Test P was computed and seen before the test stage; the checkpoint was the final iterate and no score-based selection was performed; the independence of that reading from the test outcome is not assumed, only recorded"
+    }
+  },
+  "replicate_ids": [
+    "R1",
+    "R2",
+    "R3",
+    "R4"
+  ],
+  "replicates": {
+    "R1": {
+      "INDEPENDENT_CONDITIONAL_FM": {
+        "model_init": 7101,
+        "train_stream": 7111,
+        "dev_loss_noise": 7121
+      },
+      "SHARED_CONDITIONAL_FM": {
+        "model_init": 7102,
+        "train_stream": 7112,
+        "dev_loss_noise": 7122
+      }
+    },
+    "R2": {
+      "INDEPENDENT_CONDITIONAL_FM": {
+        "model_init": 7201,
+        "train_stream": 7211,
+        "dev_loss_noise": 7221
+      },
+      "SHARED_CONDITIONAL_FM": {
+        "model_init": 7202,
+        "train_stream": 7212,
+        "dev_loss_noise": 7222
+      }
+    },
+    "R3": {
+      "INDEPENDENT_CONDITIONAL_FM": {
+        "model_init": 7301,
+        "train_stream": 7311,
+        "dev_loss_noise": 7321
+      },
+      "SHARED_CONDITIONAL_FM": {
+        "model_init": 7302,
+        "train_stream": 7312,
+        "dev_loss_noise": 7322
+      }
+    },
+    "R4": {
+      "INDEPENDENT_CONDITIONAL_FM": {
+        "model_init": 7401,
+        "train_stream": 7411,
+        "dev_loss_noise": 7421
+      },
+      "SHARED_CONDITIONAL_FM": {
+        "model_init": 7402,
+        "train_stream": 7412,
+        "dev_loss_noise": 7422
+      }
+    }
+  },
+  "rng": {
+    "model_init": "torch.manual_seed(model_init) before constructing the networks (integer per replicate and arm)",
+    "train_stream": "fa.train(seed=train_stream): torch.Generator for (x0, t) noise and random.Random for minibatch indices and the shared arm's pattern choice",
+    "dev_loss_noise": "fixed (x0, t) for the held-out dev loss at 18000 and 20000 updates",
+    "sampling": "stable hash seed_v2 over {experiment, joint, split, replicate, arm, pattern, example (conditioning id), branch, sample_id, purpose='sampling:<level>'}; one stdlib Gaussian stream per sample; the solver step count is deliberately absent so 128/256/512 share every sample's initial noise; direct and sequential never share a stream; a fresh y is drawn for every z sample of the sequential branch",
+    "permutation": "stable hash with purpose='permutation', split, replicate, arm, level, steps",
+    "bootstrap": "purpose='bootstrap'"
+  },
+  "data": {
+    "train": "unchanged (2000 rows, base data key)",
+    "dev": "unchanged rows (200); sampling keys now carry split='dev'",
+    "standardisation": "y, z divided by the train-split sds (unchanged)"
+  },
+  "test_set": {
+    "branch_key": "test_r7",
+    "n": 200,
+    "rows_sha256": "1c09b1987908aa89f8de9eb2c4807af52f98cd4b8ead40ea3b55340977fa9b6a",
+    "disjoint_from_pilot_test": true,
+    "x_overlap_count_with_pilot_test": 0,
+    "rows_file": "results/raw/p5_syn_learn_01_fm_r7/test_examples.json (written at registration)"
+  },
+  "training": {
+    "independent": "4 networks x 5000 updates = 20000",
+    "shared": "20000 updates",
+    "checkpoint": "final iterate only",
+    "fixed_as_A2": [
+      "architecture",
+      "batch 256",
+      "loss",
+      "Adam lr 1e-3, no schedule"
+    ],
+    "not_equal_compute": true
+  },
+  "solver": {
+    "primary": 128,
+    "sensitivity": [
+      256,
+      512
+    ],
+    "integrator": "Euler",
+    "cfg": "off",
+    "base": "N(0, I)",
+    "rule": "the primary is fixed; 256/512 are numerical sensitivity endpoints with the same gap and quality estimators and paired differences; no permutation test is run at 256/512; nothing is selected by any outcome"
+  },
+  "evaluation": {
+    "N": 200,
+    "M": 64,
+    "B": 199,
+    "n_boot": 2000,
+    "test_statistic": "mean ED_V, upper tail (Test P), at 128 only",
+    "families": {
+      "target_auxiliary": "8 target tests (4 replicates x 2 arms) at 128, Holm; smallest attainable p 0.005 vs first threshold 0.05/8 = 0.00625",
+      "joint_secondary": "8 joint tests at 128, Holm, separate; the round-6 joint p = 0.035 stays unadjusted and is not re-scored"
+    },
+    "primary_effect": "Theta_128 = mean_i mean_r d_ri(128), d_ri(h) = ED_U(shared)_ri - ED_U(independent)_ri; conditional on the four fit-pairs; per-replicate means shown side by side; example-level paired CIs; bootstrap resamples examples carrying all replicates/arms/steps; 4 x 200 never pooled as 800",
+    "quality": "per example: unbiased sample ED to the true conditional for the direct and the sequential branch (same population estimand as the closed-form control distance; different estimator and, for this round, different test examples), sd ratios and mean shifts for both branches",
+    "no_ranking_by_p": true,
+    "no_clipping": true
+  },
+  "labels": {
+    "undertraining_threshold": 0.02,
+    "undertraining_role": "diagnostic only; final iterate kept",
+    "inconclusive": "MODEL_FIT_OR_NUMERICS_INCONCLUSIVE only for non-finite losses or samples",
+    "numerics": "NUMERICS_NOT_SEPARATED stays whenever the paired 256-128 or 512-128 difference of the gap estimate has a 95% CI excluding 0; agreement is not an ODE-limit proof",
+    "outcome_labels": "SINGLE_PROBE_MULTI_INITIALIZATION_EVIDENCE if all four replicate means of d(128) share the sign of Theta_128 and their pointwise CIs exclude 0 in the same direction; MIXED_REPLICATION otherwise; both conditional on this probe and these fits"
+  },
+  "budget": {
+    "cpu_cap_seconds": 3600,
+    "wall_cap_seconds": 4500,
+    "threads": 1,
+    "ram_gib": 8,
+    "includes": [
+      "fixtures",
+      "timing smoke",
+      "training",
+      "generation",
+      "permutation",
+      "bootstrap",
+      "failures"
+    ],
+    "blocked": "BLOCKED_BUDGET before any result if the smoke estimate exceeds the remaining cap; N, M and seeds are not reduced",
+    "incomplete": "INCOMPLETE_BUDGET with saved checkpoints and completed replicates; no seed substitution or arm selection"
+  },
+  "order": [
+    "fixtures on the current snapshot",
+    "registration (this file)",
+    "commit",
+    "timing smoke",
+    "per replicate: train both arms -> dev (primary level, no test statistic) -> labels -> test (128 with Test P; 256; 512)",
+    "analysis",
+    "nothing changed after any p-value or effect is seen"
+  ],
+  "forbidden": [
+    "new dataset",
+    "GMM re-fit",
+    "weights download",
+    "GPU",
+    "new architecture/loss",
+    "optimizer/width sweep",
+    "extra seeds"
+  ]
+}

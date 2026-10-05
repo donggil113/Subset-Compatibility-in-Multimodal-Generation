@@ -1,0 +1,291 @@
+{
+ "derived_from": "summary.json (not raw); written after the run; rule fixed in the registered config (labels.outcome_labels)",
+ "per_replicate_d128": {
+  "R1": {
+   "n": 200,
+   "mean": -0.011177,
+   "sd": 0.047057,
+   "se": 0.003327,
+   "lo": -0.017699,
+   "hi": -0.004656
+  },
+  "R2": {
+   "n": 200,
+   "mean": -0.022809,
+   "sd": 0.048857,
+   "se": 0.003455,
+   "lo": -0.02958,
+   "hi": -0.016038
+  },
+  "R3": {
+   "n": 200,
+   "mean": -0.008153,
+   "sd": 0.035784,
+   "se": 0.00253,
+   "lo": -0.013112,
+   "hi": -0.003194
+  },
+  "R4": {
+   "n": 200,
+   "mean": 0.003346,
+   "sd": 0.03842,
+   "se": 0.002717,
+   "lo": -0.001979,
+   "hi": 0.00867
+  }
+ },
+ "all_same_sign_as_Theta": false,
+ "all_pointwise_CIs_exclude_0_same_direction": false,
+ "outcome_label": "MIXED_REPLICATION",
+ "Theta_128": {
+  "n": 200,
+  "mean": -0.009698323432143968,
+  "sd": 0.020730968315692967,
+  "se": 0.0014659008276589956,
+  "lo": -0.012571436259263056,
+  "hi": -0.006825210605024881
+ },
+ "Theta_128_bootstrap": {
+  "lo": -0.012471805150129136,
+  "hi": -0.00688736406110452,
+  "n_boot": 2000
+ },
+ "joint_level": {
+  "per_replicate": {
+   "R1": -0.008636,
+   "R2": -0.007979,
+   "R3": -0.002616,
+   "R4": -0.002798
+  },
+  "Theta": {
+   "n": 200,
+   "mean": -0.005507632839380494,
+   "sd": 0.015393577298237881,
+   "se": 0.0010884902894303299,
+   "lo": -0.007641034604185519,
+   "hi": -0.0033742310745754687
+  },
+  "reversal": false
+ },
+ "target_family_rejections_after_holm": {
+  "R1|INDEPENDENT_CONDITIONAL_FM": 0.04,
+  "R2|INDEPENDENT_CONDITIONAL_FM": 0.04,
+  "R3|INDEPENDENT_CONDITIONAL_FM": 0.04
+ },
+ "joint_family_rejections_after_holm": {
+  "R1|INDEPENDENT_CONDITIONAL_FM": 0.04,
+  "R2|INDEPENDENT_CONDITIONAL_FM": 0.04,
+  "R3|INDEPENDENT_CONDITIONAL_FM": 0.04,
+  "R4|INDEPENDENT_CONDITIONAL_FM": 0.04,
+  "R2|SHARED_CONDITIONAL_FM": 0.04,
+  "R4|SHARED_CONDITIONAL_FM": 0.04
+ },
+ "solver_sensitive_512_vs_128_target": {
+  "R1|INDEPENDENT_CONDITIONAL_FM|target": true,
+  "R1|SHARED_CONDITIONAL_FM|target": true,
+  "R2|INDEPENDENT_CONDITIONAL_FM|target": true,
+  "R2|SHARED_CONDITIONAL_FM|target": false,
+  "R3|INDEPENDENT_CONDITIONAL_FM|target": false,
+  "R3|SHARED_CONDITIONAL_FM|target": false,
+  "R4|INDEPENDENT_CONDITIONAL_FM|target": false,
+  "R4|SHARED_CONDITIONAL_FM|target": true
+ },
+ "n_solver_flags": 4,
+ "Theta_by_steps_target": {
+  "128": -9.698,
+  "256": -9.664,
+  "512": -9.647
+ },
+ "numerics_label": "NUMERICS_NOT_SEPARATED for the flagged arms (paired 512-128 differences of -0.2 to +0.1 x1e-3); Theta_128/256/512 differ by < 0.06 x1e-3",
+ "undertraining_flags": {
+  "R1|INDEPENDENT_CONDITIONAL_FM": false,
+  "R1|SHARED_CONDITIONAL_FM": true,
+  "R2|INDEPENDENT_CONDITIONAL_FM": false,
+  "R2|SHARED_CONDITIONAL_FM": false,
+  "R3|INDEPENDENT_CONDITIONAL_FM": true,
+  "R3|SHARED_CONDITIONAL_FM": false,
+  "R4|INDEPENDENT_CONDITIONAL_FM": false,
+  "R4|SHARED_CONDITIONAL_FM": false
+ },
+ "labels": {
+  "R1": {
+   "INDEPENDENT_CONDITIONAL_FM": {
+    "trained_updates": 20000,
+    "complete": true,
+    "UNDERTRAINING_FLAG": false,
+    "dev_loss_rel_decrease_90_to_100": {
+     "z|x": 0.011316978041121837,
+     "y|x": 0.014809524322774872,
+     "z|x,y": 0.00793625072132399,
+     "y,z|x": 0.010789613383375713
+    },
+    "non_finite": false,
+    "label": "EVALUABLE",
+    "note": "written before the test split of this replicate is opened; no dev test statistic is computed; nothing is selected"
+   },
+   "SHARED_CONDITIONAL_FM": {
+    "trained_updates": 20000,
+    "complete": true,
+    "UNDERTRAINING_FLAG": true,
+    "dev_loss_rel_decrease_90_to_100": {
+     "z|x": -0.021196119730635735,
+     "y|x": 0.016054542781896892,
+     "z|x,y": 0.0201182488682878,
+     "y,z|x": 0.006450696972335675
+    },
+    "non_finite": false,
+    "label": "EVALUABLE",
+    "note": "written before the test split of this replicate is opened; no dev test statistic is computed; nothing is selected"
+   }
+  },
+  "R2": {
+   "INDEPENDENT_CONDITIONAL_FM": {
+    "trained_updates": 20000,
+    "complete": true,
+    "UNDERTRAINING_FLAG": false,
+    "dev_loss_rel_decrease_90_to_100": {
+     "z|x": -0.007806127686956213,
+     "y|x": 0.0162709111250101,
+     "z|x,y": 0.016006894093778597,
+     "y,z|x": 0.008637164971738137
+    },
+    "non_finite": false,
+    "label": "EVALUABLE",
+    "note": "written before the test split of this replicate is opened; no dev test statistic is computed; nothing is selected"
+   },
+   "SHARED_CONDITIONAL_FM": {
+    "trained_updates": 20000,
+    "complete": true,
+    "UNDERTRAINING_FLAG": false,
+    "dev_loss_rel_decrease_90_to_100": {
+     "z|x": -0.027871425681968424,
+     "y|x": 0.0005137062059314632,
+     "z|x,y": -0.015210172034725205,
+     "y,z|x": -0.021935732807762877
+    },
+    "non_finite": false,
+    "label": "EVALUABLE",
+    "note": "written before the test split of this replicate is opened; no dev test statistic is computed; nothing is selected"
+   }
+  },
+  "R3": {
+   "INDEPENDENT_CONDITIONAL_FM": {
+    "trained_updates": 20000,
+    "complete": true,
+    "UNDERTRAINING_FLAG": true,
+    "dev_loss_rel_decrease_90_to_100": {
+     "z|x": 0.02619429639918303,
+     "y|x": 0.005569962968096422,
+     "z|x,y": 0.032198887311784025,
+     "y,z|x": 0.011236910485717714
+    },
+    "non_finite": false,
+    "label": "EVALUABLE",
+    "note": "written before the test split of this replicate is opened; no dev test statistic is computed; nothing is selected"
+   },
+   "SHARED_CONDITIONAL_FM": {
+    "trained_updates": 20000,
+    "complete": true,
+    "UNDERTRAINING_FLAG": false,
+    "dev_loss_rel_decrease_90_to_100": {
+     "z|x": 0.006622272955528817,
+     "y|x": -0.004755971307392441,
+     "z|x,y": -0.005507031723069482,
+     "y,z|x": 0.010991044208775301
+    },
+    "non_finite": false,
+    "label": "EVALUABLE",
+    "note": "written before the test split of this replicate is opened; no dev test statistic is computed; nothing is selected"
+   }
+  },
+  "R4": {
+   "INDEPENDENT_CONDITIONAL_FM": {
+    "trained_updates": 20000,
+    "complete": true,
+    "UNDERTRAINING_FLAG": false,
+    "dev_loss_rel_decrease_90_to_100": {
+     "z|x": -0.004477222987230133,
+     "y|x": 0.0007553096069434684,
+     "z|x,y": 0.017975756333478324,
+     "y,z|x": 0.00979178492093251
+    },
+    "non_finite": false,
+    "label": "EVALUABLE",
+    "note": "written before the test split of this replicate is opened; no dev test statistic is computed; nothing is selected"
+   },
+   "SHARED_CONDITIONAL_FM": {
+    "trained_updates": 20000,
+    "complete": true,
+    "UNDERTRAINING_FLAG": false,
+    "dev_loss_rel_decrease_90_to_100": {
+     "z|x": 0.013884758049695809,
+     "y|x": -0.010740033348687459,
+     "z|x,y": 0.00861665130723861,
+     "y,z|x": -0.0006293707313344138
+    },
+    "non_finite": false,
+    "label": "EVALUABLE",
+    "note": "written before the test split of this replicate is opened; no dev test statistic is computed; nothing is selected"
+   }
+  }
+ },
+ "test_sampling_cpu_seconds": {
+  "R1|INDEPENDENT_CONDITIONAL_FM": {
+   "128": 12.5,
+   "256": 22.9,
+   "512": 44.1
+  },
+  "R1|SHARED_CONDITIONAL_FM": {
+   "128": 25.3,
+   "256": 48.1,
+   "512": 95.9
+  },
+  "R2|INDEPENDENT_CONDITIONAL_FM": {
+   "128": 13.1,
+   "256": 24.1,
+   "512": 44.8
+  },
+  "R2|SHARED_CONDITIONAL_FM": {
+   "128": 25.9,
+   "256": 47.8,
+   "512": 95.6
+  },
+  "R3|INDEPENDENT_CONDITIONAL_FM": {
+   "128": 13.5,
+   "256": 24.3,
+   "512": 47.2
+  },
+  "R3|SHARED_CONDITIONAL_FM": {
+   "128": 27.1,
+   "256": 50.4,
+   "512": 99.6
+  },
+  "R4|INDEPENDENT_CONDITIONAL_FM": {
+   "128": 13.5,
+   "256": 25.4,
+   "512": 46.1
+  },
+  "R4|SHARED_CONDITIONAL_FM": {
+   "128": 25.1,
+   "256": 50.4,
+   "512": 97.4
+  }
+ },
+ "train_cpu_seconds": {
+  "R1|INDEPENDENT_CONDITIONAL_FM": 26.5,
+  "R1|SHARED_CONDITIONAL_FM": 37.3,
+  "R2|INDEPENDENT_CONDITIONAL_FM": 27.6,
+  "R2|SHARED_CONDITIONAL_FM": 39.0,
+  "R3|INDEPENDENT_CONDITIONAL_FM": 27.4,
+  "R3|SHARED_CONDITIONAL_FM": 38.8,
+  "R4|INDEPENDENT_CONDITIONAL_FM": 29.1,
+  "R4|SHARED_CONDITIONAL_FM": 40.3
+ },
+ "budget": {
+  "cpu_seconds_total_incl_before": 1500.140062034,
+  "cpu_seconds_this_process": 1494.340064753,
+  "wall_seconds": 1517.1582033634186,
+  "children_cpu_seconds": 0.006121
+ },
+ "status": "COMPLETE"
+}

@@ -1,0 +1,27 @@
+{
+ "tests_run": 16,
+ "failures": 0,
+ "errors": 0,
+ "skipped": [
+  "test_blocker_message: torch present",
+  "test_register_seeds_are_integers_and_distinct: r7 config not registered yet"
+ ],
+ "cpu_seconds": 1.583,
+ "wall_seconds": 8.966,
+ "children_cpu": 0.0,
+ "torch": "2.14.1+cpu",
+ "hashes": {
+  "src/p5compat/fm_adapter.py": "5449a25400b3591d78dabf52950a969bd0956471f9364953cca33309e30155eb",
+  "tests/test_fm_adapter.py": "54c0bbc04fb0eb0c425d880aa18944fe98f66562ddc61a997add88a1a1990602",
+  "src/p5compat/syn_learn_fm_r7.py": "ce2120d7091e1c64e748345f46421956a5ee1eee5a3c5e1dcb42657f82a12fa3",
+  "tests/test_fm_r7.py": "edd29c677c300f435d78cce26535f3bb849a3f1f99c0a69d1b79645925abaef3"
+ },
+ "note": "round 7: adapter fixtures re-executed on the current snapshot (hash identical to commit 22963ed/7a62fa9) plus the keyed-randomness fixtures; the r7-config test is skipped until registration",
+ "r7_config_test_after_registration": {
+  "tests_run": 3,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "cpu_seconds": 0.018
+ }
+}

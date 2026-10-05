@@ -6,10 +6,10 @@
 - Built with a minimal TeX Live 2026 installed under a user-delivered
   limited approval; the official ICML 2026 style was fetched by
   `fetch_style.sh` (SHA-256 verified) and used unmodified in review mode.
-- 19 pages; the conclusion's last sentence is on page 8 (measured with
+- 21 pages; the conclusion's last sentence is on page 8 (measured with
   `\pdfsavepos`); no overfull boxes; no undefined references.
-- The pages were NOT rasterized or viewed (no renderer was available or
-  approved), so legibility at 100% is unverified.
+- The pages were rasterized with PyMuPDF (installed into the venv under a
+  limited approval) and the changed pages were viewed; see the summary.
 - SUBMISSION_READY = false.
 - Under the project rules, do not upload this source to an external web
   compile service. Build it on a machine where a local TeX installation is
@@ -98,7 +98,8 @@ pip download --no-deps --only-binary=:all: --index-url https://download.pytorch.
 sha256sum wheels/torch-*.whl                  # expect 5e38154c8896d426a5df58bf2276b603e82184dfae4f54d77dbb212f36e34f37
 pip install --index-url https://pypi.org/simple wheels/torch-*.whl numpy==2.4.6
 OMP_NUM_THREADS=1 python scripts/run_syn_learn_fm.py --smoke --out /tmp/p5_fm_smoke          # train-only timing smoke (seed 999)
-OMP_NUM_THREADS=1 python scripts/run_syn_learn_fm.py --out /tmp/p5_fm_rerun --cpu-spent-before 0   # full re-run into a fresh root
+OMP_NUM_THREADS=1 python scripts/run_syn_learn_fm.py --out /tmp/p5_fm_rerun --cpu-spent-before 0   # pilot re-run into a fresh root
+OMP_NUM_THREADS=1 python scripts/run_syn_learn_fm_r7.py --out /tmp/p5_fm_r7_rerun --cpu-spent-before 0  # four replicates (about 25 CPU-min)
 ```
 
 The runner refuses to write into an existing output root. A re-run with the
