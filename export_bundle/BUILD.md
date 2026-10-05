@@ -1,6 +1,6 @@
-# Building the manuscript (built in round 6; see paper/build_log_summary.json)
+# Building the manuscript (v5 built in round 7; see paper/build_log_summary.json)
 
-**Status:** COMPILED locally in round 6 (`paper/main.pdf`; details in
+**Status:** COMPILED locally (v5, round 7; `paper/main.pdf`; details in
 `paper/build_log_summary.json`).
 
 - Built with a minimal TeX Live 2026 installed under a user-delivered

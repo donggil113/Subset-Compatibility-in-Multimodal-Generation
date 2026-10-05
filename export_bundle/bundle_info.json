@@ -1,5 +1,5 @@
 {
- "built_from_head": "2554a76593334b5637a4877b6c7831ee2b73408d",
+ "built_from_head": "37868290f7e84307c62158eadb4b925b254e9866",
  "branch": "claude/bold-feynman-qohhel",
  "worktree_dirty_at_build": true,
  "note": "files are copied from the working tree; the bundle is committed in the same commit as these sources, so that commit (not built_from_head) is the exact source",

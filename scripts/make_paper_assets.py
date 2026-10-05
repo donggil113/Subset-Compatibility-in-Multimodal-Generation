@@ -603,7 +603,8 @@ def write_fm_r7_assets():
     arms = [("INDEPENDENT_CONDITIONAL_FM", "Ind", "Independent"), ("SHARED_CONDITIONAL_FM", "Sh", "Shared")]
 
     def ci3(c):
-        return f"{1e3 * c['mean']:.2f} [{1e3 * c['lo']:.2f}, {1e3 * c['hi']:.2f}]"
+        z = lambda v: 0.0 if abs(v) < 5e-6 else v  # avoid printing -0.00
+        return f"{1e3 * z(c['mean']):.2f} [{1e3 * z(c['lo']):.2f}, {1e3 * z(c['hi']):.2f}]"
 
     # Table 1: per replicate and arm at the primary solver (test split)
     t = HEADER + "\\begin{tabular}{llrrrrrr}\n\\toprule\n"

@@ -441,7 +441,6 @@ That run used one seed per arm, its dev and test stages shared sampling streams,
 
 \subsection{Four training replicates with solver sensitivity}
 \label{sec:exp-reps}
-The development pilot of \cref{sec:exp-real} used one model seed per arm and was read before this design was fixed, so its numbers are kept as a development result and are not re-scored.
 Four fixed training replicates $R_1$--$R_4$ were then run once with the same training split, architecture, update budget and optimizer, new integer seeds for initialization and minibatch order, and a new test set of $200$ examples from the same source, disjoint from the pilot's.
 Every primitive draw is keyed by split, replicate, arm, pattern, example, branch, sample and purpose; the step count is absent from the keys, so Euler with $128$ (primary), $256$ and $512$ steps integrates the same initial noise; branches share no stream, and a fresh $y$ is drawn for every $z$ sample.
 The eight target tests at $128$ steps form one auxiliary family with Holm correction (with $B=199$ the smallest attainable $p$ is $0.005$ against a first threshold of $0.00625$); the eight projected-joint tests are a separate secondary family; no permutation test is run at $256$ or $512$ steps. Per-replicate results are in \cref{tab:r7reps} (appendix).
@@ -449,13 +448,13 @@ The eight target tests at $128$ steps form one auxiliary family with Holm correc
 \paragraph{Estimand.}
 For replicate $r$ and example $i$ let $d_{ri}(h)=\widehat\Delta_T^{\text{shared}}(h)-\widehat\Delta_T^{\text{indep}}(h)$, the difference of the two arms' unbiased gap estimates at step count $h$; negative values favour the shared arm.
 The primary quantity is $\Theta_{128}=\operatorname{mean}_i\operatorname{mean}_r d_{ri}(128)$, a comparison conditional on these four fit-pairs, not an effect over a population of training runs.
-Intervals are paired at the example (a normal interval over the $200$ per-example replicate means, and a percentile bootstrap that resamples examples carrying all replicates, arms and step counts of an example); the four replicate means are shown side by side, and $4\times200$ values are never pooled as $800$.
+Intervals are paired at the example (a normal interval over the $200$ per-example replicate means, and a percentile bootstrap with $2000$ resamples of examples, carrying all replicates, arms and step counts of an example); the four replicate means are shown side by side, and $4\times200$ values are never pooled as $800$.
 
 
 
 \begin{table}[t]
 \centering
-\caption{Paired between-arm difference at the target level ($\times10^{3}$): per-replicate means $\bar d_r(h)$ with pointwise 95\% CIs, and $\widehat\Theta_h$ over examples (conditional on the four fits) with the example bootstrap; $h=256$ lies between the two columns (appendix).}
+\caption{Paired between-arm difference at the target level ($\times10^{3}$): per-replicate means $\bar d_r(h)$ with pointwise 95\% CIs, and $\widehat\Theta_h$ over examples (conditional on the four fits) with the example bootstrap; $h=256$ lies between the two columns (\cref{tab:r7thetafull}, appendix).}
 \label{tab:r7theta}
 \scriptsize
 \setlength{\tabcolsep}{2pt}
@@ -775,7 +774,7 @@ All marginals and conditionals are computed from the fitted density.
 \item \textbf{Shared arm:} one MLP (width 128, depth 3) over $(x,y,z)$ whose input marks each coordinate as observed, target or absent, with $20000$ updates and uniform pattern sampling.
 \item \textbf{Budgets:} both arms get $20000$ updates in total ($4\times5000$ for the independent arm) and equal expected pattern exposure. Parameter counts are close ($34757$ and $34819$), but each shared update runs a network about four times larger, so the arms are not equal-compute.
 \item \textbf{Optimizer:} Adam, learning rate $10^{-3}$, batch size $256$.
-\item \textbf{Solver:} Euler from $\mathcal N(0,I)$ with CFG off. The fine level (128) is primary, fixed in advance; the coarse level (32) is a sensitivity check that shares the same noise draws. The per-example difference of the two levels' gap estimates is reported with its paired 95\% CI; an arm is flagged solver-sensitive when that CI excludes $0$. Agreement does not prove convergence. The held-out flow-matching loss at 90\% and 100\% of training (fixed noise) is a diagnostic of optimization progress only.
+\item \textbf{Solver:} Euler from $\mathcal N(0,I)$ with CFG off. The fine level (128) is primary, fixed in advance; the coarse level (32) is a sensitivity check that shares the same noise draws. The per-example difference of the two levels' gap estimates is reported with its paired 95\% CI; an arm is flagged solver-sensitive when that CI excludes $0$. Agreement does not prove convergence. The held-out flow-matching loss at 90\% and 100\% of training (fixed noise) is a diagnostic of optimization progress only. The replicates of \cref{sec:exp-reps} use $128$ steps as primary and $256$ and $512$ steps as pre-fixed sensitivity endpoints on the same initial noise.
 \item \textbf{Checkpoint and comparison:} the final iterate, with no selection. The primary comparison is the paired per-example difference of the unbiased gap estimates of the two arms, over the same test examples.
 \item \textbf{Pre-execution fixes:} the shared input gained a target mask, and each independent network got its own optimizer.
 \item \textbf{Execution:} CPU only, one thread, torch \numFmTorch; the adapter's fixtures (roles, leakage, path direction, optimizer isolation) were executed before training; the run contract was amended twice before training and not afterwards.
@@ -815,7 +814,15 @@ A consistency regularizer, and any real multimodal data, are outside this paper 
 
 
 \paragraph{Replicates: per-replicate results.}
-\Cref{tab:r7reps} lists the eight arms of \cref{sec:exp-reps} at the primary solver.
+\Cref{tab:r7reps} lists the eight arms of \cref{sec:exp-reps} at the primary solver, and \cref{tab:r7thetafull} the paired between-arm differences at all three step counts.
+\begin{table*}[h]
+\centering
+\caption{Paired between-arm difference at the target level at all three step counts ($\times10^{3}$): per-replicate means with pointwise 95\% CIs, $\widehat\Theta_h$ with its normal CI over examples, and the example bootstrap (2000 resamples; replicates, arms and step counts of an example carried together).}
+\label{tab:r7thetafull}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\input{generated/tab_r7_theta}
+\end{table*}
 \begin{table*}[h]
 \centering
 \caption{Four training replicates on the new test set (Test~P at $128$ steps, $N=200$, $M=64$, $B=199$). $\widehat\Delta_T$ is the unbiased gap estimate; $\widehat D_U$ is the unbiased sample energy distance of a branch to the true $q(z\mid x)$ (may be negative); sd ratios are the sample sd of a branch over the true conditional sd. Standardized scale; intervals are normal 95\% CIs over examples.}
@@ -888,7 +895,7 @@ Question & Status \\
 \midrule
 Coherence vs.\ quality & controls: coherent by construction, not flagged at the primary endpoint; the fitted control's quality is clearly worse \\
 Separate vs.\ shared learners & pilot (\cref{tab:fm}) and four replicates (\cref{tab:r7theta}): $\widehat\Theta_{128}=\numRsevenTheta\times10^{-3}$ in favour of the shared arm, conditional on the four fits, with one sign reversal (\textsc{mixed\_replication}); the shared arm's joint endpoint is flagged in two of four \\
-Gap from solver refinement & not applicable to the controls (exact sampling); for the learners the paired 128-vs-32-step difference is reported and flagged when its CI excludes $0$ \\
+Gap from solver refinement & not applicable to the controls (exact sampling); for the learners the paired step-count differences (32 vs.\ 128 in the pilot; 256 and 512 vs.\ 128 in the replicates) are reported and flagged when their CIs exclude $0$ \\
 Non-detection vs.\ equality, correctness, global joint & for the controls equality and a global joint hold by construction, correctness fails for the fitted one; for the neural flow learners none of the three is established by a non-rejection; a global joint is not implied by parameter sharing \\
 \bottomrule
 \end{tabular}
@@ -938,7 +945,7 @@ Non-detection vs.\ equality, correctness, global joint & for the controls equali
 
 \section{Compute}
 \label{app:compute}
-All runs are CPU-only. The Gaussian-probe runs and the mixture controls are single-process standard-library Python; the calibration used two processes; the neural pilot used torch (\numFmTorch), one process, one thread.
+All runs are CPU-only. The Gaussian-probe runs and the mixture controls are single-process standard-library Python; the calibration used two processes; the neural pilot and the four replicates used torch (\numFmTorch), one process, one thread.
 \begin{itemize}
 \item v1 test run: \numRuntimeVone\,s.
 \item P5-E8-EXACT: \numRuntimeEeight\,s.

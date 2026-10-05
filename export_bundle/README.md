@@ -12,7 +12,7 @@ the scripts run from this directory.
 
 | Path | Content |
 |---|---|
-| `paper/main.tex`, `paper/fig_numerics.tex`, `paper/references.bib`, `paper/generated/` | Manuscript v4 source. All numbers are generated from committed results. |
+| `paper/main.tex`, `paper/fig_numerics.tex`, `paper/references.bib`, `paper/generated/` | Manuscript v5 source. All numbers are generated from committed results. |
 | `paper/main.pdf`, `paper/build_log_summary.json` | PDF built locally with TeX Live 2026 and the official ICML 2026 style (review mode); 21 pages, conclusion ends on page 8; pages rasterized with PyMuPDF and inspected (the summary lists which pages were viewed and what was fixed) |
 | `paper/claims.csv` | 43 claims with status and evidence paths; the core claims are K1–K5 |
 | `BUILD.md`, `fetch_style.sh` | Exact build commands. The style is fetched from the official URL and SHA-256 checked. |

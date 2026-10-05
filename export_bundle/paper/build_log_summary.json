@@ -1,6 +1,6 @@
 {
  "manuscript_version": "v5 (round 7: four training replicates with solver sensitivity)",
- "built_utc": "2026-10-05T07:11:06Z",
+ "built_utc": "2026-10-05T07:17:40Z",
  "engine": "3.141592653-2.6-1.40.29",
  "texlive": "TeX Live 2026 (minimal, /home/user/texlive-p5, installed under the round-6 limited approval; reused)",
  "style": "official icml2026.zip (sha256 8b29290f5828e176debb57ea9cc00252502973d55ea561a2f18a7f0a326bfc6c), anonymous review mode, unmodified; TEMPLATE_YEAR 2026, TARGET_YEAR 2027; SUBMISSION_READY false",
@@ -28,14 +28,15 @@
   "tab:r7theta": 7,
   "tab:r7reps": 19,
   "tab:r7solver": 19,
-  "tab:r7cost": 20,
+  "tab:r7cost": 19,
   "tab:fm": 18,
   "tab:calib": 15,
-  "tab:claims": 21,
-  "tab:decision": 21
+  "tab:claims": 20,
+  "tab:decision": 21,
+  "tab:r7thetafull": 18
  },
- "conclusion_end_position_pt_from_page_bottom": 336.5,
- "note_on_position": "measured with \\pdfsavepos in a scratch copy after the final trims: the conclusion ends in the right column of page 8 (about two thirds down); the last line of page 8 is unused slack, so no further trimming was needed",
+ "conclusion_end_position_pt_from_page_bottom": 383.2,
+ "note_on_position": "measured with \\pdfsavepos in a scratch copy after the review fixes: the conclusion ends in the right column of page 8 (383 pt from the bottom); the rest of page 8 is slack",
  "overfull_hbox": 0,
  "overfull_vbox": 0,
  "underfull_hbox": 10,
@@ -72,13 +73,14 @@
   "utmr8a.pfb",
   "utmri8a.pfb"
  ],
- "pdf_bytes": 417182,
- "pdf_sha256": "2ec371478dd1e44a36e19aa8c2ad0e7fc1e6c2098f81bd256bdf5081c6b81981",
+ "pdf_bytes": 418382,
+ "pdf_sha256": "588b9ba5601456c2c715d42a2416bd8af6e986052532a2f226bf4e232b5a82fb",
  "pdf_metadata_author": "Anonymous Authors (set by the ICML style in review mode)",
- "visual_check": "PERFORMED with PyMuPDF 1.28.2 (results/env/pymupdf_env.json): all 21 pages rasterized at 100 dpi; pages 1, 7, 8, 9, 15, 18, 19, 20 viewed directly (abstract; coherent controls and replicate section; Theta table, limitations, conclusion; references; calibration table; pilot record and replicate tables; claims and decision tables). Defects found and fixed during inspection: math-mode range macros rendered without spaces ('2.4to4.6'); the pilot's design description was duplicated on page 7; appendix run-in headings appeared after their tables (orphaned). After the fixes the tables are legible at 100% (scriptsize), no text is clipped, no overfull boxes, and the PDF metadata author is 'Anonymous Authors'. Pages 2-6, 10-14, 16-17, 21 were rasterized but not viewed individually (unchanged layout relative to v4 apart from reflow).",
+ "visual_check": "PERFORMED with PyMuPDF 1.28.2 (results/env/pymupdf_env.json): all 21 pages rasterized at 100 dpi; pages 1, 7, 8, 9, 15, 18, 19, 20 viewed directly (abstract; coherent controls and replicate section; Theta table, limitations, conclusion; references; calibration table; pilot record and replicate tables; claims and decision tables). Defects found and fixed during inspection: math-mode range macros rendered without spaces ('2.4to4.6'); the pilot's design description was duplicated on page 7; appendix run-in headings appeared after their tables (orphaned). After the fixes the tables are legible at 100% (scriptsize), no text is clipped, no overfull boxes, and the PDF metadata author is 'Anonymous Authors'. After the single review pass (10 findings: 2 major, 8 minor; all fixed), pages 7 and 18 were re-rendered and viewed again. Pages 2-6, 10-14, 16-17, 21 were rasterized but not viewed individually (unchanged layout relative to v4 apart from reflow).",
  "todo_markers_in_body": [
   "P5-REAL-02 (real paired multimodal data; intentionally kept)"
  ],
  "font_size_margins": "unchanged from the style (no \\small, no geometry changes); fit obtained by moving the pilot's detail, the calibration table and the per-replicate table to the appendix and trimming prose",
- "revision": "v5 built and inspected on 2026-10-05 (round 7)"
+ "revision": "v5 built, inspected and review-corrected on 2026-10-05 (round 7)",
+ "review": "one read-only reviewer on commit 3786829 (15-minute time box): 10 findings (stale run_manifest page-fit record; dangling pointer to a 256-step table; bundle doc versions; decision-table and app:mixture solver wording; redundant sentence; bootstrap resample count; negative zero; compute wording) - all VALID_FIXED in this build; the reviewer's number, statistics and record checks passed"
 }

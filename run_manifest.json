@@ -444,7 +444,7 @@
   "static_check": "scripts/check_tex.py",
   "claims": "paper/claims.csv",
   "version": "v5 (four training replicates with solver sensitivity)",
-  "page_fit_8": "body ends on page 8 (last line; measured with \\pdfsavepos; paper/build_log_summary.json); 19 pages total; visual rendering NOT verified",
+  "page_fit_8": "v5: 21 pages total; the conclusion ends in the right column of page 8 (336.5 pt from the bottom, measured with \\pdfsavepos; the last line of page 8 is slack); visual check PERFORMED with PyMuPDF 1.28.2 (pages 1, 7, 8, 9, 15, 18, 19, 20 viewed) - see paper/build_log_summary.json",
   "export_bundle": "export_bundle/ (source + compiled paper/main.pdf and build_log_summary.json; checkpoints and env records; style fetched by export_bundle/fetch_style.sh with SHA-256 check)",
   "pdf": "paper/main.pdf"
  },
