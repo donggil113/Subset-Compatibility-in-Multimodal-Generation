@@ -1,12 +1,13 @@
 %% =====================================================================
-%% P5 manuscript v3.1 (v1 = 9923d50, v2 = 1814564, v3 = ca0c350). v3: statistical errata E1-E6, coherent-joint
+%% P5 manuscript v4 (v1 = 9923d50, v2 = 1814564, v3 = ca0c350, v3.1 = 889ee41). v3: statistical errata E1-E6, coherent-joint
 %% controls (P5-SYN-LEARN-01), calibration history moved to the appendix, body edited toward 8 pages.
 %% v3.1 (round 5): wording corrections only. v4 (round 6): neural flow arms run once; all numbers from generated/numbers.tex.
 %%   TARGET_YEAR      = 2027  (intended venue: ICML 2027)
 %%   TEMPLATE_YEAR    = 2026  (official ICML 2026 style, anonymous review mode;
 %%                             no official ICML 2027 style was found on 2026-09-26)
 %%   SUBMISSION_READY = false
-%%   COMPILE_STATUS   = COMPILE_NOT_RUN (no LaTeX toolchain in the build environment)
+%%   COMPILE_STATUS   = COMPILED (round 6; TeX Live 2026 minimal, official icml2026 style unmodified; see build_log_summary.json)
+%%   NOTE: the commit hashes in these comments tie the source to the repository; strip lines 1-19 for an anonymous package.
 %% The style files are NOT vendored in this repository. To build, place the
 %% official files from https://media.icml.cc/Conferences/ICML2026/Styles/icml2026.zip
 %% (icml2026.sty, icml2026.bst, algorithm.sty, algorithmic.sty, fancyhdr.sty)
@@ -140,15 +141,7 @@ This paper is about that separation, on synthetic probes only. We make three con
   \item \textbf{A single-seed neural pilot} (\cref{sec:exp-real}). Separately trained conditional flow learners are detectably incompatible on the probe; a shared network is not flagged at the target level but is at the joint level, and is less accurate; the arms are compared by a paired difference with its interval.
 \end{itemize}
 The experiment that bears on the central question, comparing separately learned conditionals with a shared conditional network, was run once as a small synthetic pilot (\cref{sec:exp-real}); its scope is one probe, one data seed and one model seed per arm.
-We do not claim as new:
-\begin{itemize}
-\item the identity~\eqref{eq:identity};
-\item the consistency and compatibility definitions;
-\item the fact that marginal-level consistency does not imply joint-level consistency, which is Proposition~2 of \citet{klotergens2026tabular};
-\item guidance distortion;
-\item permutation-test validity~\citep{ernst2004permutation,lehmann2005testing,phipson2010permutation};
-\item energy statistics~\citep{szekely2013energy,baringhaus2004twosample}.
-\end{itemize}
+We do not claim as new: the identity~\eqref{eq:identity}; the consistency and compatibility definitions; the fact that marginal-level consistency does not imply joint-level consistency, which is Proposition~2 of \citet{klotergens2026tabular}; guidance distortion; permutation-test validity~\citep{ernst2004permutation,lehmann2005testing,phipson2010permutation}; energy statistics~\citep{szekely2013energy,baringhaus2004twosample}.
 
 % ---------------------------------------------------------------------
 \section{Related Work}
@@ -369,7 +362,7 @@ Two synthetic probes are used; neither is real multimodal data.
 \item \textbf{Gaussian probe.} Three scalars $(x,y,z)$ with a non-Markov and a Markov correlation structure (\cref{app:probe}). Its laws are closed-form for exact samplers and for the PF-ODE.
 \item \textbf{Mixture probe.} A fixed three-component Gaussian mixture over $(x,y,z)$ with multimodal, non-Gaussian conditionals (\cref{app:mixture}).
 \end{itemize}
-In both, splits are independent draws. The train split is used for fitting and standardization, the dev split only for pipeline smoke runs, and the test split ($N=200$ conditioning examples) for reported results.
+In both, splits are independent draws. The train split is used for fitting and standardization, the dev split for pipeline smoke runs and, for the neural arms, for the pre-registered diagnostics and labels, which select nothing, and the test split ($N=200$ conditioning examples) for reported results.
 Model, data and sampling seeds are separate. Every configuration was committed before its test run (\cref{app:prereg}).
 Closed-form curves were computed after the corresponding runs and are exploratory.
 The v1 Gaussian-probe runs used Test~S with $M=256$ and 999 flips; the later runs use Test~P with $N=200$, $M=64$ and $B=199$.
@@ -472,10 +465,10 @@ Two learners were trained on the mixture probe's training split with linear-path
 \item \textsc{shared\_conditional\_net}: one MLP over $(x,y,z)$ whose input marks each coordinate as observed, target or absent ($\numFmShParams$ parameters, $\numFmShUpdates$ updates with uniform pattern sampling).
 \end{itemize}
 Parameter counts and updates are close, but each shared update runs a network about four times larger, so the arms are not equal-compute (\cref{tab:fm-cost}, appendix); the final iterate is the model, with nothing selected on any outcome.
-Sampling uses Euler from $\mathcal N(0,I)$ with guidance off, at $128$ steps (primary, fixed in advance) and $32$ steps (sensitivity check), with the same noise draws at both levels.
+Sampling uses Euler from $\mathcal N(0,I)$, guidance off, at $128$ steps (primary, fixed in advance) and $32$ steps (sensitivity check) with the same noise draws.
 The sequential branch draws a fresh $y$ from the arm's own $q(y\mid x)$ for every sample; the observed $y$ is never used.
 The design is that of \cref{sec:exp-coherent}; the primary family is the two target-level tests at $128$ steps, Holm-adjusted, without the control $p$-values.
-\Cref{tab:fm} reports the run (\numFmCPU\,CPU-s in total, one thread).
+\Cref{tab:fm} reports the run (\numFmCPU\,CPU-s for the run process, \numFmBudgetCPU\,CPU-s charged in total with fixtures and smokes; one thread).
 
 \begin{table*}[t]
 \centering
@@ -491,14 +484,14 @@ The design is that of \cref{sec:exp-coherent}; the primary family is the two tar
 \paragraph{Consistency.}
 At the primary endpoint the independent arm gave $p=\numFmIndP$ and the shared arm $p=\numFmShP$ (Holm $\numFmIndHolm$ and $\numFmShHolm$), with gap estimates $\numFmIndD$ and $\numFmShD$ ($\times10^{-3}$).
 At $32$ steps the $p$-values were $\numFmIndPThirtyTwo$ and $\numFmShPThirtyTwo$; the paired solver differences of the gap estimates were $\numFmIndSolver$ and $\numFmShSolver$ ($\times10^{-3}$), flagged solver-sensitive: \numFmIndSolverFlag{} and \numFmShSolverFlag.
-The paired between-arm difference $\widehat\Delta_T(\text{shared})-\widehat\Delta_T(\text{independent})$ over the same examples is $\numFmBetween$ ($\times10^{-3}$; bootstrap $\numFmBetweenBoot$).
+The paired between-arm difference $\widehat\Delta_T(\text{shared})-\widehat\Delta_T(\text{independent})$ over the same examples is $\numFmBetween$ ($\times10^{-3}$; percentile bootstrap over examples, $2000$ resamples: $\numFmBetweenBoot$).
 The independent arm is flagged at the primary endpoint and the shared arm is not; by itself that would not show that the arms differ, and a larger $p$-value does not rank an arm as more coherent. The paired difference does speak to it: it favours the shared arm, and the same holds at $32$ steps ($\numFmBetweenThirtyTwo$).
 The shared arm's projected-joint test, a secondary endpoint, gave $p=\numFmShPJ$ with gap $\numFmShDJ$ ($\times10^{-3}$): a smaller target gap did not come with an undetected joint gap, the direction of Proposition~2 of \citet{klotergens2026tabular} once more, and a reminder that parameter sharing defines no joint.
 All four solver flags are set. The gap estimates move by $0.3$ to $1.1\times10^{-3}$ between $32$ and $128$ steps, an order of magnitude below the between-arm difference but detectable under shared noise, so by the pre-registered rule the numerical and learned components are not separated at that level.
 
 \paragraph{Correctness and cost.}
 The direct branches lie at $\widehat D_U=\numFmIndQ$ and $\numFmShQ$ ($\times10^{-3}$) from the true conditional, with spread ratios $\numFmIndSdr$ and $\numFmShSdr$.
-The two arms are mirror images: the independent arm's direct branch is close to the truth while its sequential route is not ($\numFmIndQSeq$), so its gap is error accumulated along the two-stage route; the shared arm's direct branch is the less accurate one (spread ratio $\numFmShSdr$, mean shift $\numFmShShift$ true standard deviations) while its sequential route is at $\numFmShQSeq$. Consistency obtained by sharing came with worse direct quality here; whether that trade-off holds beyond one seed and one probe is not known.
+The two arms are mirror images: the independent arm's direct branch is close to the truth while its sequential route is not ($\numFmIndQSeq$), so its gap is error accumulated along the two-stage route; the shared arm's direct branch is the less accurate one (spread ratio $\numFmShSdr$, mean shift $\numFmShShift$ true standard deviations) while its sequential route is at $\numFmShQSeq$. The shared arm's smaller measured target gap, which is not consistency (its joint endpoint is flagged), came with worse direct quality here; whether that trade-off holds beyond one seed and one probe is not known.
 Training took $\numFmIndTrainCPU$ and $\numFmShTrainCPU$ CPU-s; sampling for the test split $\numFmIndSampCPU$ and $\numFmShSampCPU$ CPU-s.
 The dev-loss diagnostic decreased by at most $\numFmIndUnder\%$ and $\numFmShUnder\%$ over the last tenth of training (flagged: \numFmIndUnderFlag{} and \numFmShUnderFlag).
 No density is available for these arms, so no likelihood is reported; and sharing parameters does not make the shared arm's conditionals those of one normalized joint, whatever its gap.
@@ -522,7 +515,7 @@ A consistency regularizer, and any real multimodal data, are outside this paper 
 For samplers without densities, checking whether direct and intermediate-then-target generation agree is mostly a matter of accounting for other sources of error.
 On probes whose laws are known, guidance can dominate the gap, and moderate solver error cancels between routes even when the sampler is wrong.
 A permutation test with the conditioning example as the unit passed a pre-registered calibration once, after one failed gate and one gate design withdrawn before use.
-Coherent-by-construction controls are not flagged even when their fit is poor. Consistency is therefore neither correctness nor evidence of a global joint.
+Coherent-by-construction controls are not flagged at the primary endpoint even when their fit is poor (one secondary joint test of the exact control rejected). Consistency is therefore neither correctness nor evidence of a global joint.
 In a single-seed neural pilot, separately trained conditionals were detectably incompatible; a shared network reduced that gap without defining a joint, and was less accurate.
 Whether learned any-to-any generators are incompatible beyond these effects remains open.\label{conc:end}
 
@@ -892,13 +885,14 @@ Non-detection vs.\ equality, correctness, global joint & for the controls equali
 
 \section{Compute}
 \label{app:compute}
-All runs are single-process pure Python on CPU.
+All runs are CPU-only. The Gaussian-probe runs and the mixture controls are single-process standard-library Python; the calibration used two processes; the neural pilot used torch (\numFmTorch), one process, one thread.
 \begin{itemize}
 \item v1 test run: \numRuntimeVone\,s.
 \item P5-E8-EXACT: \numRuntimeEeight\,s.
 \item Development, timing and analysis runs are listed in the supplementary compute ledger.
 \item P5-E8-CALIB v3: \numCalibWall{} minutes of wall time on two processes (\numCalibCPU{} CPU-minutes); 920 tasks, run once.
 \item A calibration timing smoke with a different seed is listed in the ledger and not reported.
+\item Mixture controls (P5-SYN-LEARN-01): \numSynWall\,s. Neural pilot: \numFmCPU\,CPU-s for the run process (\numFmBudgetCPU\,CPU-s charged with fixtures, smokes and preflight), \numFmWall\,s wall; its timing smoke (seed 999) is in the ledger and not reported.
 \end{itemize}
 
 \section{Reproducibility}
@@ -908,6 +902,7 @@ The supplementary code regenerates every number in this paper:
 \item \texttt{run\_first\_run.py --split test} reproduces the v1 raw results.
 \item \texttt{run\_e8\_exact.py} reproduces P5-E8-EXACT.
 \item \texttt{reanalyse\_v1.py} reproduces the exploratory re-analysis.
+\item \texttt{run\_calib.py} reproduces P5-E8-CALIB v3; \texttt{run\_syn\_learn.py --split test} the mixture controls; \texttt{run\_syn\_learn\_fm.py} the neural pilot (CPU torch environment as recorded in the supplement).
 \item \texttt{make\_paper\_assets.py} regenerates the tables, figure data and numeric macros from committed raw results.
 \end{itemize}
 Unit tests cover the linear algebra, the conditionals and perturbations, the sorted energy distance against brute force, the fair CRPS against its Gaussian closed form, the affine PF-ODE map against the sampler, the V/U equivalence and exact-enumeration super-uniformity of Test~P, and the Clopper--Pearson bounds. They are numerical checks, not proofs.

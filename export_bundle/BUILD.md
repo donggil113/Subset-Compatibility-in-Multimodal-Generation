@@ -1,4 +1,4 @@
-# Building the manuscript (not done in the authoring environment)
+# Building the manuscript (built in round 6; see paper/build_log_summary.json)
 
 **Status:** COMPILED locally in round 6 (`paper/main.pdf`; details in
 `paper/build_log_summary.json`).
@@ -63,8 +63,8 @@ for p in $(seq 1 "$n"); do pdftotext -f "$p" -l "$p" main.pdf - | grep -q "Impac
   tables and captions. That number is not a page count.
 - If the body is over 8 pages, move material to the appendix without
   changing any number. All numbers come from `paper/generated/numbers.tex`.
-- The two red `[TODO: P5-REAL-01 ...]` and `[TODO: P5-REAL-02 ...]`
-  markers are intentional. They mark evidence that has not been produced.
+- The one red `[TODO: P5-REAL-02 ...]` marker is intentional. It marks
+  evidence that has not been produced.
 
 ## Static check (no TeX needed)
 

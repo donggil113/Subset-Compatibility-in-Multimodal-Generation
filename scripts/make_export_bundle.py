@@ -4,7 +4,7 @@ Copies the manuscript source, configs, code, tests, small raw results and
 aggregates, and the status/manifest files into export_bundle/ with the same
 relative layout as the repository, then writes export_bundle/MANIFEST.sha256.
 The hand-written files export_bundle/{README.md, BUILD.md, fetch_style.sh}
-are left untouched. Nothing is deleted. No PDF is produced or included.
+are left untouched. Nothing is deleted. paper/main.pdf is copied when it exists (built in round 6).
 
 Excluded on purpose (available in the repository at the recorded commit):
 * results/raw/p5_first_run_v1_{dev,test}/*.jsonl (about 5.8 MB of per-example
@@ -81,8 +81,9 @@ def main():
         "branch": git("rev-parse", "--abbrev-ref", "HEAD"),
         "worktree_dirty_at_build": bool(status),
         "note": "files are copied from the working tree; the bundle is committed in the same commit as these sources, so that commit (not built_from_head) is the exact source",
-        "pdf_included": False,
-        "compile_status": "COMPILE_NOT_RUN",
+        "pdf_included": os.path.exists(os.path.join(ROOT, "paper", "main.pdf")),
+        "compile_status": ("COMPILED locally (see paper/build_log_summary.json)" if os.path.exists(os.path.join(ROOT, "paper", "build_log_summary.json"))
+                           else "COMPILE_NOT_RUN"),
         "n_files_copied": len(copied),
     }
     with open(os.path.join(OUT, "bundle_info.json"), "w") as f:

@@ -14,7 +14,7 @@ kept below; rounds 1–2 are unchanged.
 | Contract | A2 registered before training (+ addenda after a static review, still before training); base config and A1 unchanged. |
 | P5-SYN-LEARN-01 FM arms | **RUN once, COMPLETE** (220 CPU-s, 227 wall-s; budget 238/1800 CPU-s incl. fixtures and smokes). Labels EVALUABLE (dev and after test). |
 | INDEPENDENT_CONDITIONAL_FM | **Flagged at the primary endpoint**: p = 0.005 (Holm 0.01), Δ̂_T = 11.9 ×10⁻³ [7.2, 16.6]; direct branch close to truth, sequential route not. |
-| SHARED_CONDITIONAL_NET | **Not flagged at the target** (p = 0.425; Δ̂_T = 0.2 ×10⁻³ [−2.8, 3.2]); **flagged at the projected joint** (p = 0.035, secondary); direct branch less accurate (5.5 vs 1.9 ×10⁻³). |
+| SHARED_CONDITIONAL_FM (shared conditional net) | **Not flagged at the target** (p = 0.425; Δ̂_T = 0.2 ×10⁻³ [−2.7, 3.2]); **flagged at the projected joint** (p = 0.035, secondary); direct branch less accurate (5.5 vs 1.9 ×10⁻³). |
 | Between arms (primary paired effect) | ED_U(shared) − ED_U(independent) = **−11.65 ×10⁻³ [−16.93, −6.38]** (bootstrap [−16.86, −6.30]); same sign at 32 steps. |
 | Solver sensitivity | All four endpoints flagged (paired differences 0.3–1.1 ×10⁻³): NUMERICS_NOT_SEPARATED at that level; numbers reported in full. |
 | Previous verdicts | All kept: EH1 FAIL; calib v2 NEVER RUN; calib v3 PASS (not re-run; **not** a neural PASS); TRUE/FITTED controls not re-run; STOP record kept. |
@@ -38,7 +38,11 @@ Details: RESEARCH_PACKET §13; raw under `results/raw/p5_syn_learn_01_fm_*`.
   budget.
 - Research budget (1 thread): fixtures 2.1 + smokes 6.9 + 7.1 + preflight 0.1
   + dry run 1.9 + run 220.2 = **238.3 CPU-s of 1800**; run wall 226.7 s of
-  2400.
+  2400. A post-run regression run of the test suite (about 2 CPU-s of torch
+  fixtures) is in the ledger and not included in that figure.
+- The TeX install log in `results/env/` covers the first tlmgr call (89 s,
+  163 MB); two later package calls (17 s + 4 s) brought it to 110 s and
+  235 MB (ledger; addendum appended to the log).
 - PDF builds: about 7 s per three-pass build.
 - Ledger: `results/compute_ledger.csv`.
 

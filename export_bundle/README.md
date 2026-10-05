@@ -77,10 +77,14 @@ No claim about real any-to-any generators is supported.
 
 ## Before any other use
 
-- **Not an anonymous submission package.** It contains `STATUS.md`,
-  `run_manifest.json` and `scripts/check_tex.py`. `check_tex.py` holds the
-  anonymity patterns it searches for. Other files may identify the
-  repository. Build a separate package for submission after checking the
-  venue rules and third-party rights.
+- **Not an anonymous submission package.** Identifying material is present
+  in `STATUS.md`, `run_manifest.json`, `scripts/check_tex.py` (its anonymity
+  patterns name the author, institution and repository), `bundle_info.json`
+  (branch name), `results/env/*` and `paper/build_log_summary.json` (local
+  paths, session-specific scratch paths), `results/compute_ledger.csv`, the
+  `%` header comments of `paper/main.tex` (commit hashes) and possibly other
+  files. The typeset PDF itself carries the style's placeholder authors only.
+  Build a separate package for submission after checking the venue rules
+  and third-party rights; a string scan is not a proof of anonymity.
 - The repository has no LICENSE file. Decide licensing before any public
   release.

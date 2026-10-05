@@ -12,7 +12,7 @@ separately (see STATUS.md).
   There are no earlier Work IDs; P5 is **not** mapped to any existing Work ID.
   Experiment IDs below (`P5-E*`) are new.
 - Environment: Python 3.11.15 standard library only. numpy / scipy / torch /
-  pytest are not installed and were **not** installed (not approved). CPU only,
+  pytest are not installed and were **not** installed (not approved). *[Rounds 1–5. In round 6, torch 2.14.1+cpu and numpy 2.4.6 were installed into the uncommitted venv `.venv-p5` under a user-delivered limited approval; see §13.]* CPU only,
   single process (within the 2-thread limit), 120 s budget per synthetic run.
 - External data / models / code used in FIRST RUN: **none**. All data are
   synthetic draws from Gaussians defined in `configs/p5_first_run.json`. All

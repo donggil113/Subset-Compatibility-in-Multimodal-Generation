@@ -32,3 +32,6 @@ tlmgr revision 79639 (2026-07-10 18:45:34 +0200)
 tlmgr using installation: /home/user/texlive-p5
 163M	/home/user/texlive-p5
 end_utc=2026-10-02T16:26:47Z
+
+# ADDENDUM (written 2026-10-05; the log above covers the first tlmgr call only): two later tlmgr calls were made on 2026-10-02 after trial builds failed on missing font files:
+# tlmgr install dvips cm-super -> 16.8 s wall; tlmgr install courier helvetic symbol zapfding times -> 4.3 s wall; final du -sh /home/user/texlive-p5 = 235M. Totals used in the records: about 110 s wall, 235 MB.

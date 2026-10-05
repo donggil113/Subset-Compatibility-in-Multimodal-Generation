@@ -455,10 +455,15 @@ def write_synlearn_assets():
     ll = {"TRUE_JOINT_CONTROL": s["heldout_loglik"]["true_mean_loglik"], "FITTED_JOINT_CONTROL": s["heldout_loglik"]["fitted_mean_loglik"]}
     t = HEADER + "\\begin{tabular}{lrrrrr}\n\\toprule\n"
     t += ("Model & $p_T$ & $p_J$ & $\\widehat{\\Delta}_T\\times10^3$ [95\\% CI] & $D(\\text{model},\\text{truth})\\times10^3$ [95\\% CI] & test log-lik. \\\\\n\\midrule\n")
+    fm_exists = os.path.exists(os.path.join(ROOT, "results", "raw", "p5_syn_learn_01_fm_test", "summary.json"))
     for name in ("TRUE_JOINT_CONTROL", "FITTED_JOINT_CONTROL", "INDEPENDENT_CONDITIONAL_FM", "SHARED_CONDITIONAL_FM"):
         r = s["results"][name]
         if r.get("status") == "NOT_RUN":
-            t += f"{lab[name]} & \\multicolumn{{5}}{{l}}{{NOT RUN (no tensor library; installation not approved)}} \\\\\n"
+            # The round-4 controls file records the flow arms as NOT_RUN; they ran in round 6 (tab:fm).
+            if fm_exists and name == "INDEPENDENT_CONDITIONAL_FM":
+                t += "Neural flow arms (round 6) & \\multicolumn{5}{l}{see \\cref{tab:fm}} \\\\\n"
+            elif not fm_exists:
+                t += f"{lab[name]} & \\multicolumn{{5}}{{l}}{{NOT RUN (no tensor library; installation not approved)}} \\\\\n"
             continue
         tg, jt = r["target"], r["joint"]
         e, q = tg["effect_ED_U"], tg["quality_ED_to_truth"]
@@ -574,7 +579,8 @@ def write_fm_assets():
     n += macro("numFmBetweenJ", ci3(bwj["paired_normal"]))
     bw32 = s["between_arms"][f"target|{sec}"]
     n += macro("numFmBetweenThirtyTwo", ci3(bw32["paired_normal"]))
-    n += macro("numFmCPU", f"{man['budget']['cpu_seconds_total_incl_before']:.0f}")
+    n += macro("numFmCPU", f"{man['budget']['cpu_seconds_this_process']:.0f}")
+    n += macro("numFmBudgetCPU", f"{man['budget']['cpu_seconds_total_incl_before']:.0f}")
     n += macro("numFmWall", f"{man['budget']['wall_seconds']:.0f}")
     n += macro("numFmTorch", man["torch"].replace("+", "{+}"))
     with open(os.path.join(OUT, "numbers.tex"), "a") as f:

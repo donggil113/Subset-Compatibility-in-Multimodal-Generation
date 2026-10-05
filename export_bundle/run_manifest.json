@@ -4,10 +4,11 @@
  "environment": {
   "python": "3.11.15",
   "platform": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
-  "packages": "standard library only (numpy/scipy/torch/pytest not installed; nothing installed)",
+  "packages": "rounds 1-5: standard library only (numpy/scipy/torch/pytest not installed; nothing installed). Round 6: see packages_round6 (torch 2.14.1+cpu and numpy 2.4.6 in the uncommitted venv .venv-p5 under a user-delivered limited approval)",
   "compute": "CPU, single process (<= 2 threads allowed); no GPU",
   "network_use": "literature lookup only (read-only web fetch); no uploads, no dataset/model downloads",
-  "packages_round6": "isolated venv .venv-p5 (not committed): torch 2.14.1+cpu (CPU index; wheel sha256 5e38154c...), numpy 2.4.6 (PyPI); minimal TeX Live 2026 in /home/user/texlive-p5 (235 MB); both under user-delivered limited approvals (round 6)"
+  "packages_round6": "isolated venv .venv-p5 (not committed): torch 2.14.1+cpu (CPU index; wheel sha256 5e38154c...), numpy 2.4.6 (PyPI); minimal TeX Live 2026 in /home/user/texlive-p5 (235 MB); both under user-delivered limited approvals (round 6)",
+  "platform_round6": "Linux-6.18.44-fc-v51-x86_64-with-glibc2.39 (container restarted during the round; the checkout, venv and TeX install persisted)"
  },
  "sources": {
   "data": "synthetic Gaussian draws defined in configs/p5_first_run.json (no external data)",
@@ -20,7 +21,8 @@
   "result": "see STATUS.md (all pass at commit)",
   "note": "numerical checks, not proofs",
   "round4": "56 tests pass (11.3 s wall), including 9 GMM fixture tests",
-  "round5": "64 tests: 57 pass, 7 SKIPPED (torch fixtures in tests/test_fm_adapter.py; not a pass)"
+  "round5": "64 tests: 57 pass, 7 SKIPPED (torch fixtures in tests/test_fm_adapter.py; not a pass)",
+  "round6": "tests/test_fm_adapter.py under torch 2.14.1+cpu: 12 run, 0 failures, 1 skipped (no-torch message test); 2.1 CPU-s (results/env/fm_fixtures_run.json); full suite re-run in .venv-p5 after all round-6 code changes: OK (1 skipped)"
  },
  "runs": [
   {
@@ -333,8 +335,8 @@
   "static_check": "scripts/check_tex.py",
   "claims": "paper/claims.csv",
   "version": "v4 (neural flow arms + coherent controls)",
-  "page_fit_8": "UNVERIFIED (static estimate about 5080 words before the appendix, incl. tables/captions)",
-  "export_bundle": "export_bundle/ (source only; no PDF; style fetched by export_bundle/fetch_style.sh with SHA-256 check)",
+  "page_fit_8": "body ends on page 8 (last line; measured with \\pdfsavepos; paper/build_log_summary.json); 19 pages total; visual rendering NOT verified",
+  "export_bundle": "export_bundle/ (source + compiled paper/main.pdf and build_log_summary.json; checkpoints and env records; style fetched by export_bundle/fetch_style.sh with SHA-256 check)",
   "pdf": "paper/main.pdf"
  },
  "verdicts_round3": {
@@ -377,12 +379,13 @@
  },
  "verdicts_round6": {
   "P5_SYN_LEARN_01_INDEPENDENT_CONDITIONAL_FM": "TOY_RESULT: target Test P p=0.005 (Holm 0.01), gap 11.9e-3 [7.2, 16.6]; joint p=0.005; direct close to truth (1.9e-3), sequential route 9.8e-3; SOLVER_SENSITIVE (paired +1.10e-3 [0.79, 1.41]); label EVALUABLE; one model seed",
-  "P5_SYN_LEARN_01_SHARED_CONDITIONAL_FM": "TOY_RESULT: target p=0.425 (not flagged), gap 0.2e-3 [-2.8, 3.2]; projected-joint p=0.035 (secondary; gap 2.5e-3 [0.3, 4.8]); direct less accurate (5.5e-3; spread ratio 0.93); SOLVER_SENSITIVE (paired -0.35e-3); label EVALUABLE; one model seed",
+  "P5_SYN_LEARN_01_SHARED_CONDITIONAL_FM": "TOY_RESULT: target p=0.425 (not flagged), gap 0.2e-3 [-2.7, 3.2]; projected-joint p=0.035 (secondary; gap 2.5e-3 [0.3, 4.8]); direct less accurate (5.5e-3; spread ratio 0.93); SOLVER_SENSITIVE (paired -0.35e-3); label EVALUABLE; one model seed",
   "between_arms_primary": "paired ED_U(SHARED)-ED_U(IND) at target/128 on test: -11.65e-3 [-16.93, -6.38] (bootstrap [-16.86, -6.30]); negative = shared smaller gap; at 32 steps -10.20e-3",
   "numerics": "all four (arm x level) endpoints flagged SOLVER_SENSITIVE on test by the pre-registered paired rule (differences 0.3-1.1e-3, an order of magnitude below the between-arm difference): NUMERICS_NOT_SEPARATED at that level",
   "coherent_joint_for_shared": "NOT_ESTABLISHED: parameter sharing defines no joint; the shared arm's joint-level endpoint is flagged",
   "scope": "synthetic 3-variable probe; one data seed; one model seed per arm; not equal-compute (shared about 1.5x training CPU and 2.6x sampling CPU); not real multimodal data",
   "kept": "EH1 FAIL; calib v2 NEVER RUN; calib v3 PASS (not re-run; not a neural PASS); TRUE/FITTED control results (not re-run); model-stage STOP record kept (this stage ran under NEURAL_PILOT_AUTHORIZED_THIS_RUN)",
   "method_validity_novelty": "UNVERIFIED"
- }
+ },
+ "compute_ledger_note_round6": "research budget 238.3 CPU-s = pre-run 18.1 (fixtures, smokes, preflight, dry run) + run 220.2; a post-run regression test run (about 2 CPU-s of torch fixtures) is listed in the ledger and not included in that figure"
 }
