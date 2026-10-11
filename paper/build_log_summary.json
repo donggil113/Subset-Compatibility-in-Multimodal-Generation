@@ -1,6 +1,6 @@
 {
  "manuscript_version": "v6 (round 8: equal-training-CPU rerun as a supplementary result; estimator statement)",
- "built_utc": "2026-10-11T03:40Z",
+ "built_utc": "2026-10-11T04:05Z",
  "engine": "This is pdfTeX, Version 3.141592653-2.6-1.40.29",
  "texlive": "TeX Live 2026 (minimal, /home/user/texlive-p5, installed under the round-6 limited approval; reused, no installs in round 8)",
  "style": "official icml2026.zip (sha256 8b29290f5828e176debb57ea9cc00252502973d55ea561a2f18a7f0a326bfc6c), anonymous review mode, unmodified; TEMPLATE_YEAR 2026, TARGET_YEAR 2027; SUBMISSION_READY false",
@@ -44,15 +44,15 @@
   "tab:r8solvercost": 22
  },
  "conclusion_end_position_pt_from_page_bottom": 77.2,
- "conclusion_end_x_pt": 364.7,
+ "conclusion_end_x_pt": 330.5,
  "note_on_position": "measured with \\pdfsavepos in a scratch copy of the final source: the conclusion's last sentence ends in the right column of page 8, 77 pt above the page bottom (last text line of the column); the Impact Statement starts on page 9",
  "overfull_hbox": 0,
  "overfull_vbox": 0,
- "underfull_hbox": 9,
- "underfull_vbox": 2,
+ "underfull_hbox": 8,
+ "underfull_vbox": 1,
  "undefined_references": 0,
  "multiply_defined": 0,
- "rerun_warning_in_final_log": true,
+ "rerun_warning_in_final_log": false,
  "latex_and_package_warnings": [
   "LaTeX Warning: `h' float specifier changed to `ht'.",
   "Package epstopdf Warning: Shell escape feature is not enabled.",
@@ -85,16 +85,13 @@
   "utmr8a.pfb",
   "utmri8a.pfb"
  ],
- "pdf_bytes": 436168,
- "pdf_sha256": "d4185a17a5111a5e96b980e0967f3a217acc439b1603cc47265be4c59e482ebb",
+ "pdf_bytes": 436432,
+ "pdf_sha256": "531bc269e8347a15611176bba9ac14c034250cb97d57d6e8c5eecb760ba6f367",
  "pdf_metadata_author": "Anonymous Authors (set by the ICML style in review mode)",
- "visual_check": "PERFORMED with PyMuPDF 1.28.2 (results/env/pymupdf_env.json), one renderer for all pages, 100 dpi: ALL 23 pages of the pre-fix build were viewed directly one by one; two defects were found and fixed (appendix headings D and G had no running text under them because their only table floated above the heading; a sentence was added to each), the decision and claims tables gained the equal-CPU row/clause, and the update-count macros gained thousands separators. The final build was re-rendered; pages 8, 13, 14, 15, 16, 20, 21, 22 and 23 (every page whose raster differed from the viewed build) were viewed again; pages 1-7, 9-12 and 17-19 are raster-identical between the two builds. Tables are legible at 100 % (scriptsize), no text is clipped, no overfull boxes, line numbers of the review style present, metadata author 'Anonymous Authors'. Remaining cosmetic: the decision table (float) interrupts appendix L between its Results and Reading paragraphs.",
+ "visual_check": "PERFORMED with PyMuPDF 1.28.2 (results/env/pymupdf_env.json), one renderer for all pages, 100 dpi. Pass 1: ALL 23 pages of the first full build viewed directly one by one; two defects fixed (appendix headings D and G had no running text under them because their only table floated above the heading), the decision and claims tables gained the equal-CPU row/clause, and the update-count macros gained thousands separators. Pass 2: pages 8, 13, 14, 15, 16, 20, 21, 22, 23 (every page whose raster differed) viewed again. Pass 3 (after the single read-only review): pages 7, 8, 20, 21, 22, 23 (every page whose raster differed from pass 2) viewed again; all other pages are raster-identical to a viewed render. Tables legible at 100 % (scriptsize), no clipped text, no overfull boxes, review-style line numbers present, metadata author 'Anonymous Authors'. Remaining cosmetic: the decision table (float) interrupts appendix L between its Results and Reading paragraphs.",
  "pages_viewed_final_build": [
+  7,
   8,
-  13,
-  14,
-  15,
-  16,
   20,
   21,
   22,
@@ -131,5 +128,52 @@
  "todo_note": "one [TODO: P5-REAL-02] marker in appendix K (pilot record) names the unrun real-data experiment; kept on purpose, as in v4/v5",
  "font_size_margins": "unchanged ICML defaults (10 pt Times, two columns); no \\vspace tricks, no font or margin changes; page fit obtained by moving detail to the appendix and shortening prose",
  "revision": "v6 built from the working tree committed as the round-8 manuscript commit (see run_manifest.json / git log); the PDF is committed in the same commit",
- "review": "one read-only reviewer pass at the committed source (<= 10 min, single agent) recorded in STATUS.md / the final report; findings fixed in the same round are marked VALID_FIXED there"
+ "review": "one read-only reviewer at commit 7b09f03 (single agent, about 4 min): 7 findings, all VALID_FIXED in the next commit - MAJOR: per-replicate mean macros were in sorted order, not R1-R4 order (both R7 and R8; now replicate order, labelled R1-R4); MINOR: 'no longer worse' softened to 'not worse in three of four pairs' / 'no clear accuracy disadvantage' (R2 shared 4.2 vs 3.8); independent direct-branch distances larger than R7 in all four pairs (not two); 'wider intervals' qualified to three of four; rerun flag in this record was a false positive from the rerunfilecheck banner; checkpoint sha256 filled in run_manifest; thousands separators in the R8 per-arm table. Checks the reviewer reported as passed: Theta/CI/bootstrap, per-replicate CIs, Holm in both families, update counts and overshoot, quality ranges, solver flags, compute totals, estimator statement, cref targets, derive_labels rule, asset-writer keys. Not covered by the reviewer: per-example recomputation of Theta's sd and bootstrap, re-hashing test set/checkpoints/code, full claims table, PDF rendering.",
+ "rerun_note": "the fourth pass is the first whose log contains neither 'Label(s) may have changed' nor 'Rerun to get'; the only 'Rerun' string left is the rerunfilecheck package banner (an earlier record wrongly counted that banner)",
+ "pages_viewed_history": {
+  "pass1_all_pages_first_full_build": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   22,
+   23
+  ],
+  "pass2_changed_pages": [
+   8,
+   13,
+   14,
+   15,
+   16,
+   20,
+   21,
+   22,
+   23
+  ],
+  "pass3_changed_pages_final_build": [
+   7,
+   8,
+   20,
+   21,
+   22,
+   23
+  ]
+ }
 }

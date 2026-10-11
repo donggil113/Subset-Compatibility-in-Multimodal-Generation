@@ -659,7 +659,7 @@ def write_fm_r7_assets():
     th = an["target"][str(prim)]
     n += macro("numRsevenTheta", ci3(th["Theta"]))
     n += macro("numRsevenThetaBoot", f"[{1e3 * th['bootstrap_percentile_95']['lo']:.2f}, {1e3 * th['bootstrap_percentile_95']['hi']:.2f}]")
-    n += macro("numRsevenRepMeans", ", ".join(f"{1e3 * v:.2f}" for v in th["replicate_means_sorted"]))
+    n += macro("numRsevenRepMeans", ", ".join(f"{1e3 * th['per_replicate_mean_d'][rep]['mean']:.2f}" for rep in reps))  # replicate order R1-R4
     n += macro("numRsevenRepSd", f"{1e3 * th['between_replicate_sd_of_means']:.2f}")
     n += macro("numRsevenReversal", "yes" if th["sign_reversal_across_replicates"] else "no")
     n += macro("numRsevenThetaJ", ci3(an["joint"][str(prim)]["Theta"]))
@@ -717,7 +717,7 @@ def write_fm_r8_assets():
         for arm, short, lab in arms:
             bt, bj = s["blocks"][f"{rep}|{arm}|target|{prim}"], s["blocks"][f"{rep}|{arm}|joint|{prim}"]
             ti = tr[f"{rep}|{arm}"]
-            t += (f"{rep} & {lab} & {ti['updates']} & {bt['p']:.3f} & {bj['p']:.3f} & {ci3(bt['effect_ED_U'])} & {1e3 * bt['q_direct_truth_ed_u']['mean']:.2f} & "
+            t += (f"{rep} & {lab} & {ti['updates']:,} & {bt['p']:.3f} & {bj['p']:.3f} & {ci3(bt['effect_ED_U'])} & {1e3 * bt['q_direct_truth_ed_u']['mean']:.2f} & "
                   f"{1e3 * bt['q_seq_truth_ed_u']['mean']:.2f} & {ti['cpu_used_seconds']:.1f} \\\\\n")
     t += "\\bottomrule\n\\end{tabular}\n"
     open(os.path.join(OUT, "tab_r8_reps.tex"), "w").write(t)
@@ -743,7 +743,7 @@ def write_fm_r8_assets():
     n += macro("numReightStatus", s["status"].replace("_", "\\_"))
     n += macro("numReightTheta", ci3(th["Theta"]))
     n += macro("numReightThetaBoot", f"[{1e3 * th['bootstrap_percentile_95']['lo']:.2f}, {1e3 * th['bootstrap_percentile_95']['hi']:.2f}]")
-    n += macro("numReightRepMeans", ", ".join(f"{1e3 * v:.2f}" for v in th["replicate_means_sorted"]))
+    n += macro("numReightRepMeans", ", ".join(f"{1e3 * th['per_replicate_mean_d'][rep]['mean']:.2f}" for rep in reps))  # replicate order R1-R4
     n += macro("numReightReversal", "yes" if th["sign_reversal_across_replicates"] else "no")
     n += macro("numReightThetaSens", ci3(an["target"][str(sens)]["Theta"]))
     n += macro("numReightThetaJ", ci3(an["joint"][str(prim)]["Theta"]))

@@ -470,35 +470,43 @@
    "checkpoints": {
     "R1|INDEPENDENT_CONDITIONAL_FM": {
      "path": "p5_syn_learn_01_fm_r8/checkpoints/R1_INDEPENDENT_CONDITIONAL_FM.pt",
-     "sha256": null
+     "sha256": "c5895f3ad174548ff77fc085952f9c5b38a299f35f9b03a7d37d7408a5be66f7",
+     "bytes": 150407
     },
     "R1|SHARED_CONDITIONAL_FM": {
      "path": "p5_syn_learn_01_fm_r8/checkpoints/R1_SHARED_CONDITIONAL_FM.pt",
-     "sha256": null
+     "sha256": "04a022c5aa8dcfea770d0d9b1f9186c00f6e161b2ac77ff15b1730155e09334e",
+     "bytes": 143355
     },
     "R2|INDEPENDENT_CONDITIONAL_FM": {
      "path": "p5_syn_learn_01_fm_r8/checkpoints/R2_INDEPENDENT_CONDITIONAL_FM.pt",
-     "sha256": null
+     "sha256": "15dc712a6c13356c211c813a5acce05e41f562797aec923e928d70052f40a494",
+     "bytes": 150407
     },
     "R2|SHARED_CONDITIONAL_FM": {
      "path": "p5_syn_learn_01_fm_r8/checkpoints/R2_SHARED_CONDITIONAL_FM.pt",
-     "sha256": null
+     "sha256": "be5d581389937e8eefeee1c695354243fab061fb67dfcd3305dcf70654d47f81",
+     "bytes": 143355
     },
     "R3|INDEPENDENT_CONDITIONAL_FM": {
      "path": "p5_syn_learn_01_fm_r8/checkpoints/R3_INDEPENDENT_CONDITIONAL_FM.pt",
-     "sha256": null
+     "sha256": "2c68faa7bf30f19a0fd175c7c452a48dea133ee59817d94431af1ad7882d687f",
+     "bytes": 150407
     },
     "R3|SHARED_CONDITIONAL_FM": {
      "path": "p5_syn_learn_01_fm_r8/checkpoints/R3_SHARED_CONDITIONAL_FM.pt",
-     "sha256": null
+     "sha256": "0062d376e8218e8f73006c3216ab39ea8ba67a936120300e30396758883b8c57",
+     "bytes": 143355
     },
     "R4|INDEPENDENT_CONDITIONAL_FM": {
      "path": "p5_syn_learn_01_fm_r8/checkpoints/R4_INDEPENDENT_CONDITIONAL_FM.pt",
-     "sha256": null
+     "sha256": "843e94703c3685f62c800f404ea13efe6533a6aaa0f041c23ecb96825cdc26ce",
+     "bytes": 150407
     },
     "R4|SHARED_CONDITIONAL_FM": {
      "path": "p5_syn_learn_01_fm_r8/checkpoints/R4_SHARED_CONDITIONAL_FM.pt",
-     "sha256": null
+     "sha256": "c2025c85ec499f335da7e40db04ed80d5f543fa2fbf618ae743f6dea2b68496a",
+     "bytes": 143355
     }
    },
    "evidence_sha256": {
@@ -574,7 +582,8 @@
   "version": "v6 (round 8: equal-training-CPU rerun as a supplementary result; estimator statement)",
   "page_fit_8": "v6: 23 pages total; the conclusion ends in the right column of page 8 (77.2 pt from the page bottom, measured with \\pdfsavepos); visual check PERFORMED with PyMuPDF 1.28.2 on all 23 pages - see paper/build_log_summary.json",
   "export_bundle": "export_bundle/ (source + compiled paper/main.pdf and build_log_summary.json; checkpoints and env records; style fetched by export_bundle/fetch_style.sh with SHA-256 check)",
-  "pdf": "paper/main.pdf"
+  "pdf": "paper/main.pdf",
+  "review_round8": "single read-only reviewer at 7b09f03; 7 findings VALID_FIXED; see paper/build_log_summary.json"
  },
  "verdicts_round3": {
   "calib_v2": "NOT_RUN; superseded before any run (gate OC defect)",
