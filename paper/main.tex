@@ -271,6 +271,7 @@ If $a$ is drawn i.i.d.\ from $P$ and $c$ i.i.d.\ from $Q$, then $\E\,\ED_U=D(P,Q
 The v1 checker used the noise-floor-subtracted contrast $d_i=\ED_V(A_i,C_i)-\ED_V(A_i,B_i)$.
 By \cref{lem:vbias}, $\E d_i=D+(\E|C-C'|-\E|B-B'|)/M$. This is exactly $0$ under $H_0$ and biased under alternatives whose spread differs from the reference; the bias is negative for under-dispersed $C$.
 $\ED_U(A_i,C_i)$ is unbiased for $D$ and needs no third set.
+Being unbiased for a non-negative quantity, $\ED_U$ can be negative; the intervals we report for it are unconstrained normal approximations over examples, not projected onto $[0,\infty)$, and a negative interval is not a claim of a negative population distance (the implementation was re-checked against a brute-force evaluation on stored samples, \cref{app:edcheck}).
 We report effect sizes on a scale standardized by the training-split standard deviation of each coordinate.
 
 \subsection{Two randomization tests}
@@ -483,7 +484,7 @@ Agreement between step counts is not a convergence proof; the statements concern
 \item \textbf{Data and models.} All evidence is synthetic: a Gaussian probe, a three-component mixture probe, an EM-fitted mixture and two small flow-matching learners. Nothing here shows that real any-to-any generators are, or are not, incompatible.
 \item \textbf{Closed-form decomposition.} It relies on Gaussian conditionals and exact scores. With learned scores, discretization, prior mismatch and model error interact; the neural gap estimates move with the step count by up to about $10^{-3}$, detectable under shared noise but small against the gaps.
 \item \textbf{Tests and conventions.} The joint test compares eight projections and cannot certify joint equality; calibration ran once at one design; the level guarantee needs fresh intermediates and independent branch randomness; non-detection is bounded by power; the unconditional model is the target marginal~\citep{bao2023unidiffuser}; energy distance is one of several discrepancies; C2 is not measured.
-\item \textbf{Pilots.} One data seed, one probe, one fitted control, one pilot and four replicate initializations per arm; the pilot's dev and test stages shared sampling streams by its registered key scheme (the replicates key every draw by split); the arms are not equal-compute; the between-arm average is conditional on the four fits; sample-based and closed-form quality estimates share an estimand but not examples.
+\item \textbf{Pilots.} One data seed, one probe, one fitted control, one pilot and four replicate initializations per arm; the pilot's dev and test stages shared sampling streams by its registered key scheme (the replicates key every draw by split); the arms are not equal-compute (a supplementary run matched process-CPU training time, \cref{app:r8}, not FLOPs); the between-arm average is conditional on the four fits; sample-based and closed-form quality estimates share an estimand but not examples.
 \end{itemize}
 
 % ---------------------------------------------------------------------
@@ -825,12 +826,17 @@ A consistency regularizer, and any real multimodal data, are outside this paper 
 \end{table*}
 \begin{table*}[h]
 \centering
-\caption{Four training replicates on the new test set (Test~P at $128$ steps, $N=200$, $M=64$, $B=199$). $\widehat\Delta_T$ is the unbiased gap estimate; $\widehat D_U$ is the unbiased sample energy distance of a branch to the true $q(z\mid x)$ (may be negative); sd ratios are the sample sd of a branch over the true conditional sd. Standardized scale; intervals are normal 95\% CIs over examples.}
+\caption{Four training replicates on the new test set (Test~P at $128$ steps, $N=200$, $M=64$, $B=199$). $\widehat\Delta_T$ is the unbiased gap estimate; $\widehat D_U$ is the unbiased sample energy distance of a branch to the true $q(z\mid x)$ (may be negative; the negative interval of the $R_2$ shared arm is an unconstrained approximate interval, \cref{app:edcheck}); sd ratios are the sample sd of a branch over the true conditional sd. Standardized scale; intervals are normal 95\% CIs over examples.}
 \label{tab:r7reps}
 \scriptsize
 \setlength{\tabcolsep}{3pt}
 \input{generated/tab_r7_reps}
 \end{table*}
+
+\paragraph{Estimator check on stored samples.}
+\label{app:edcheck}
+Because the $R_2$ shared arm's direct branch has a negative interval for $\widehat D_U(\text{direct},\text{truth})$ in \cref{tab:r7reps}, the estimator was re-checked once before any further run, on four fixed examples (indices $0$, $50$, $100$, $150$, chosen by position, not by sign) of all eight replicate arms at $128$ steps: a brute-force double sum with the within-sample denominators $M(M-1)$ and the diagonal excluded, the closed-form cross and truth terms, and the standardization were recomputed from the stored samples and agree with the recorded values to within the storage precision ($\max|{\rm diff}|<10^{-7}$); the per-example values reproduce the recorded interval exactly; direct and sequential draws use distinct keys and a fresh $y$ per $z$ sample.
+No estimator or leakage defect was found. The interval is an unconstrained normal approximation over examples ($140$ of $200$ per-example values are negative), and no negative population distance is claimed.
 
 \paragraph{Replicates: solver sensitivity and cost.}
 \Cref{tab:r7solver,tab:r7cost} give the paired step-count differences and the cost of the eight arms.
@@ -930,6 +936,7 @@ Non-detection vs.\ equality, correctness, global joint & for the controls equali
   \item The gate's operating characteristics were computed in advance: P(pass $\mid$ valid, power $0.3$) $=\numOCvThreeGate$.
   \item A timing smoke with a different seed preceded the single run and is not reported.
   \end{itemize}
+\item \textbf{Equal-training-CPU run} (\cref{app:r8}) was registered in full before it started: allowed stages, input and code hashes, the R7 seeds reused unchanged, the third test set and its digest, the $60$\,s process-CPU stop rule with warm-up, solver levels $128$/$512$, the estimand, both Holm families, stop conditions and caps; the outcome label applies the replicate rule unchanged. A single run; nothing was selected by outcome. [[R8_DEVIATIONS]]
 \item \textbf{Exploratory analyses.} The re-analysis in \cref{app:reanalysis,app:znull} and the closed-form curves in \cref{fig:numerics} were computed after the v1 results were seen.
 \end{itemize}
 
@@ -952,7 +959,7 @@ All runs are CPU-only. The Gaussian-probe runs and the mixture controls are sing
 \item Development, timing and analysis runs are listed in the supplementary compute ledger.
 \item P5-E8-CALIB v3: \numCalibWall{} minutes of wall time on two processes (\numCalibCPU{} CPU-minutes); 920 tasks, run once.
 \item A calibration timing smoke with a different seed is listed in the ledger and not reported.
-\item Mixture controls (P5-SYN-LEARN-01): \numSynWall\,s. Neural pilot: \numFmCPU\,CPU-s for the run process (\numFmBudgetCPU\,CPU-s charged with fixtures, smokes and preflight), \numFmWall\,s wall. Four replicates: \numRsevenCPU\,CPU-s (\numRsevenBudgetCPU\,CPU-s charged), \numRsevenWall\,s wall, one thread. Timing smokes (seed 999) are in the ledger and not reported.
+\item Mixture controls (P5-SYN-LEARN-01): \numSynWall\,s. Neural pilot: \numFmCPU\,CPU-s for the run process (\numFmBudgetCPU\,CPU-s charged with fixtures, smokes and preflight), \numFmWall\,s wall. Four replicates: \numRsevenCPU\,CPU-s (\numRsevenBudgetCPU\,CPU-s charged), \numRsevenWall\,s wall, one thread. Equal-training-CPU run (\cref{app:r8}): \numReightCPU\,CPU-s (\numReightBudgetCPU\,CPU-s charged with the estimator check, fixtures and smoke), \numReightWall\,s wall, one thread. Timing smokes (seed 999) are in the ledger and not reported.
 \end{itemize}
 
 \section{Reproducibility}
@@ -962,7 +969,7 @@ The supplementary code regenerates every number in this paper:
 \item \texttt{run\_first\_run.py --split test} reproduces the v1 raw results.
 \item \texttt{run\_e8\_exact.py} reproduces P5-E8-EXACT.
 \item \texttt{reanalyse\_v1.py} reproduces the exploratory re-analysis.
-\item \texttt{run\_calib.py} reproduces P5-E8-CALIB v3; \texttt{run\_syn\_learn.py --split test} the mixture controls; \texttt{run\_syn\_learn\_fm.py} the neural pilot and \texttt{run\_syn\_learn\_fm\_r7.py} the four replicates (CPU torch environment as recorded in the supplement).
+\item \texttt{run\_calib.py} reproduces P5-E8-CALIB v3; \texttt{run\_syn\_learn.py --split test} the mixture controls; \texttt{run\_syn\_learn\_fm.py} the neural pilot, \texttt{run\_syn\_learn\_fm\_r7.py} the four replicates and \texttt{run\_syn\_learn\_fm\_r8.py} the equal-training-CPU run (CPU torch environment as recorded in the supplement; the CPU-budget stop makes the update counts of that run hardware-dependent, so its checkpoints are stored).
 \item \texttt{make\_paper\_assets.py} regenerates the tables, figure data and numeric macros from committed raw results.
 \end{itemize}
 Unit tests cover the linear algebra, the conditionals and perturbations, the sorted energy distance against brute force, the fair CRPS against its Gaussian closed form, the affine PF-ODE map against the sampler, the V/U equivalence and exact-enumeration super-uniformity of Test~P, and the Clopper--Pearson bounds. They are numerical checks, not proofs.
