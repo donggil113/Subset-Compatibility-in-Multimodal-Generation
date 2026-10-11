@@ -1,0 +1,15 @@
+{
+ "stages": {
+  "train_and_test": {
+   "status": "COMPLETE",
+   "inputs_hash": "e942259e603181474d32598ecd866baeeb917da3bbfaf0dfefb334971867cf7d",
+   "evidence_sha256": {
+    "summary.json": "6ed42a6f84c2b03554aec79af126e8de513ef810d05b86a8bb1d77d916cf1f9e",
+    "training.json": "a0480edca7b11636ae079c0338dbdf94cd2cbaa7d3645c8c9edffb9f777330df",
+    "manifest.json": "2b2d60a637b88083538202d9d4ca47f990fe5e8684d9cbb95951c38eea9552d5"
+   },
+   "finished_utc": "2026-10-11T03:24:13Z"
+  }
+ },
+ "next": "operator stages: python3 scripts/make_paper_assets.py; manuscript edit; PDF build with -halt-on-error -no-shell-escape; PyMuPDF inspection; delivery"
+}

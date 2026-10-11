@@ -1,15 +1,16 @@
-# Building the manuscript (v5 built in round 7; see paper/build_log_summary.json)
+# Building the manuscript (v6 built in round 8; see paper/build_log_summary.json)
 
-**Status:** COMPILED locally (v5, round 7; `paper/main.pdf`; details in
+**Status:** COMPILED locally (v6, round 8; `paper/main.pdf`; details in
 `paper/build_log_summary.json`).
 
 - Built with a minimal TeX Live 2026 installed under a user-delivered
   limited approval; the official ICML 2026 style was fetched by
   `fetch_style.sh` (SHA-256 verified) and used unmodified in review mode.
-- 21 pages; the conclusion's last sentence is on page 8 (measured with
-  `\pdfsavepos`); no overfull boxes; no undefined references.
-- The pages were rasterized with PyMuPDF (installed into the venv under a
-  limited approval) and the changed pages were viewed; see the summary.
+- 23 pages; the conclusion's last sentence is on page 8 (measured with
+  `\pdfsavepos`); no overfull boxes; no undefined references; built with
+  `-no-shell-escape` (four pdflatex passes; the third still asked for a rerun).
+- All pages were rasterized with PyMuPDF (installed into the venv under a
+  limited approval) and viewed; see the summary for the exact scope.
 - SUBMISSION_READY = false.
 - Under the project rules, do not upload this source to an external web
   compile service. Build it on a machine where a local TeX installation is
@@ -34,10 +35,11 @@ From the directory that contains this file:
 ```sh
 sh fetch_style.sh             # official ICML 2026 style -> paper/, SHA-256 verified
 cd paper
-pdflatex -interaction=nonstopmode -halt-on-error main.tex
+pdflatex -interaction=nonstopmode -halt-on-error -no-shell-escape main.tex
 bibtex main
-pdflatex -interaction=nonstopmode -halt-on-error main.tex
-pdflatex -interaction=nonstopmode -halt-on-error main.tex
+pdflatex -interaction=nonstopmode -halt-on-error -no-shell-escape main.tex
+pdflatex -interaction=nonstopmode -halt-on-error -no-shell-escape main.tex
+pdflatex -interaction=nonstopmode -halt-on-error -no-shell-escape main.tex   # repeat while the log says 'Rerun to get cross-references right'
 ```
 
 Equivalent, if latexmk is available: `cd paper && latexmk -pdf main.tex`.

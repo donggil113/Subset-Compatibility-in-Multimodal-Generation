@@ -1,0 +1,601 @@
+{
+ "run_id": "R8-P5-CPU-BUDGET",
+ "experiment_id": "P5-SYN-LEARN-01-R8",
+ "started_utc": "2026-10-11T02:56:37Z",
+ "git_commit_at_run": "db6957f4503c3c6011a5c4ea1e273dc61b046b2f",
+ "code_dirty_at_run": false,
+ "code_hashes_match_registration": true,
+ "config_sha256": "c42bd7f8892edbb80ba819750338a4325d2423465bb9395ec4e650074a78f3a3",
+ "inputs_hash": "e942259e603181474d32598ecd866baeeb917da3bbfaf0dfefb334971867cf7d",
+ "pid": 586,
+ "processes": 1,
+ "threads": 1,
+ "python": "3.11.15",
+ "torch": "2.14.1+cpu",
+ "torch_wheel_sha256": "5e38154c8896d426a5df58bf2276b603e82184dfae4f54d77dbb212f36e34f37",
+ "numpy": "2.4.6",
+ "device": "cpu",
+ "cpu_spent_before_seconds": 11.0,
+ "caps": {
+  "cpu_seconds": 5400,
+  "wall_seconds": 7200,
+  "threads": 1,
+  "ram_gib": 16,
+  "includes": [
+   "estimator check",
+   "fixtures",
+   "smoke",
+   "8 fits",
+   "evaluation",
+   "permutation",
+   "bootstrap"
+  ]
+ },
+ "status": "COMPLETE",
+ "stages": {
+  "train": "COMPLETE",
+  "test_R1": "COMPLETE",
+  "test_R2": "COMPLETE",
+  "test_R3": "COMPLETE",
+  "test_R4": "COMPLETE",
+  "test": "COMPLETE"
+ },
+ "scale_from_train": {
+  "y": 1.3062590871260458,
+  "z": 1.0371491514992974
+ },
+ "budget_after_train": {
+  "cpu_seconds_total_incl_before": 493.671545236,
+  "cpu_seconds_this_process": 482.671547766,
+  "wall_seconds": 484.3476128578186,
+  "children_cpu_seconds": 0.005195999999999999
+ },
+ "training": {
+  "R1|INDEPENDENT_CONDITIONAL_FM": {
+   "updates": 32709,
+   "updates_planned": 200000,
+   "stopped_early": "cpu budget 60.0 s reached at update 32709",
+   "pattern_exposure": {
+    "z|x": 8178,
+    "y|x": 8177,
+    "z|x,y": 8177,
+    "y,z|x": 8177
+   },
+   "rows_seen_per_pattern": {
+    "z|x": 2093568,
+    "y|x": 2093312,
+    "z|x,y": 2093312,
+    "y,z|x": 2093312
+   },
+   "n_params": {
+    "z|x": 8641,
+    "y|x": 8641,
+    "z|x,y": 8705,
+    "y,z|x": 8770,
+    "total": 34757
+   },
+   "all_losses_finite": true,
+   "train_wall_seconds": 60.33965539932251,
+   "train_cpu_seconds": 60.000851917,
+   "torch_threads": 1,
+   "torch_version": "2.14.1+cpu",
+   "timing": {
+    "wall_seconds": 60.339916944503784,
+    "cpu_seconds": 60.001114325
+   },
+   "cpu_budget_seconds": 60.0,
+   "cpu_used_seconds": 60.001114644000005,
+   "overshoot_seconds": 0.0011146440000047164,
+   "stopped_at_full_update_boundary": true,
+   "budget_reached": true,
+   "dev_fm_loss_fixed_noise_at_end": {
+    "z|x": 1.1681758165359497,
+    "y|x": 1.3484857082366943,
+    "z|x,y": 1.0300877094268799,
+    "y,z|x": 1.3756450414657593
+   },
+   "seeds": {
+    "model_init": 7101,
+    "train_stream": 7111,
+    "dev_loss_noise": 7121
+   },
+   "design": {
+    "patterns": [
+     "z|x",
+     "y|x",
+     "z|x,y",
+     "y,z|x"
+    ],
+    "mlp_width": 64,
+    "mlp_depth": 3,
+    "optimizer": "Adam lr 1e-3",
+    "batch": 256,
+    "updates_per_pattern": 5000,
+    "total_updates": 20000,
+    "loss": "linear-path conditional flow matching",
+    "code": "src/p5compat/fm_adapter.py (UNTESTED)",
+    "lr": 0.001
+   },
+   "checkpoint": {
+    "path": "p5_syn_learn_01_fm_r8/checkpoints/R1_INDEPENDENT_CONDITIONAL_FM.pt",
+    "sha256": "c5895f3ad174548ff77fc085952f9c5b38a299f35f9b03a7d37d7408a5be66f7",
+    "bytes": 150407,
+    "final_iterate": true
+   },
+   "complete": true
+  },
+  "R1|SHARED_CONDITIONAL_FM": {
+   "updates": 23730,
+   "updates_planned": 200000,
+   "stopped_early": "cpu budget 60.0 s reached at update 23730",
+   "pattern_exposure": {
+    "z|x": 5935,
+    "y|x": 5990,
+    "z|x,y": 5854,
+    "y,z|x": 5951
+   },
+   "rows_seen_per_pattern": {
+    "z|x": 1519360,
+    "y|x": 1533440,
+    "z|x,y": 1498624,
+    "y,z|x": 1523456
+   },
+   "n_params": {
+    "total": 34819
+   },
+   "all_losses_finite": true,
+   "train_wall_seconds": 60.30063271522522,
+   "train_cpu_seconds": 60.00212297000001,
+   "torch_threads": 1,
+   "torch_version": "2.14.1+cpu",
+   "timing": {
+    "wall_seconds": 60.30078363418579,
+    "cpu_seconds": 60.002275784
+   },
+   "cpu_budget_seconds": 60.0,
+   "cpu_used_seconds": 60.002274668999995,
+   "overshoot_seconds": 0.0022746689999948444,
+   "stopped_at_full_update_boundary": true,
+   "budget_reached": true,
+   "dev_fm_loss_fixed_noise_at_end": {
+    "z|x": 1.3522485494613647,
+    "y|x": 1.3779596090316772,
+    "z|x,y": 1.0151383876800537,
+    "y,z|x": 1.1297719478607178
+   },
+   "seeds": {
+    "model_init": 7102,
+    "train_stream": 7112,
+    "dev_loss_noise": 7122
+   },
+   "design": {
+    "mlp_width": 128,
+    "mlp_depth": 3,
+    "total_updates": 20000,
+    "pattern_sampling": "uniform over the 4 patterns (expected 5000 each)",
+    "budget_note": "same total updates as the independent arm; parameter counts differ and are recorded, not equalised",
+    "batch": 256,
+    "optimizer": "Adam lr 1e-3",
+    "lr": 0.001
+   },
+   "checkpoint": {
+    "path": "p5_syn_learn_01_fm_r8/checkpoints/R1_SHARED_CONDITIONAL_FM.pt",
+    "sha256": "04a022c5aa8dcfea770d0d9b1f9186c00f6e161b2ac77ff15b1730155e09334e",
+    "bytes": 143355,
+    "final_iterate": true
+   },
+   "complete": true
+  },
+  "R2|INDEPENDENT_CONDITIONAL_FM": {
+   "updates": 32824,
+   "updates_planned": 200000,
+   "stopped_early": "cpu budget 60.0 s reached at update 32824",
+   "pattern_exposure": {
+    "z|x": 8206,
+    "y|x": 8206,
+    "z|x,y": 8206,
+    "y,z|x": 8206
+   },
+   "rows_seen_per_pattern": {
+    "z|x": 2100736,
+    "y|x": 2100736,
+    "z|x,y": 2100736,
+    "y,z|x": 2100736
+   },
+   "n_params": {
+    "z|x": 8641,
+    "y|x": 8641,
+    "z|x,y": 8705,
+    "y,z|x": 8770,
+    "total": 34757
+   },
+   "all_losses_finite": true,
+   "train_wall_seconds": 60.46604776382446,
+   "train_cpu_seconds": 60.001186719,
+   "torch_threads": 1,
+   "torch_version": "2.14.1+cpu",
+   "timing": {
+    "wall_seconds": 60.46636176109314,
+    "cpu_seconds": 60.00150213799999
+   },
+   "cpu_budget_seconds": 60.0,
+   "cpu_used_seconds": 60.001500103,
+   "overshoot_seconds": 0.001500102999997921,
+   "stopped_at_full_update_boundary": true,
+   "budget_reached": true,
+   "dev_fm_loss_fixed_noise_at_end": {
+    "z|x": 1.1819300651550293,
+    "y|x": 1.3182971477508545,
+    "z|x,y": 1.0551515817642212,
+    "y,z|x": 1.2706090211868286
+   },
+   "seeds": {
+    "model_init": 7201,
+    "train_stream": 7211,
+    "dev_loss_noise": 7221
+   },
+   "design": {
+    "patterns": [
+     "z|x",
+     "y|x",
+     "z|x,y",
+     "y,z|x"
+    ],
+    "mlp_width": 64,
+    "mlp_depth": 3,
+    "optimizer": "Adam lr 1e-3",
+    "batch": 256,
+    "updates_per_pattern": 5000,
+    "total_updates": 20000,
+    "loss": "linear-path conditional flow matching",
+    "code": "src/p5compat/fm_adapter.py (UNTESTED)",
+    "lr": 0.001
+   },
+   "checkpoint": {
+    "path": "p5_syn_learn_01_fm_r8/checkpoints/R2_INDEPENDENT_CONDITIONAL_FM.pt",
+    "sha256": "15dc712a6c13356c211c813a5acce05e41f562797aec923e928d70052f40a494",
+    "bytes": 150407,
+    "final_iterate": true
+   },
+   "complete": true
+  },
+  "R2|SHARED_CONDITIONAL_FM": {
+   "updates": 23535,
+   "updates_planned": 200000,
+   "stopped_early": "cpu budget 60.0 s reached at update 23535",
+   "pattern_exposure": {
+    "z|x": 5887,
+    "y|x": 5788,
+    "z|x,y": 6028,
+    "y,z|x": 5832
+   },
+   "rows_seen_per_pattern": {
+    "z|x": 1507072,
+    "y|x": 1481728,
+    "z|x,y": 1543168,
+    "y,z|x": 1492992
+   },
+   "n_params": {
+    "total": 34819
+   },
+   "all_losses_finite": true,
+   "train_wall_seconds": 60.45864820480347,
+   "train_cpu_seconds": 60.002560294000006,
+   "torch_threads": 1,
+   "torch_version": "2.14.1+cpu",
+   "timing": {
+    "wall_seconds": 60.45881199836731,
+    "cpu_seconds": 60.00272466299998
+   },
+   "cpu_budget_seconds": 60.0,
+   "cpu_used_seconds": 60.00272200399999,
+   "overshoot_seconds": 0.0027220039999917844,
+   "stopped_at_full_update_boundary": true,
+   "budget_reached": true,
+   "dev_fm_loss_fixed_noise_at_end": {
+    "z|x": 1.2584068775177002,
+    "y|x": 1.4567070007324219,
+    "z|x,y": 1.1036324501037598,
+    "y,z|x": 1.3428431749343872
+   },
+   "seeds": {
+    "model_init": 7202,
+    "train_stream": 7212,
+    "dev_loss_noise": 7222
+   },
+   "design": {
+    "mlp_width": 128,
+    "mlp_depth": 3,
+    "total_updates": 20000,
+    "pattern_sampling": "uniform over the 4 patterns (expected 5000 each)",
+    "budget_note": "same total updates as the independent arm; parameter counts differ and are recorded, not equalised",
+    "batch": 256,
+    "optimizer": "Adam lr 1e-3",
+    "lr": 0.001
+   },
+   "checkpoint": {
+    "path": "p5_syn_learn_01_fm_r8/checkpoints/R2_SHARED_CONDITIONAL_FM.pt",
+    "sha256": "be5d581389937e8eefeee1c695354243fab061fb67dfcd3305dcf70654d47f81",
+    "bytes": 143355,
+    "final_iterate": true
+   },
+   "complete": true
+  },
+  "R3|INDEPENDENT_CONDITIONAL_FM": {
+   "updates": 32331,
+   "updates_planned": 200000,
+   "stopped_early": "cpu budget 60.0 s reached at update 32331",
+   "pattern_exposure": {
+    "z|x": 8083,
+    "y|x": 8083,
+    "z|x,y": 8083,
+    "y,z|x": 8082
+   },
+   "rows_seen_per_pattern": {
+    "z|x": 2069248,
+    "y|x": 2069248,
+    "z|x,y": 2069248,
+    "y,z|x": 2068992
+   },
+   "n_params": {
+    "z|x": 8641,
+    "y|x": 8641,
+    "z|x,y": 8705,
+    "y,z|x": 8770,
+    "total": 34757
+   },
+   "all_losses_finite": true,
+   "train_wall_seconds": 60.39406967163086,
+   "train_cpu_seconds": 60.00183339399999,
+   "torch_threads": 1,
+   "torch_version": "2.14.1+cpu",
+   "timing": {
+    "wall_seconds": 60.394386291503906,
+    "cpu_seconds": 60.00215170600001
+   },
+   "cpu_budget_seconds": 60.0,
+   "cpu_used_seconds": 60.002150438,
+   "overshoot_seconds": 0.0021504380000010315,
+   "stopped_at_full_update_boundary": true,
+   "budget_reached": true,
+   "dev_fm_loss_fixed_noise_at_end": {
+    "z|x": 1.2286217212677002,
+    "y|x": 1.1487317085266113,
+    "z|x,y": 1.1100271940231323,
+    "y,z|x": 1.2494490146636963
+   },
+   "seeds": {
+    "model_init": 7301,
+    "train_stream": 7311,
+    "dev_loss_noise": 7321
+   },
+   "design": {
+    "patterns": [
+     "z|x",
+     "y|x",
+     "z|x,y",
+     "y,z|x"
+    ],
+    "mlp_width": 64,
+    "mlp_depth": 3,
+    "optimizer": "Adam lr 1e-3",
+    "batch": 256,
+    "updates_per_pattern": 5000,
+    "total_updates": 20000,
+    "loss": "linear-path conditional flow matching",
+    "code": "src/p5compat/fm_adapter.py (UNTESTED)",
+    "lr": 0.001
+   },
+   "checkpoint": {
+    "path": "p5_syn_learn_01_fm_r8/checkpoints/R3_INDEPENDENT_CONDITIONAL_FM.pt",
+    "sha256": "2c68faa7bf30f19a0fd175c7c452a48dea133ee59817d94431af1ad7882d687f",
+    "bytes": 150407,
+    "final_iterate": true
+   },
+   "complete": true
+  },
+  "R3|SHARED_CONDITIONAL_FM": {
+   "updates": 23259,
+   "updates_planned": 200000,
+   "stopped_early": "cpu budget 60.0 s reached at update 23259",
+   "pattern_exposure": {
+    "z|x": 5731,
+    "y|x": 5915,
+    "z|x,y": 5851,
+    "y,z|x": 5762
+   },
+   "rows_seen_per_pattern": {
+    "z|x": 1467136,
+    "y|x": 1514240,
+    "z|x,y": 1497856,
+    "y,z|x": 1475072
+   },
+   "n_params": {
+    "total": 34819
+   },
+   "all_losses_finite": true,
+   "train_wall_seconds": 60.26441144943237,
+   "train_cpu_seconds": 60.00171790799999,
+   "torch_threads": 1,
+   "torch_version": "2.14.1+cpu",
+   "timing": {
+    "wall_seconds": 60.26455640792847,
+    "cpu_seconds": 60.00186417599997
+   },
+   "cpu_budget_seconds": 60.0,
+   "cpu_used_seconds": 60.00186229100001,
+   "overshoot_seconds": 0.0018622910000090087,
+   "stopped_at_full_update_boundary": true,
+   "budget_reached": true,
+   "dev_fm_loss_fixed_noise_at_end": {
+    "z|x": 1.1033300161361694,
+    "y|x": 1.1256221532821655,
+    "z|x,y": 0.8753264546394348,
+    "y,z|x": 1.1963566541671753
+   },
+   "seeds": {
+    "model_init": 7302,
+    "train_stream": 7312,
+    "dev_loss_noise": 7322
+   },
+   "design": {
+    "mlp_width": 128,
+    "mlp_depth": 3,
+    "total_updates": 20000,
+    "pattern_sampling": "uniform over the 4 patterns (expected 5000 each)",
+    "budget_note": "same total updates as the independent arm; parameter counts differ and are recorded, not equalised",
+    "batch": 256,
+    "optimizer": "Adam lr 1e-3",
+    "lr": 0.001
+   },
+   "checkpoint": {
+    "path": "p5_syn_learn_01_fm_r8/checkpoints/R3_SHARED_CONDITIONAL_FM.pt",
+    "sha256": "0062d376e8218e8f73006c3216ab39ea8ba67a936120300e30396758883b8c57",
+    "bytes": 143355,
+    "final_iterate": true
+   },
+   "complete": true
+  },
+  "R4|INDEPENDENT_CONDITIONAL_FM": {
+   "updates": 32301,
+   "updates_planned": 200000,
+   "stopped_early": "cpu budget 60.0 s reached at update 32301",
+   "pattern_exposure": {
+    "z|x": 8076,
+    "y|x": 8075,
+    "z|x,y": 8075,
+    "y,z|x": 8075
+   },
+   "rows_seen_per_pattern": {
+    "z|x": 2067456,
+    "y|x": 2067200,
+    "z|x,y": 2067200,
+    "y,z|x": 2067200
+   },
+   "n_params": {
+    "z|x": 8641,
+    "y|x": 8641,
+    "z|x,y": 8705,
+    "y,z|x": 8770,
+    "total": 34757
+   },
+   "all_losses_finite": true,
+   "train_wall_seconds": 60.33499026298523,
+   "train_cpu_seconds": 60.00162760799998,
+   "torch_threads": 1,
+   "torch_version": "2.14.1+cpu",
+   "timing": {
+    "wall_seconds": 60.33535313606262,
+    "cpu_seconds": 60.00199083199999
+   },
+   "cpu_budget_seconds": 60.0,
+   "cpu_used_seconds": 60.00198988599999,
+   "overshoot_seconds": 0.0019898859999898377,
+   "stopped_at_full_update_boundary": true,
+   "budget_reached": true,
+   "dev_fm_loss_fixed_noise_at_end": {
+    "z|x": 1.3207809925079346,
+    "y|x": 1.2984819412231445,
+    "z|x,y": 1.0012545585632324,
+    "y,z|x": 1.349790096282959
+   },
+   "seeds": {
+    "model_init": 7401,
+    "train_stream": 7411,
+    "dev_loss_noise": 7421
+   },
+   "design": {
+    "patterns": [
+     "z|x",
+     "y|x",
+     "z|x,y",
+     "y,z|x"
+    ],
+    "mlp_width": 64,
+    "mlp_depth": 3,
+    "optimizer": "Adam lr 1e-3",
+    "batch": 256,
+    "updates_per_pattern": 5000,
+    "total_updates": 20000,
+    "loss": "linear-path conditional flow matching",
+    "code": "src/p5compat/fm_adapter.py (UNTESTED)",
+    "lr": 0.001
+   },
+   "checkpoint": {
+    "path": "p5_syn_learn_01_fm_r8/checkpoints/R4_INDEPENDENT_CONDITIONAL_FM.pt",
+    "sha256": "843e94703c3685f62c800f404ea13efe6533a6aaa0f041c23ecb96825cdc26ce",
+    "bytes": 150407,
+    "final_iterate": true
+   },
+   "complete": true
+  },
+  "R4|SHARED_CONDITIONAL_FM": {
+   "updates": 23058,
+   "updates_planned": 200000,
+   "stopped_early": "cpu budget 60.0 s reached at update 23058",
+   "pattern_exposure": {
+    "z|x": 5811,
+    "y|x": 5785,
+    "z|x,y": 5746,
+    "y,z|x": 5716
+   },
+   "rows_seen_per_pattern": {
+    "z|x": 1487616,
+    "y|x": 1480960,
+    "z|x,y": 1470976,
+    "y,z|x": 1463296
+   },
+   "n_params": {
+    "total": 34819
+   },
+   "all_losses_finite": true,
+   "train_wall_seconds": 60.272868394851685,
+   "train_cpu_seconds": 60.001664859000016,
+   "torch_threads": 1,
+   "torch_version": "2.14.1+cpu",
+   "timing": {
+    "wall_seconds": 60.273070335388184,
+    "cpu_seconds": 60.00186715999996
+   },
+   "cpu_budget_seconds": 60.0,
+   "cpu_used_seconds": 60.001868624,
+   "overshoot_seconds": 0.0018686239999965437,
+   "stopped_at_full_update_boundary": true,
+   "budget_reached": true,
+   "dev_fm_loss_fixed_noise_at_end": {
+    "z|x": 1.1572641134262085,
+    "y|x": 1.1683261394500732,
+    "z|x,y": 0.9535186886787415,
+    "y,z|x": 1.1746623516082764
+   },
+   "seeds": {
+    "model_init": 7402,
+    "train_stream": 7412,
+    "dev_loss_noise": 7422
+   },
+   "design": {
+    "mlp_width": 128,
+    "mlp_depth": 3,
+    "total_updates": 20000,
+    "pattern_sampling": "uniform over the 4 patterns (expected 5000 each)",
+    "budget_note": "same total updates as the independent arm; parameter counts differ and are recorded, not equalised",
+    "batch": 256,
+    "optimizer": "Adam lr 1e-3",
+    "lr": 0.001
+   },
+   "checkpoint": {
+    "path": "p5_syn_learn_01_fm_r8/checkpoints/R4_SHARED_CONDITIONAL_FM.pt",
+    "sha256": "c2025c85ec499f335da7e40db04ed80d5f543fa2fbf618ae743f6dea2b68496a",
+    "bytes": 143355,
+    "final_iterate": true
+   },
+   "complete": true
+  }
+ },
+ "budget": {
+  "cpu_seconds_total_incl_before": 1657.077744188,
+  "cpu_seconds_this_process": 1646.077746245,
+  "wall_seconds": 1656.1298801898956,
+  "children_cpu_seconds": 0.005195999999999999
+ }
+}

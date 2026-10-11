@@ -1,0 +1,345 @@
+{
+ "derived_from": "summary.json (not raw); written after the run; outcome rule = R7 rule reused unchanged",
+ "status": "COMPLETE",
+ "replicates_complete": [
+  "R1",
+  "R2",
+  "R3",
+  "R4"
+ ],
+ "outcome_rule": "SINGLE_PROBE_MULTI_INITIALIZATION_EVIDENCE if all four replicate means of d(128) share the sign of Theta_128 and their pointwise CIs exclude 0 in the same direction; MIXED_REPLICATION otherwise; both conditional on this probe and these fits",
+ "per_replicate_d128": {
+  "R1": {
+   "n": 200,
+   "mean": -0.009152155407900849,
+   "sd": 0.05814400916662628,
+   "se": 0.004111402316709422,
+   "lo": -0.017210355874605857,
+   "hi": -0.001093954941195843
+  },
+  "R2": {
+   "n": 200,
+   "mean": -0.003212636618454818,
+   "sd": 0.044429531258375954,
+   "se": 0.003141642283773732,
+   "lo": -0.009370142346959496,
+   "hi": 0.0029448691100498595
+  },
+  "R3": {
+   "n": 200,
+   "mean": -0.004522230576505764,
+   "sd": 0.04770322000366511,
+   "se": 0.003373127034902536,
+   "lo": -0.011133438080193115,
+   "hi": 0.002088976927181587
+  },
+  "R4": {
+   "n": 200,
+   "mean": -0.005971005447459534,
+   "sd": 0.0476053539837465,
+   "se": 0.003366206862269317,
+   "lo": -0.012568649662018976,
+   "hi": 0.0006266387670999076
+  }
+ },
+ "all_same_sign_as_Theta": true,
+ "all_pointwise_CIs_exclude_0_same_direction": false,
+ "outcome_label": "MIXED_REPLICATION",
+ "Theta_128": {
+  "n": 200,
+  "mean": -0.0057145070125802465,
+  "sd": 0.024324207057654385,
+  "se": 0.0017199811757453093,
+  "lo": -0.009085608171127909,
+  "hi": -0.0023434058540325836
+ },
+ "Theta_128_bootstrap": {
+  "lo": -0.009188251435933908,
+  "hi": -0.0025447105102997915,
+  "n_boot": 2000
+ },
+ "replicate_range_d128": [
+  -0.009152155407900849,
+  -0.003212636618454818
+ ],
+ "sign_reversal_across_replicates": false,
+ "joint_level": {
+  "per_replicate": {
+   "R1": -0.015856,
+   "R2": -0.003515,
+   "R3": -0.002403,
+   "R4": -0.0055
+  },
+  "Theta": {
+   "n": 200,
+   "mean": -0.006818618190728434,
+   "sd": 0.016053398128382728,
+   "se": 0.0011351466677666858,
+   "lo": -0.009043464776721792,
+   "hi": -0.004593771604735076
+  },
+  "reversal": false
+ },
+ "Theta_by_steps_target": {
+  "128": -5.715,
+  "512": -5.776
+ },
+ "solver_sensitive_512_vs_128_target": {
+  "R1|INDEPENDENT_CONDITIONAL_FM|target": false,
+  "R1|SHARED_CONDITIONAL_FM|target": false,
+  "R2|INDEPENDENT_CONDITIONAL_FM|target": false,
+  "R2|SHARED_CONDITIONAL_FM|target": false,
+  "R3|INDEPENDENT_CONDITIONAL_FM|target": true,
+  "R3|SHARED_CONDITIONAL_FM|target": false,
+  "R4|INDEPENDENT_CONDITIONAL_FM|target": false,
+  "R4|SHARED_CONDITIONAL_FM|target": false
+ },
+ "n_solver_flags": 1,
+ "numerics_label": "NUMERICS_NOT_SEPARATED for the flagged arms (paired 512-128 differences with CIs excluding 0); agreement elsewhere is not an ODE-limit proof",
+ "target_family_rejections_after_holm": {
+  "R1|INDEPENDENT_CONDITIONAL_FM": 0.04,
+  "R1|SHARED_CONDITIONAL_FM": 0.04,
+  "R4|INDEPENDENT_CONDITIONAL_FM": 0.04
+ },
+ "joint_family_rejections_after_holm": {
+  "R1|INDEPENDENT_CONDITIONAL_FM": 0.04,
+  "R4|INDEPENDENT_CONDITIONAL_FM": 0.04
+ },
+ "labels": {
+  "R1|INDEPENDENT_CONDITIONAL_FM": "EVALUABLE",
+  "R1|SHARED_CONDITIONAL_FM": "EVALUABLE",
+  "R2|INDEPENDENT_CONDITIONAL_FM": "EVALUABLE",
+  "R2|SHARED_CONDITIONAL_FM": "EVALUABLE",
+  "R3|INDEPENDENT_CONDITIONAL_FM": "EVALUABLE",
+  "R3|SHARED_CONDITIONAL_FM": "EVALUABLE",
+  "R4|INDEPENDENT_CONDITIONAL_FM": "EVALUABLE",
+  "R4|SHARED_CONDITIONAL_FM": "EVALUABLE"
+ },
+ "training": {
+  "R1|INDEPENDENT_CONDITIONAL_FM": {
+   "updates": 32709,
+   "cpu_used_seconds": 60.001114644000005,
+   "overshoot_seconds": 0.0011146440000047164,
+   "budget_reached": true,
+   "all_losses_finite": true,
+   "pattern_exposure": {
+    "z|x": 8178,
+    "y|x": 8177,
+    "z|x,y": 8177,
+    "y,z|x": 8177
+   },
+   "complete": true
+  },
+  "R1|SHARED_CONDITIONAL_FM": {
+   "updates": 23730,
+   "cpu_used_seconds": 60.002274668999995,
+   "overshoot_seconds": 0.0022746689999948444,
+   "budget_reached": true,
+   "all_losses_finite": true,
+   "pattern_exposure": {
+    "z|x": 5935,
+    "y|x": 5990,
+    "z|x,y": 5854,
+    "y,z|x": 5951
+   },
+   "complete": true
+  },
+  "R2|INDEPENDENT_CONDITIONAL_FM": {
+   "updates": 32824,
+   "cpu_used_seconds": 60.001500103,
+   "overshoot_seconds": 0.001500102999997921,
+   "budget_reached": true,
+   "all_losses_finite": true,
+   "pattern_exposure": {
+    "z|x": 8206,
+    "y|x": 8206,
+    "z|x,y": 8206,
+    "y,z|x": 8206
+   },
+   "complete": true
+  },
+  "R2|SHARED_CONDITIONAL_FM": {
+   "updates": 23535,
+   "cpu_used_seconds": 60.00272200399999,
+   "overshoot_seconds": 0.0027220039999917844,
+   "budget_reached": true,
+   "all_losses_finite": true,
+   "pattern_exposure": {
+    "z|x": 5887,
+    "y|x": 5788,
+    "z|x,y": 6028,
+    "y,z|x": 5832
+   },
+   "complete": true
+  },
+  "R3|INDEPENDENT_CONDITIONAL_FM": {
+   "updates": 32331,
+   "cpu_used_seconds": 60.002150438,
+   "overshoot_seconds": 0.0021504380000010315,
+   "budget_reached": true,
+   "all_losses_finite": true,
+   "pattern_exposure": {
+    "z|x": 8083,
+    "y|x": 8083,
+    "z|x,y": 8083,
+    "y,z|x": 8082
+   },
+   "complete": true
+  },
+  "R3|SHARED_CONDITIONAL_FM": {
+   "updates": 23259,
+   "cpu_used_seconds": 60.00186229100001,
+   "overshoot_seconds": 0.0018622910000090087,
+   "budget_reached": true,
+   "all_losses_finite": true,
+   "pattern_exposure": {
+    "z|x": 5731,
+    "y|x": 5915,
+    "z|x,y": 5851,
+    "y,z|x": 5762
+   },
+   "complete": true
+  },
+  "R4|INDEPENDENT_CONDITIONAL_FM": {
+   "updates": 32301,
+   "cpu_used_seconds": 60.00198988599999,
+   "overshoot_seconds": 0.0019898859999898377,
+   "budget_reached": true,
+   "all_losses_finite": true,
+   "pattern_exposure": {
+    "z|x": 8076,
+    "y|x": 8075,
+    "z|x,y": 8075,
+    "y,z|x": 8075
+   },
+   "complete": true
+  },
+  "R4|SHARED_CONDITIONAL_FM": {
+   "updates": 23058,
+   "cpu_used_seconds": 60.001868624,
+   "overshoot_seconds": 0.0018686239999965437,
+   "budget_reached": true,
+   "all_losses_finite": true,
+   "pattern_exposure": {
+    "z|x": 5811,
+    "y|x": 5785,
+    "z|x,y": 5746,
+    "y,z|x": 5716
+   },
+   "complete": true
+  }
+ },
+ "warmup_not_charged": {
+  "INDEPENDENT_CONDITIONAL_FM": {
+   "wall_seconds": 1.3598241806030273,
+   "cpu_seconds": 1.349983718
+  },
+  "SHARED_CONDITIONAL_FM": {
+   "wall_seconds": 0.05314946174621582,
+   "cpu_seconds": 0.05314830500000012
+  }
+ },
+ "undertraining_flags": "NOT_DEFINED for CPU-budgeted training (no 90%/100% checkpoints); final iterates kept; dev loss at the end recorded in training.json",
+ "test_sampling_cpu_seconds": {
+  "R1|INDEPENDENT_CONDITIONAL_FM|target|128": {
+   "sampling": 9.85018386500002,
+   "test": 1.2716374789999918
+  },
+  "R1|INDEPENDENT_CONDITIONAL_FM|target|512": {
+   "sampling": 34.430053327999985,
+   "test": 0.0
+  },
+  "R1|SHARED_CONDITIONAL_FM|target|128": {
+   "sampling": 18.12981493999996,
+   "test": 1.3984848129999818
+  },
+  "R1|SHARED_CONDITIONAL_FM|target|512": {
+   "sampling": 68.08051488800004,
+   "test": 0.0
+  },
+  "R2|INDEPENDENT_CONDITIONAL_FM|target|128": {
+   "sampling": 9.603308077999941,
+   "test": 1.3452668209999956
+  },
+  "R2|INDEPENDENT_CONDITIONAL_FM|target|512": {
+   "sampling": 34.76513180000006,
+   "test": 0.0
+  },
+  "R2|SHARED_CONDITIONAL_FM|target|128": {
+   "sampling": 18.153360423000095,
+   "test": 1.3648586439999235
+  },
+  "R2|SHARED_CONDITIONAL_FM|target|512": {
+   "sampling": 68.25268114400001,
+   "test": 0.0
+  },
+  "R3|INDEPENDENT_CONDITIONAL_FM|target|128": {
+   "sampling": 9.78222019399982,
+   "test": 1.191007208999963
+  },
+  "R3|INDEPENDENT_CONDITIONAL_FM|target|512": {
+   "sampling": 36.68661066300001,
+   "test": 0.0
+  },
+  "R3|SHARED_CONDITIONAL_FM|target|128": {
+   "sampling": 19.063681548999966,
+   "test": 1.3270495300000675
+  },
+  "R3|SHARED_CONDITIONAL_FM|target|512": {
+   "sampling": 71.55661465000003,
+   "test": 0.0
+  },
+  "R4|INDEPENDENT_CONDITIONAL_FM|target|128": {
+   "sampling": 9.594057605999978,
+   "test": 1.4993214880000778
+  },
+  "R4|INDEPENDENT_CONDITIONAL_FM|target|512": {
+   "sampling": 35.79692636799996,
+   "test": 0.0
+  },
+  "R4|SHARED_CONDITIONAL_FM|target|128": {
+   "sampling": 19.22185186899992,
+   "test": 1.493229073000066
+  },
+  "R4|SHARED_CONDITIONAL_FM|target|512": {
+   "sampling": 71.082065478,
+   "test": 0.0
+  }
+ },
+ "budget": {
+  "cpu_seconds_total_incl_before": 1657.077744188,
+  "cpu_seconds_this_process": 1646.077746245,
+  "wall_seconds": 1656.1298801898956,
+  "children_cpu_seconds": 0.005195999999999999
+ },
+ "manifest_checks": {
+  "code_hashes_match_registration": true,
+  "code_dirty_at_run": false,
+  "git_commit_at_run": "db6957f4503c3c6011a5c4ea1e273dc61b046b2f",
+  "threads": 1,
+  "pid": 586
+ },
+ "comparison_with_R7_descriptive": {
+  "note": "descriptive only (different test sets; design seen before); not an independent causal or equal-everything comparison",
+  "R7": {
+   "outcome_label": "MIXED_REPLICATION",
+   "Theta_128_x1e3": -9.7,
+   "per_replicate_x1e3": {
+    "R1": -11.18,
+    "R2": -22.81,
+    "R3": -8.15,
+    "R4": 3.35
+   }
+  },
+  "R8": {
+   "outcome_label": "MIXED_REPLICATION",
+   "Theta_128_x1e3": -5.71,
+   "per_replicate_x1e3": {
+    "R1": -9.15,
+    "R2": -3.21,
+    "R3": -4.52,
+    "R4": -5.97
+   }
+  }
+ }
+}

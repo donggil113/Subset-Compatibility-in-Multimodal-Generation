@@ -2,25 +2,26 @@
 
 **P5: Do Any-to-Any Generators Define a Coherent Joint Distribution?**
 Manuscript title: *Separating Sampling Error from Conditional
-Incompatibility in Generative Models* (v5: four training replicates with solver sensitivity; compiled and raster-inspected).
+Incompatibility in Generative Models* (v6: four training replicates with solver sensitivity plus an equal-training-CPU rerun as a supplementary result; compiled with shell escape disabled and raster-inspected on every page).
 
 This bundle is a copy of the repository files needed to review, rebuild and
-re-check the round-7 state. It is an internal evidence package. The layout is the same as the repository's, so
+re-check the round-8 state. It is an internal evidence package. The layout is the same as the repository's, so
 the scripts run from this directory.
 
 ## What is here
 
 | Path | Content |
 |---|---|
-| `paper/main.tex`, `paper/fig_numerics.tex`, `paper/references.bib`, `paper/generated/` | Manuscript v5 source. All numbers are generated from committed results. |
-| `paper/main.pdf`, `paper/build_log_summary.json` | PDF built locally with TeX Live 2026 and the official ICML 2026 style (review mode); 21 pages, conclusion ends on page 8; pages rasterized with PyMuPDF and inspected (the summary lists which pages were viewed and what was fixed) |
-| `paper/claims.csv` | 43 claims with status and evidence paths; the core claims are K1–K5 |
+| `paper/main.tex`, `paper/fig_numerics.tex`, `paper/references.bib`, `paper/generated/` | Manuscript v6 source. All numbers are generated from committed results. |
+| `paper/main.pdf`, `paper/build_log_summary.json` | PDF built locally with TeX Live 2026 and the official ICML 2026 style (review mode), `-halt-on-error -no-shell-escape`; 23 pages, conclusion ends on page 8; all pages rasterized with PyMuPDF and viewed (the summary lists the exact scope and what was fixed) |
+| `paper/claims.csv` | 45 claims with status and evidence paths; the core claims are K1–K5 (K6 is the supplementary equal-CPU rerun) |
 | `BUILD.md`, `fetch_style.sh` | Exact build commands. The style is fetched from the official URL and SHA-256 checked. |
 | `configs/` | All configs, including the never-run `p5_e8_calib_v2.json`, kept as a record |
 | `src/`, `scripts/`, `tests/` | Code (Python 3.11 standard library) and the unit tests |
 | `results/raw/p5_syn_learn_01_{dev,test}/` | P5-SYN-LEARN-01 GMM-control outputs (summary + manifest). Dev is a smoke only. |
 | `results/raw/p5_syn_learn_01_fm_{train,dev,test}/` | Neural flow arms (round 6): training.json, manifest.json, checkpoints (final iterates, sha256 in training.json), dev labels, summaries, blocks, per-example results, test samples (gzip) |
 | `results/raw/p5_syn_learn_01_fm_r7/` | Round-7 replicates: registered test set, training.json, manifest.json, summary.json, derived_labels.json, dev labels/blocks, test blocks and per-example rows, eight checkpoints (sha256 in training.json). `test/samples.jsonl.gz` (8.8 MB) stays in the repository. |
+| `results/raw/p5_syn_learn_01_fm_r8/`, `results/estimator_check/` | Round-8 equal-training-CPU rerun: registered test set, auto_state.json, training.json, manifest.json, summary.json, derived_labels.json, test blocks and per-example rows, eight checkpoints; the pre-run estimator check on stored R7 samples. `test/samples.jsonl.gz` (5.8 MB) stays in the repository. |
 | `results/env/` | Install records (torch wheel hash, pip freeze, TeX log, PyMuPDF), fixture runs, seed preflight, run logs |
 | `results/raw/p5_e8_calib_v3/`, `results/raw/p5_e8_exact_v1/` | Raw jsonl + summary + manifest |
 | `results/raw/p5_first_run_v1_{dev,test}/` | Summary + manifest only (the per-example rows are in the repository) |

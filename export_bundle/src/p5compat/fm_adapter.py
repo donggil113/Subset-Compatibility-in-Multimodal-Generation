@@ -174,7 +174,7 @@ def held_out_fm_loss(model, pattern, rows, noise_seed: int) -> float:
 def train(model, rows: Sequence[Dict[str, float]], patterns: List[str], total_updates: int, batch: int,
           lr: float, seed: int, log_every: int = 1000, opts: Optional[Dict] = None,
           hook: Optional[Callable[[int, object], None]] = None, hook_at: Sequence[int] = (),
-          check: Optional[Callable[[int], None]] = None) -> Dict:
+          check: Optional[Callable[[int], None]] = None, check_every: Optional[int] = None) -> Dict:
     """Round-robin over patterns for the independent arm (total_updates / 4 per
     network); uniform pattern sampling for the shared arm. The final iterate is
     the model; there is no checkpoint selection. `hook(step, model)` runs after
@@ -206,12 +206,14 @@ def train(model, rows: Sequence[Dict[str, float]], patterns: List[str], total_up
         if done % log_every == 0:
             trace.append({"update": done, "mean_train_loss": sum(window) / len(window)})
             window = []
-            if check is not None:
-                stop_reason = check(done)
+        if check is not None and done % (check_every or log_every) == 0:
+            stop_reason = check(done)
         if hook is not None and done in hook_at:
             hook(done, model)
         if stop_reason:
             break
+    if window:  # partial window at an early stop
+        trace.append({"update": done, "mean_train_loss": sum(window) / len(window)})
     return {"updates": done, "updates_planned": total_updates, "stopped_early": stop_reason, "pattern_exposure": exposure,
             "rows_seen_per_pattern": {p: e * batch for p, e in exposure.items()},
             "n_params": n_params_model(model), "loss_trace": trace, "all_losses_finite": all_finite,

@@ -1,0 +1,384 @@
+{
+ "what": "R8 pre-run estimator check on stored R7 samples (fixed examples 0, 50, 100, 150 for all 8 arms at target/128); not a re-run",
+ "estimator": "ED_U = 2/(nm) sum|a_i-c_j| - 2/(n(n-1)) sum_{i<j}|a_i-a_j| - 2/(m(m-1)) sum_{i<j}|c_i-c_j|, n=m=64, diagonal excluded, standardised by the train sd of z (sz=1.037149)",
+ "rows": [
+  {
+   "key": "R1|INDEPENDENT_CONDITIONAL_FM|0",
+   "stored_ed_u": -0.00011167692658387018,
+   "brute_force": -0.00011169263428500997,
+   "library": -0.00011169263428945087,
+   "abs_diff_vs_stored": 1.570770113978881e-08,
+   "direct_sd_over_sz": 1.0056416720020849,
+   "seq_sd_over_sz": 1.2348887492178073,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R1|INDEPENDENT_CONDITIONAL_FM|50",
+   "stored_ed_u": 0.011087985224310648,
+   "brute_force": 0.011088012412606263,
+   "library": 0.011088012412608483,
+   "abs_diff_vs_stored": 2.7188295614877234e-08,
+   "direct_sd_over_sz": 0.891788140839061,
+   "seq_sd_over_sz": 0.9476255150088382,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R1|INDEPENDENT_CONDITIONAL_FM|100",
+   "stored_ed_u": -0.019630924853707432,
+   "brute_force": -0.0196309285090992,
+   "library": -0.01963092850909698,
+   "abs_diff_vs_stored": 3.655391767054539e-09,
+   "direct_sd_over_sz": 0.8539121334866673,
+   "seq_sd_over_sz": 0.9139215551328056,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R1|INDEPENDENT_CONDITIONAL_FM|150",
+   "stored_ed_u": -0.00756728384813421,
+   "brute_force": -0.007567286997822387,
+   "library": -0.007567286997817613,
+   "abs_diff_vs_stored": 3.1496881769399465e-09,
+   "direct_sd_over_sz": 0.7865912657716173,
+   "seq_sd_over_sz": 0.9756943150829473,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R1|SHARED_CONDITIONAL_FM|0",
+   "stored_ed_u": -0.023390130694501465,
+   "brute_force": -0.023390138664168836,
+   "library": -0.02339013866417594,
+   "abs_diff_vs_stored": 7.969667370488764e-09,
+   "direct_sd_over_sz": 1.1895579798000335,
+   "seq_sd_over_sz": 1.170542050628692,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R1|SHARED_CONDITIONAL_FM|50",
+   "stored_ed_u": -0.013729570879602804,
+   "brute_force": -0.013729582340101798,
+   "library": -0.013729582340103796,
+   "abs_diff_vs_stored": 1.1460498994253498e-08,
+   "direct_sd_over_sz": 0.9155250164300046,
+   "seq_sd_over_sz": 1.0389270069623688,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R1|SHARED_CONDITIONAL_FM|100",
+   "stored_ed_u": 0.019458673830948126,
+   "brute_force": 0.01945866569316146,
+   "library": 0.01945866569316146,
+   "abs_diff_vs_stored": 8.137786666750912e-09,
+   "direct_sd_over_sz": 0.9143401966745964,
+   "seq_sd_over_sz": 0.8701794755733885,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R1|SHARED_CONDITIONAL_FM|150",
+   "stored_ed_u": -0.030018821782941574,
+   "brute_force": -0.030018824871438143,
+   "library": -0.030018824871439254,
+   "abs_diff_vs_stored": 3.088496569603194e-09,
+   "direct_sd_over_sz": 1.1494589980356071,
+   "seq_sd_over_sz": 1.149607519320569,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R2|INDEPENDENT_CONDITIONAL_FM|0",
+   "stored_ed_u": 0.07185051808119813,
+   "brute_force": 0.07185053236053096,
+   "library": 0.07185053236052785,
+   "abs_diff_vs_stored": 1.4279332827271674e-08,
+   "direct_sd_over_sz": 1.0396657661542095,
+   "seq_sd_over_sz": 1.095399213377892,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R2|INDEPENDENT_CONDITIONAL_FM|50",
+   "stored_ed_u": 0.14149525773502836,
+   "brute_force": 0.14149525346716918,
+   "library": 0.14149525346716785,
+   "abs_diff_vs_stored": 4.267859177176092e-09,
+   "direct_sd_over_sz": 0.9613659996901357,
+   "seq_sd_over_sz": 0.9066472175722486,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R2|INDEPENDENT_CONDITIONAL_FM|100",
+   "stored_ed_u": -0.00802440816900818,
+   "brute_force": -0.00802440978194463,
+   "library": -0.00802440978194574,
+   "abs_diff_vs_stored": 1.612936451067526e-09,
+   "direct_sd_over_sz": 0.911090215174697,
+   "seq_sd_over_sz": 0.9919069713597006,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R2|INDEPENDENT_CONDITIONAL_FM|150",
+   "stored_ed_u": 0.09473935225277041,
+   "brute_force": 0.09473939647983998,
+   "library": 0.09473939647983953,
+   "abs_diff_vs_stored": 4.422706956219713e-08,
+   "direct_sd_over_sz": 1.0220118437008516,
+   "seq_sd_over_sz": 1.3543270636340023,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R2|SHARED_CONDITIONAL_FM|0",
+   "stored_ed_u": 0.02561478875397505,
+   "brute_force": 0.025614810970908897,
+   "library": 0.025614810970900015,
+   "abs_diff_vs_stored": 2.2216933848184794e-08,
+   "direct_sd_over_sz": 1.1931009719634902,
+   "seq_sd_over_sz": 1.0904172357005677,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R2|SHARED_CONDITIONAL_FM|50",
+   "stored_ed_u": 0.00846351679748003,
+   "brute_force": 0.008463502587685134,
+   "library": 0.008463502587681804,
+   "abs_diff_vs_stored": 1.4209794896302697e-08,
+   "direct_sd_over_sz": 0.9807286960916136,
+   "seq_sd_over_sz": 0.9496606837937049,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R2|SHARED_CONDITIONAL_FM|100",
+   "stored_ed_u": -0.007383331731761977,
+   "brute_force": -0.007383340520942472,
+   "library": -0.007383340520942472,
+   "abs_diff_vs_stored": 8.789180494517268e-09,
+   "direct_sd_over_sz": 1.109500872243324,
+   "seq_sd_over_sz": 1.0088861738072432,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R2|SHARED_CONDITIONAL_FM|150",
+   "stored_ed_u": -0.033308765925647466,
+   "brute_force": -0.03330876070413735,
+   "library": -0.033308760704135354,
+   "abs_diff_vs_stored": 5.221510113173622e-09,
+   "direct_sd_over_sz": 1.252427220365678,
+   "seq_sd_over_sz": 1.356731948571957,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R3|INDEPENDENT_CONDITIONAL_FM|0",
+   "stored_ed_u": -0.030364439380978325,
+   "brute_force": -0.030364448703509073,
+   "library": -0.03036444870349997,
+   "abs_diff_vs_stored": 9.322530747368774e-09,
+   "direct_sd_over_sz": 1.1166729111670735,
+   "seq_sd_over_sz": 1.2314961951269345,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R3|INDEPENDENT_CONDITIONAL_FM|50",
+   "stored_ed_u": 0.004616819981202669,
+   "brute_force": 0.004616826457108925,
+   "library": 0.004616826457109147,
+   "abs_diff_vs_stored": 6.4759062556873914e-09,
+   "direct_sd_over_sz": 0.914250575022464,
+   "seq_sd_over_sz": 1.0341209415482524,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R3|INDEPENDENT_CONDITIONAL_FM|100",
+   "stored_ed_u": -0.02394821166818306,
+   "brute_force": -0.023948206549916584,
+   "library": -0.023948206549915918,
+   "abs_diff_vs_stored": 5.11826647731084e-09,
+   "direct_sd_over_sz": 0.8934480241699416,
+   "seq_sd_over_sz": 0.9014224750767444,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R3|INDEPENDENT_CONDITIONAL_FM|150",
+   "stored_ed_u": 0.0787379264959075,
+   "brute_force": 0.0787379104366992,
+   "library": 0.07873791043669742,
+   "abs_diff_vs_stored": 1.605920829650387e-08,
+   "direct_sd_over_sz": 1.2292474453385678,
+   "seq_sd_over_sz": 0.8622407731300802,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R3|SHARED_CONDITIONAL_FM|0",
+   "stored_ed_u": -0.03029217422601116,
+   "brute_force": -0.030292172277844864,
+   "library": -0.03029217227785841,
+   "abs_diff_vs_stored": 1.9481662949516476e-09,
+   "direct_sd_over_sz": 1.1627322788972572,
+   "seq_sd_over_sz": 1.0989409853103398,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R3|SHARED_CONDITIONAL_FM|50",
+   "stored_ed_u": -0.0007746548440494827,
+   "brute_force": -0.0007746585684165197,
+   "library": -0.0007746585684150764,
+   "abs_diff_vs_stored": 3.7243670369946358e-09,
+   "direct_sd_over_sz": 1.025101881644359,
+   "seq_sd_over_sz": 0.8538083694059061,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R3|SHARED_CONDITIONAL_FM|100",
+   "stored_ed_u": -0.01276507217120082,
+   "brute_force": -0.012765102292205954,
+   "library": -0.012765102292203734,
+   "abs_diff_vs_stored": 3.0121005134553513e-08,
+   "direct_sd_over_sz": 0.9614007177524977,
+   "seq_sd_over_sz": 0.851327056335797,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R3|SHARED_CONDITIONAL_FM|150",
+   "stored_ed_u": -0.014806320142501161,
+   "brute_force": -0.014806327176238865,
+   "library": -0.014806327176240641,
+   "abs_diff_vs_stored": 7.033737703387999e-09,
+   "direct_sd_over_sz": 1.0257895587397634,
+   "seq_sd_over_sz": 0.9486368094473208,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R4|INDEPENDENT_CONDITIONAL_FM|0",
+   "stored_ed_u": -0.022143862227161026,
+   "brute_force": -0.02214386114085687,
+   "library": -0.022143861140853538,
+   "abs_diff_vs_stored": 1.0863041577380272e-09,
+   "direct_sd_over_sz": 1.140364125168711,
+   "seq_sd_over_sz": 1.1841457504429,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R4|INDEPENDENT_CONDITIONAL_FM|50",
+   "stored_ed_u": -0.023478860235490062,
+   "brute_force": -0.023478854434812346,
+   "library": -0.023478854434803687,
+   "abs_diff_vs_stored": 5.800677715939173e-09,
+   "direct_sd_over_sz": 0.9882534274418587,
+   "seq_sd_over_sz": 0.9358846673759164,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R4|INDEPENDENT_CONDITIONAL_FM|100",
+   "stored_ed_u": 0.10442712624101991,
+   "brute_force": 0.10442714033918477,
+   "library": 0.10442714033917899,
+   "abs_diff_vs_stored": 1.4098164857756501e-08,
+   "direct_sd_over_sz": 1.003326859435894,
+   "seq_sd_over_sz": 0.8732667031137633,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R4|INDEPENDENT_CONDITIONAL_FM|150",
+   "stored_ed_u": 0.0029314532979736185,
+   "brute_force": 0.0029314692354869276,
+   "library": 0.002931469235489592,
+   "abs_diff_vs_stored": 1.593751330908333e-08,
+   "direct_sd_over_sz": 1.190251473839129,
+   "seq_sd_over_sz": 1.3473699544524185,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R4|SHARED_CONDITIONAL_FM|0",
+   "stored_ed_u": -0.03237751358131935,
+   "brute_force": -0.03237749975104576,
+   "library": -0.03237749975104731,
+   "abs_diff_vs_stored": 1.3830273593029574e-08,
+   "direct_sd_over_sz": 1.1029259761241514,
+   "seq_sd_over_sz": 1.15538166956077,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R4|SHARED_CONDITIONAL_FM|50",
+   "stored_ed_u": -0.0026790841171606683,
+   "brute_force": -0.002679076066815389,
+   "library": -0.0026790760668071734,
+   "abs_diff_vs_stored": 8.05034527928683e-09,
+   "direct_sd_over_sz": 0.9938740002093361,
+   "seq_sd_over_sz": 0.9889859142705988,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R4|SHARED_CONDITIONAL_FM|100",
+   "stored_ed_u": -0.019583139665982463,
+   "brute_force": -0.019583137274160833,
+   "library": -0.01958313727415928,
+   "abs_diff_vs_stored": 2.3918216296436867e-09,
+   "direct_sd_over_sz": 0.9052555882478432,
+   "seq_sd_over_sz": 0.9124513488089995,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  },
+  {
+   "key": "R4|SHARED_CONDITIONAL_FM|150",
+   "stored_ed_u": 0.010209187335896486,
+   "brute_force": 0.010209199273101266,
+   "library": 0.010209199273108815,
+   "abs_diff_vs_stored": 1.1937204780210209e-08,
+   "direct_sd_over_sz": 0.9304899828851476,
+   "seq_sd_over_sz": 1.2172687380071712,
+   "n_distinct_seq_y": 64,
+   "direct_equals_seq_samples": false
+  }
+ ],
+ "max_abs_diff_vs_stored": 4.422706956219713e-08,
+ "all_match_to_1e-9": null,
+ "ci_units": {
+  "block_interval_reproduced_from_per_example_values": true,
+  "formula": "mean +/- 1.96 sd/sqrt(200) over the 200 per-example ED_U values (unit: standardised energy distance; table shows x1e3)",
+  "R2_shared_target_128": {
+   "n": 200,
+   "mean": -0.0033677866252555615,
+   "lo": -0.0062871554549513015,
+   "hi": -0.000448417795559822,
+   "n_negative_examples": 140
+  }
+ },
+ "streams": {
+  "direct_and_sequential_seed_keys_differ": true,
+  "fresh_y_per_sample_in_stored_rows": true
+ },
+ "interpretation": "ED_U is an unbiased estimate of a non-negative population distance; negative estimates and an interval below 0 are possible under equality or near-equality and do not indicate a bug or a negative population distance; the interval is an unconstrained normal approximation over examples (no projection onto [0, inf)); no clipping is applied",
+ "cpu_seconds": 3.1750361849999997,
+ "match_tolerance": {
+  "stored_samples_rounded_to": "6 decimals (samples.jsonl.gz)",
+  "max_abs_diff_vs_stored": 4.422706956219713e-08,
+  "within_rounding_tolerance_1e-6": true,
+  "note": "the brute-force double loop over the rounded stored samples reproduces the stored per-example ED_U to 4.4e-8, i.e. within the rounding of the stored samples; the library (sorted O(n log n)) value agrees to the same tolerance"
+ },
+ "verdict": "NO ESTIMATOR OR LEAKAGE DEFECT FOUND: denominators n(n-1)/m(m-1) with the diagonal excluded, all n*m cross pairs, standardisation by the train sd of z, block CI reproduced from the per-example values (unit: standardised ED; tables x1e3), direct/sequential keyed streams differ, fresh y per sample. The negative R2-shared estimate and its interval are an unconstrained normal approximation; no negative population distance is claimed."
+}

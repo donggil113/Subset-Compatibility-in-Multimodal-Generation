@@ -692,6 +692,92 @@ def write_fm_r7_assets():
         f.write(n)
 
 
+def write_fm_r8_assets():
+    """Tables and macros for the R8 CPU-budget-matched comparison (NOT RUN until results exist)."""
+    base = os.path.join(ROOT, "results", "raw", "p5_syn_learn_01_fm_r8")
+    n = ""
+    if not os.path.exists(os.path.join(base, "summary.json")):
+        n += macro("numReightStatus", "NOT RUN")
+        with open(os.path.join(OUT, "numbers.tex"), "a") as f:
+            f.write(n)
+        return
+    s, tr, man = load(os.path.join(base, "summary.json")), load(os.path.join(base, "training.json")), load(os.path.join(base, "manifest.json"))
+    r8 = load(os.path.join(ROOT, "configs", "auto_run_r8.json"))
+    reps = s["replicates_complete"]
+    prim, sens = r8["solver"]["primary"], r8["solver"]["sensitivity"][0]
+    arms = [("INDEPENDENT_CONDITIONAL_FM", "Ind", "Independent"), ("SHARED_CONDITIONAL_FM", "Sh", "Shared")]
+
+    def ci3(c):
+        z = lambda v: 0.0 if abs(v) < 5e-6 else v
+        return f"{1e3 * z(c['mean']):.2f} [{1e3 * z(c['lo']):.2f}, {1e3 * z(c['hi']):.2f}]"
+
+    t = HEADER + "\\begin{tabular}{llrrrrrrr}\n\\toprule\n"
+    t += ("Rep. & Arm & updates & $p_T$ & $p_J^U$ & $\\widehat{\\Delta}_T\\times10^3$ [95\\% CI] & $\\widehat D_U(\\text{dir},\\text{truth})\\times10^3$ & $\\widehat D_U(\\text{seq},\\text{truth})\\times10^3$ & CPU-s \\\\\n\\midrule\n")
+    for rep in reps:
+        for arm, short, lab in arms:
+            bt, bj = s["blocks"][f"{rep}|{arm}|target|{prim}"], s["blocks"][f"{rep}|{arm}|joint|{prim}"]
+            ti = tr[f"{rep}|{arm}"]
+            t += (f"{rep} & {lab} & {ti['updates']} & {bt['p']:.3f} & {bj['p']:.3f} & {ci3(bt['effect_ED_U'])} & {1e3 * bt['q_direct_truth_ed_u']['mean']:.2f} & "
+                  f"{1e3 * bt['q_seq_truth_ed_u']['mean']:.2f} & {ti['cpu_used_seconds']:.1f} \\\\\n")
+    t += "\\bottomrule\n\\end{tabular}\n"
+    open(os.path.join(OUT, "tab_r8_reps.tex"), "w").write(t)
+    an = s["analysis"]
+    t = HEADER + "\\begin{tabular}{lrr}\n\\toprule\n"
+    t += f"Quantity ($\\times10^3$) & $h={prim}$ (primary) & $h={sens}$ \\\\\n\\midrule\n"
+    for rep in reps:
+        t += f"$\\bar d_{{{rep}}}(h)$ [pointwise 95\\% CI] & " + " & ".join(ci3(an["target"][str(h)]["per_replicate_mean_d"][rep]) for h in (prim, sens)) + " \\\\\n"
+    t += "$\\widehat\\Theta_h$ (normal) & " + " & ".join(ci3(an["target"][str(h)]["Theta"]) for h in (prim, sens)) + " \\\\\n"
+    t += "$\\widehat\\Theta_h$ (cluster bootstrap) & " + " & ".join(f"[{1e3 * an['target'][str(h)]['bootstrap_percentile_95']['lo']:.2f}, {1e3 * an['target'][str(h)]['bootstrap_percentile_95']['hi']:.2f}]" for h in (prim, sens)) + " \\\\\n"
+    t += "\\bottomrule\n\\end{tabular}\n"
+    open(os.path.join(OUT, "tab_r8_theta.tex"), "w").write(t)
+    t = HEADER + "\\begin{tabular}{llrrrr}\n\\toprule\n"
+    t += f"Rep. & Arm & $\\widehat\\Delta_T({sens})-\\widehat\\Delta_T({prim})$ & $\\widehat D_U({sens})-\\widehat D_U({prim})$ & exposure (z$\\mid$x / y$\\mid$x / z$\\mid$x,y / y,z$\\mid$x) & overshoot s \\\\\n\\midrule\n"
+    for rep in reps:
+        for arm, short, lab in arms:
+            e = an["solver_sensitivity"][f"{rep}|{arm}|target"][f"{sens}_minus_{prim}"]
+            ti = tr[f"{rep}|{arm}"]; ex = ti["pattern_exposure"]
+            t += f"{rep} & {lab} & {ci3(e['gap_ED_U'])} & {ci3(e['quality_direct'])} & {ex['z|x']}/{ex['y|x']}/{ex['z|x,y']}/{ex['y,z|x']} & {ti['overshoot_seconds']:.3f} \\\\\n"
+    t += "\\bottomrule\n\\end{tabular}\n"
+    open(os.path.join(OUT, "tab_r8_solver_cost.tex"), "w").write(t)
+    th = an["target"][str(prim)]
+    n += macro("numReightStatus", s["status"].replace("_", "\\_"))
+    n += macro("numReightTheta", ci3(th["Theta"]))
+    n += macro("numReightThetaBoot", f"[{1e3 * th['bootstrap_percentile_95']['lo']:.2f}, {1e3 * th['bootstrap_percentile_95']['hi']:.2f}]")
+    n += macro("numReightRepMeans", ", ".join(f"{1e3 * v:.2f}" for v in th["replicate_means_sorted"]))
+    n += macro("numReightReversal", "yes" if th["sign_reversal_across_replicates"] else "no")
+    n += macro("numReightThetaSens", ci3(an["target"][str(sens)]["Theta"]))
+    n += macro("numReightThetaJ", ci3(an["joint"][str(prim)]["Theta"]))
+    fam, famj = s["families"]["target_auxiliary"], s["families"]["joint_secondary"]
+    n += macro("numReightTargetRejectedInd", str(sum(1 for k, v in fam["holm_p"].items() if v <= 0.05 and "INDEP" in k)))
+    n += macro("numReightTargetRejectedSh", str(sum(1 for k, v in fam["holm_p"].items() if v <= 0.05 and "SHARED" in k)))
+    n += macro("numReightJointRejectedInd", str(sum(1 for k, v in famj["holm_p"].items() if v <= 0.05 and "INDEP" in k)))
+    n += macro("numReightJointRejectedSh", str(sum(1 for k, v in famj["holm_p"].items() if v <= 0.05 and "SHARED" in k)))
+    n += macro("numReightTargetRawInd", ", ".join(f"{fam['raw_p'][f'{rep}|INDEPENDENT_CONDITIONAL_FM']:.3f}" for rep in reps))
+    n += macro("numReightTargetRawSh", ", ".join(f"{fam['raw_p'][f'{rep}|SHARED_CONDITIONAL_FM']:.3f}" for rep in reps))
+    for arm, short, lab in arms:
+        ups = [tr[f"{rep}|{arm}"]["updates"] for rep in reps]
+        n += macro(f"numReight{short}Updates", f"{min(ups):,}\\text{{ to }}{max(ups):,}".replace(",", "{,}"))
+        qd = [s["blocks"][f"{rep}|{arm}|target|{prim}"]["q_direct_truth_ed_u"]["mean"] for rep in reps]
+        qs = [s["blocks"][f"{rep}|{arm}|target|{prim}"]["q_seq_truth_ed_u"]["mean"] for rep in reps]
+        n += macro(f"numReight{short}QdRange", f"{1e3 * min(qd):.1f}\\text{{ to }}{1e3 * max(qd):.1f}")
+        n += macro(f"numReight{short}QsRange", f"{1e3 * min(qs):.1f}\\text{{ to }}{1e3 * max(qs):.1f}")
+        n += macro(f"numReight{short}SolverFlags", str(sum(1 for rep in reps if an["solver_sensitivity"][f"{rep}|{arm}|target"][f"{sens}_minus_{prim}"]["SOLVER_SENSITIVE"])))
+        ov = [tr[f"{rep}|{arm}"]["overshoot_seconds"] for rep in reps]
+        n += macro(f"numReight{short}OvershootMax", f"{max(ov):.3f}")
+    n += macro("numReightJointRawInd", ", ".join(f"{famj['raw_p'][f'{rep}|INDEPENDENT_CONDITIONAL_FM']:.3f}" for rep in reps))
+    n += macro("numReightJointRawSh", ", ".join(f"{famj['raw_p'][f'{rep}|SHARED_CONDITIONAL_FM']:.3f}" for rep in reps))
+    jflags = [an["solver_sensitivity"][f"{rep}|{arm}|joint"][f"{sens}_minus_{prim}"] for rep in reps for arm, _, _ in arms]
+    n += macro("numReightJointSolverFlags", str(sum(1 for e in jflags if e["SOLVER_SENSITIVE"])))
+    n += macro("numReightJointSolverMaxAbs", f"{1e3 * max(abs(e['gap_ED_U']['mean']) for e in jflags):.2f}")
+    ind_ups = [tr[f"{rep}|INDEPENDENT_CONDITIONAL_FM"]["updates"] for rep in reps]
+    n += macro("numReightIndUpdatesPerNet", f"{min(ind_ups) // 4:,}\\text{{ to }}{max(ind_ups) // 4:,}".replace(",", "{,}"))
+    n += macro("numReightCPU", f"{man['budget']['cpu_seconds_this_process']:.0f}")
+    n += macro("numReightBudgetCPU", f"{man['budget']['cpu_seconds_total_incl_before']:.0f}")
+    n += macro("numReightWall", f"{man['budget']['wall_seconds']:.0f}")
+    with open(os.path.join(OUT, "numbers.tex"), "a") as f:
+        f.write(n)
+
+
 def write_reference_lines():
     """Horizontal reference line data (detection resolution) for the figure."""
     num = open(os.path.join(OUT, "numbers.tex")).read()
@@ -707,3 +793,4 @@ if __name__ == "__main__":
     write_synlearn_assets()
     write_fm_assets()
     write_fm_r7_assets()
+    write_fm_r8_assets()

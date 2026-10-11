@@ -271,7 +271,7 @@ If $a$ is drawn i.i.d.\ from $P$ and $c$ i.i.d.\ from $Q$, then $\E\,\ED_U=D(P,Q
 The v1 checker used the noise-floor-subtracted contrast $d_i=\ED_V(A_i,C_i)-\ED_V(A_i,B_i)$.
 By \cref{lem:vbias}, $\E d_i=D+(\E|C-C'|-\E|B-B'|)/M$. This is exactly $0$ under $H_0$ and biased under alternatives whose spread differs from the reference; the bias is negative for under-dispersed $C$.
 $\ED_U(A_i,C_i)$ is unbiased for $D$ and needs no third set.
-Being unbiased for a non-negative quantity, $\ED_U$ can be negative; the intervals we report for it are unconstrained normal approximations over examples, not projected onto $[0,\infty)$, and a negative interval is not a claim of a negative population distance (the implementation was re-checked against a brute-force evaluation on stored samples, \cref{app:edcheck}).
+Being unbiased for a non-negative quantity, $\ED_U$ can be negative; its intervals are unconstrained normal approximations over examples, and a negative interval is not a claim of a negative population distance (implementation re-checked on stored samples, \cref{app:edcheck}).
 We report effect sizes on a scale standardized by the training-split standard deviation of each coordinate.
 
 \subsection{Two randomization tests}
@@ -432,24 +432,24 @@ A compatibility test cannot see this by construction; only the quality metrics c
 
 \subsection{Neural flow learners: development pilot}
 \label{sec:exp-real}
-The experiment that bears on the central question was first run once as a development pilot, under a limited CPU-only approval, after the controls of \cref{sec:exp-coherent} had been seen; \cref{sec:exp-reps} replicates it over four fixed initializations on a new test set.
+The central experiment was first run once as a development pilot (CPU only), after the controls of \cref{sec:exp-coherent} had been seen; \cref{sec:exp-reps} replicates it over four fixed initializations on a new test set.
 
 
 Two learners were trained on the probe's training split with linear-path conditional flow matching (\cref{app:mixture}): \textsc{independent\_conditional\_fm}, four MLPs with one per conditional ($4\times5000$ updates), and \textsc{shared\_conditional\_net}, one MLP over $(x,y,z)$ whose input marks each coordinate as observed, target or absent ($20000$ updates); parameter counts are close ($\numFmIndParams$ and $\numFmShParams$) but the arms are not equal-compute, and the final iterate is the model.
 Sampling uses Euler from $\mathcal N(0,I)$ with guidance off; the sequential branch draws a fresh $y$ from the arm's own $q(y\mid x)$ for every sample.
 In the pilot (\cref{app:pilot}) the independent arm was flagged at the target endpoint ($p=\numFmIndP$, Holm $\numFmIndHolm$; gap $\numFmIndD\times10^{-3}$) and the shared arm was not ($p=\numFmShP$; gap $\numFmShD\times10^{-3}$), with a paired difference of $\numFmBetween\times10^{-3}$; the shared arm's projected joint was flagged ($p=\numFmShPJ$, unadjusted secondary result) and its direct branch was less accurate.
-That run used one seed per arm, its dev and test stages shared sampling streams, and its dev $p$-values were seen before the design below was fixed, so it is kept as a development result and is not re-scored.
+It used one seed per arm, shared sampling streams between dev and test, and its dev $p$-values were seen before the design below was fixed, so it is kept as a development result and not re-scored.
 
 \subsection{Four training replicates with solver sensitivity}
 \label{sec:exp-reps}
 Four fixed training replicates $R_1$--$R_4$ were then run once with the same training split, architecture, update budget and optimizer, new integer seeds for initialization and minibatch order, and a new test set of $200$ examples from the same source, disjoint from the pilot's.
-Every primitive draw is keyed by split, replicate, arm, pattern, example, branch, sample and purpose; the step count is absent from the keys, so Euler with $128$ (primary), $256$ and $512$ steps integrates the same initial noise; branches share no stream, and a fresh $y$ is drawn for every $z$ sample.
+Every draw is keyed by split, replicate, arm, pattern, example, branch, sample and purpose, without the step count, so Euler with $128$ (primary), $256$ and $512$ steps integrates the same initial noise; branches share no stream, and a fresh $y$ is drawn for every $z$.
 The eight target tests at $128$ steps form one auxiliary family with Holm correction (with $B=199$ the smallest attainable $p$ is $0.005$ against a first threshold of $0.00625$); the eight projected-joint tests are a separate secondary family; no permutation test is run at $256$ or $512$ steps. Per-replicate results are in \cref{tab:r7reps} (appendix).
 
 \paragraph{Estimand.}
 For replicate $r$ and example $i$ let $d_{ri}(h)=\widehat\Delta_T^{\text{shared}}(h)-\widehat\Delta_T^{\text{indep}}(h)$, the difference of the two arms' unbiased gap estimates at step count $h$; negative values favour the shared arm.
 The primary quantity is $\Theta_{128}=\operatorname{mean}_i\operatorname{mean}_r d_{ri}(128)$, a comparison conditional on these four fit-pairs, not an effect over a population of training runs.
-Intervals are paired at the example (a normal interval over the $200$ per-example replicate means, and a percentile bootstrap with $2000$ resamples of examples, carrying all replicates, arms and step counts of an example); the four replicate means are shown side by side, and $4\times200$ values are never pooled as $800$.
+Intervals are paired at the example (normal over the $200$ per-example replicate means; percentile bootstrap with $2000$ resamples of examples carrying all replicates, arms and step counts); replicate means are shown side by side and never pooled as $800$ values.
 
 
 
@@ -463,19 +463,24 @@ Intervals are paired at the example (a normal interval over the $200$ per-exampl
 \end{table}
 
 \paragraph{Replication.}
-At the primary solver, $\numRsevenTargetRejectedInd$ of the four independent arms and $\numRsevenTargetRejectedSh$ of the four shared arms are flagged after Holm correction (raw $p$: independent $\numRsevenTargetRawInd$; shared $\numRsevenTargetRawSh$).
+At the primary solver, $\numRsevenTargetRejectedInd$ of the four independent arms and $\numRsevenTargetRejectedSh$ of the four shared arms are flagged after Holm correction (raw $p$ in \cref{tab:r7reps}).
 The per-replicate means of $d(128)$ are $\numRsevenRepMeans$ ($\times10^{-3}$; between-replicate sd $\numRsevenRepSd$), and $\widehat\Theta_{128}=\numRsevenTheta$ (bootstrap $\numRsevenThetaBoot$); sign reversal across replicates: \numRsevenReversal.
-By the pre-registered rule this is \textsc{mixed\_replication}: three of the four fit-pairs favour the shared arm with pointwise intervals excluding $0$, and the fourth reverses the sign with an interval that includes $0$; the average is conditional on these four fits and is not a population effect.
-At the joint level, $\numRsevenJointRejectedSh$ of the four shared arms are flagged in the secondary family (raw $p$: $\numRsevenJointRawSh$), against $\numRsevenJointRejectedInd$ independent arms; $\widehat\Theta_{128}^{J}=\numRsevenThetaJ$.
+By the pre-registered rule this is \textsc{mixed\_replication}: three of the four fit-pairs favour the shared arm with pointwise intervals excluding $0$, and the fourth reverses the sign with an interval that includes $0$.
+At the joint level, $\numRsevenJointRejectedSh$ of the four shared arms are flagged in the secondary family, against $\numRsevenJointRejectedInd$ independent arms; $\widehat\Theta_{128}^{J}=\numRsevenThetaJ$.
 
 \paragraph{Quality and cost.}
 Across replicates the independent arms' direct branches lie $\numRsevenIndQdRange$ ($\times10^{-3}$) from the truth and their sequential routes $\numRsevenIndQsRange$; the shared arms' direct branches $\numRsevenShQdRange$ and sequential routes $\numRsevenShQsRange$.
-This is consistent with error accumulated along the independent arm's two-stage route, but the causes were not attributed per route: conditional errors can also cancel.
+This is consistent with error accumulating along the independent arm's two-stage route, but causes were not attributed per route (conditional errors can also cancel).
 Training took $\numRsevenIndTrainCPU$ CPU-s per independent and $\numRsevenShTrainCPU$ per shared arm (\cref{tab:r7cost}, appendix; not equal-compute); a smaller gap with a worse direct branch is a trade-off, not an improved generator.
 
 \paragraph{Solver sensitivity.}
 Going from $128$ to $512$ steps changes the gap estimate by a detectable amount in $\numRsevenIndSolverFlags$ of four independent and $\numRsevenShSolverFlags$ of four shared arms (paired intervals, \cref{tab:r7solver}, appendix), while $\widehat\Theta_{512}=\numRsevenThetaFiveTwelve$.
-Agreement between step counts is not a convergence proof; the statements concern the implemented sampler, and where paired differences remain detectable the numerical and learned components are not separated.
+Agreement between step counts is not a convergence proof, and where paired differences remain detectable the numerical and learned components are not separated.
+
+\paragraph{Equal training CPU (supplementary).}
+Matching update counts gives the shared network about four times the per-update arithmetic, so the eight fits were retrained from step $0$ with the same seeds, architectures, loss, optimizer and data, each arm stopped after the first full update at which its process-CPU time reached $60$\,s (independent: $\numReightIndUpdates$ updates; shared: $\numReightShUpdates$; OS-level, not FLOP, matching), and evaluated on a third test set of $200$ examples (\cref{app:r8}).
+At $128$ steps, $\numReightTargetRejectedInd$ independent and $\numReightTargetRejectedSh$ shared arms are flagged after Holm correction; the per-replicate means of $d(128)$ are $\numReightRepMeans$ ($\times10^{-3}$) and $\widehat\Theta_{128}=\numReightTheta$ (bootstrap $\numReightThetaBoot$), with no sign reversal but only $R_1$'s pointwise interval excluding $0$: again \textsc{mixed\_replication}.
+No shared arm is flagged at the joint level after correction, the shared arms' direct branches ($\numReightShQdRange$, $\times10^{-3}$) are no longer worse than the independent arms' ($\numReightIndQdRange$); the comparison with the equal-update replicates is descriptive.
 
 % ---------------------------------------------------------------------
 \section{Limitations}
@@ -484,7 +489,7 @@ Agreement between step counts is not a convergence proof; the statements concern
 \item \textbf{Data and models.} All evidence is synthetic: a Gaussian probe, a three-component mixture probe, an EM-fitted mixture and two small flow-matching learners. Nothing here shows that real any-to-any generators are, or are not, incompatible.
 \item \textbf{Closed-form decomposition.} It relies on Gaussian conditionals and exact scores. With learned scores, discretization, prior mismatch and model error interact; the neural gap estimates move with the step count by up to about $10^{-3}$, detectable under shared noise but small against the gaps.
 \item \textbf{Tests and conventions.} The joint test compares eight projections and cannot certify joint equality; calibration ran once at one design; the level guarantee needs fresh intermediates and independent branch randomness; non-detection is bounded by power; the unconditional model is the target marginal~\citep{bao2023unidiffuser}; energy distance is one of several discrepancies; C2 is not measured.
-\item \textbf{Pilots.} One data seed, one probe, one fitted control, one pilot and four replicate initializations per arm; the pilot's dev and test stages shared sampling streams by its registered key scheme (the replicates key every draw by split); the arms are not equal-compute (a supplementary run matched process-CPU training time, \cref{app:r8}, not FLOPs); the between-arm average is conditional on the four fits; sample-based and closed-form quality estimates share an estimand but not examples.
+\item \textbf{Pilots.} One data seed, one probe, one fitted control, one pilot and four replicate initializations per arm; the pilot's dev and test stages shared sampling streams (the replicates do not); the arms are not equal-compute (an equal-CPU run is in \cref{app:r8}); the between-arm average is conditional on the four fits; sample-based and closed-form quality estimates share an estimand but not examples.
 \end{itemize}
 
 % ---------------------------------------------------------------------
@@ -495,6 +500,7 @@ On probes whose laws are known, guidance can dominate the gap, and moderate solv
 A permutation test with the conditioning example as the unit passed a pre-registered calibration once, after one failed gate and one gate design withdrawn before use.
 Coherent-by-construction controls are not flagged at the primary endpoint even when their fit is poor (one secondary joint test of the exact control rejected). Consistency is therefore neither correctness nor evidence of a global joint.
 In a neural pilot replicated over four initializations, separately trained conditionals were flagged in three of four; a shared network had the smaller target gap on average, with one reversal, was flagged at the joint level in two of four, and was often less accurate: sharing changes the gap without defining a joint.
+At equal training CPU (supplementary) the sign held in all four pairs, detectable in one, and the accuracy disadvantage did not recur.
 Whether learned any-to-any generators are incompatible beyond these effects remains open.\label{conc:end}
 
 % ---------------------------------------------------------------------
@@ -585,6 +591,7 @@ The spread term of \cref{lem:vbias} is visible where it should be. For variance 
 
 \section{Normal Reference Check for the Studentized Contrast}
 \label{app:znull}
+\Cref{tab:znull} gives, for each v1 null cell, the sign-flip distribution of the studentized mean of $d_i$ given the observed $|d_i|$; it is the basis of the third audit finding in \cref{app:calibhistory}.
 \begin{table}[h]
 \centering
 \caption{Sign-flip distribution of the studentized mean of $d_i$ given the observed $|d_i|$ (4999 flips) for the seven v1 null cells.}
@@ -624,6 +631,7 @@ The spread term of \cref{lem:vbias} is visible where it should be. For variance 
 
 \section{Quality Metrics in the Calibration Run}
 \label{app:calibq}
+\Cref{tab:calibq} lists the quality metrics of every calibration cell (\cref{app:calibhistory}); the both-branch collapse cells pass the compatibility test and fail these metrics in every replicate.
 \begin{table}[h]
 \centering
 \caption{Quality metrics in the calibration run: mean CRPS excess over the true conditional ($\times10^3$) for each branch, oracle sd ratio of the sequential branch, and the share of replicates whose 95\% CI for the sequential CRPS excess lies above $0$.}
@@ -880,7 +888,7 @@ No estimator or leakage defect was found. The interval is an unconstrained norma
 \toprule
 Claim & Evidence that would support it & Status in this paper \\
 \midrule
-Non-detection of $\Delta_T$, $\Delta_J^U$ & a calibrated, powered test that does not reject; reported with its design & synthetic probes, coherent controls and two neural flow arms (a pilot and four replicate initializations) \\
+Non-detection of $\Delta_T$, $\Delta_J^U$ & a calibrated, powered test that does not reject; reported with its design & synthetic probes, coherent controls and two neural flow arms (a pilot, four replicate initializations and an equal-CPU rerun) \\
 Distributional correctness & proper scores or distances against a known truth & closed form on the probes \\
 Coherent joint existence & all relations of the model, or a normalized density & by construction for controls only \\
 \bottomrule
@@ -901,11 +909,57 @@ Question & Status \\
 \midrule
 Coherence vs.\ quality & controls: coherent by construction, not flagged at the primary endpoint; the fitted control's quality is clearly worse \\
 Separate vs.\ shared learners & pilot (\cref{tab:fm}) and four replicates (\cref{tab:r7theta}): $\widehat\Theta_{128}=\numRsevenTheta\times10^{-3}$ in favour of the shared arm, conditional on the four fits, with one sign reversal (\textsc{mixed\_replication}); the shared arm's joint endpoint is flagged in two of four \\
+Equal training CPU (supplementary) & \cref{tab:r8theta}: $\widehat\Theta_{128}=\numReightTheta\times10^{-3}$, same sign in all four pairs but detectable in one (\textsc{mixed\_replication}); the shared arm's direct branch is no longer worse; descriptive comparison only \\
 Gap from solver refinement & not applicable to the controls (exact sampling); for the learners the paired step-count differences (32 vs.\ 128 in the pilot; 256 and 512 vs.\ 128 in the replicates) are reported and flagged when their CIs exclude $0$ \\
 Non-detection vs.\ equality, correctness, global joint & for the controls equality and a global joint hold by construction, correctness fails for the fitted one; for the neural flow learners none of the three is established by a non-rejection; a global joint is not implied by parameter sharing \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\section{Equal-Training-CPU Replicates (Supplementary Run)}
+\label{app:r8}
+The four replicates of \cref{sec:exp-reps} matched the number of parameter updates ($20{,}000$ per arm), so the shared network, which evaluates one width-$128$ network per update against four width-$64$ networks in round-robin, received roughly four times the per-update arithmetic. A single supplementary run, registered in full before it started (\texttt{configs/auto\_run\_r8.json}: stages, inputs and code hashes, seeds, test set digest, estimand, solver levels, stop conditions and caps), asked whether the measured pattern changes when the two arms receive the same process-CPU training time instead.
+
+\paragraph{Design.}
+Everything except the stopping rule is that of \cref{sec:exp-reps}: the same training and dev rows, standardization, architectures and role masks, loss, Adam with learning rate $10^{-3}$, batch $256$, and the same integer seeds $R_1$--$R_4$ for initialization, minibatch stream and dev-loss noise. Each arm was retrained from step $0$ and stopped after the first full update at which the process-CPU time charged to it reached $60.0$\,s, measured with \texttt{time.process\_time()} in one single-thread process; for the independent arm this is the whole ensemble (four networks, balanced round-robin), for the shared arm the single network. Before each arm type a throwaway model of the same class was trained for $20$ updates (seed $999$) so that first-call costs were paid equally and were not charged. The final iterate is the model; there is no checkpoint selection. Overshoot beyond $60$\,s was at most $\numReightIndOvershootMax$\,s (independent) and $\numReightShOvershootMax$\,s (shared). This is approximate OS-level matching, not exact FLOP matching; the update counts reached are in \cref{tab:r8solvercost}.
+A third test set of $200$ examples was drawn from the same mixture (branch key \texttt{test\_r8}; no $x$ shared with the pilot's or the replicates' test sets) and is used by all four fit-pairs. Every draw is keyed by split, replicate, arm, pattern, example, branch, sample and purpose, with the step count absent, so Euler with $128$ (primary) and $512$ (sensitivity) steps integrates the same initial noise; a fresh $y$ is drawn for every sequential $z$. Test~P is run at $128$ steps only ($M=64$, $B=199$); the eight target tests form one Holm family and the eight projected-joint tests a separate secondary family. The primary quantity is again $\widehat\Theta_{128}$, the mean over examples of the mean over replicates of $d_{ri}(128)$, with the normal interval over the $200$ per-example replicate means and a cluster bootstrap over examples ($2000$ resamples carrying all replicates, arms and step counts of an example); the four replicate means are shown side by side and $4\times200$ values are never pooled.
+
+\paragraph{Results.}
+Status: \numReightStatus. \Cref{tab:r8theta} gives the paired between-arm differences, \cref{tab:r8reps} the per-arm tests and quality, and \cref{tab:r8solvercost} the solver sensitivity, pattern exposure and overshoot.
+At $128$ steps, $\numReightTargetRejectedInd$ of the four independent arms and $\numReightTargetRejectedSh$ of the four shared arms are flagged after Holm correction (raw $p$: independent $\numReightTargetRawInd$; shared $\numReightTargetRawSh$). The per-replicate means of $d(128)$ are $\numReightRepMeans$ ($\times10^{-3}$); $\widehat\Theta_{128}=\numReightTheta$ (bootstrap $\numReightThetaBoot$); sign reversal across replicates: \numReightReversal. By the replicate rule this is \textsc{mixed\_replication}: all four replicate means share the sign of $\widehat\Theta_{128}$, but three of the four pointwise intervals include $0$ (only $R_1$'s excludes it); the average is conditional on these four fits and is not a population effect.
+At the joint level, $\numReightJointRejectedSh$ of the four shared arms and $\numReightJointRejectedInd$ of the four independent arms are flagged in the secondary family; $\widehat\Theta^{J}_{128}=\numReightThetaJ$.
+The direct branches of the independent arms lie $\numReightIndQdRange$ ($\times10^{-3}$) from the true $q(z\mid x)$ and their sequential routes $\numReightIndQsRange$; the shared arms' direct branches $\numReightShQdRange$ and sequential routes $\numReightShQsRange$.
+Going from $128$ to $512$ steps changes the gap estimate detectably in $\numReightIndSolverFlags$ of four independent and $\numReightShSolverFlags$ of four shared arms (paired intervals), and $\widehat\Theta_{512}=\numReightThetaSens$; agreement between step counts is not a convergence proof, and where a paired difference is detectable the numerical and learned components remain unseparated.
+The run used $\numReightCPU$ CPU-s in one process ($\numReightBudgetCPU$ CPU-s charged with the estimator check, fixtures and the timing smoke) and $\numReightWall$\,s of wall time.
+
+\paragraph{Reading.}
+Compared with the equal-update replicates of \cref{sec:exp-reps} ($\widehat\Theta_{128}=\numRsevenTheta$ with one reversal), the equal-CPU run gives a smaller average difference with the same sign in all four pairs and wider per-replicate intervals. The independent arms completed $\numReightIndUpdatesPerNet$ updates per network (against $5{,}000$) and the shared arms $\numReightShUpdates$ (against $20{,}000$); the independent arms' target gaps and direct-branch distances are larger than in \cref{tab:r7reps} in two pairs, while the shared arms' direct branches ($\numReightShQdRange$) are no longer worse than the independent arms' ($\numReightIndQdRange$), so the accuracy trade-off seen at equal update counts does not recur at equal CPU. At the joint level no shared arm is flagged after Holm correction (raw $p$: $\numReightJointRawSh$), against two of four in \cref{sec:exp-reps}, while the independent arms' raw $p$ are $\numReightJointRawInd$. At the joint level $\numReightJointSolverFlags$ of the eight paired $512$-versus-$128$ differences are detectable (at most $\numReightJointSolverMaxAbs\times10^{-3}$ in magnitude).
+The comparison with \cref{sec:exp-reps} is descriptive: the test sets differ, the design had been seen before this run was registered, and matching process CPU is not matching FLOPs or wall time on other hardware. Nothing here is a population statement over training runs, and non-detection of a shared arm is neither equality nor a coherent joint.
+
+\begin{table}[h]
+\centering
+\caption{Equal-training-CPU run: paired between-arm difference at the target level ($\times10^{3}$), per-replicate means with pointwise 95\% CIs, and $\widehat\Theta_h$ over examples (conditional on the four fits) with its normal interval and the example bootstrap.}
+\label{tab:r8theta}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\input{generated/tab_r8_theta}
+\end{table}
+\begin{table*}[h]
+\centering
+\caption{Equal-training-CPU run: the eight arms on the third test set (Test~P at $128$ steps, $N=200$, $M=64$, $B=199$). Updates are the parameter updates completed within $60$ process-CPU seconds; $\widehat\Delta_T$ is the unbiased gap estimate; $\widehat D_U$ is the unbiased sample energy distance of a branch to the true $q(z\mid x)$ (may be negative; unconstrained intervals, \cref{app:edcheck}); CPU-s is the training time charged. Standardized scale; intervals are normal 95\% CIs over examples.}
+\label{tab:r8reps}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\input{generated/tab_r8_reps}
+\end{table*}
+\begin{table*}[h]
+\centering
+\caption{Equal-training-CPU run: paired step-count differences ($512$ minus $128$, shared initial noise, $\times10^{3}$, normal 95\% CIs over examples) of the gap estimate and of the direct branch's distance to the truth; pattern exposure (updates per conditioning pattern); and the CPU overshoot beyond $60$\,s at the stopping update. Agreement between step counts is not a convergence proof.}
+\label{tab:r8solvercost}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\input{generated/tab_r8_solver_cost}
+\end{table*}
 
 \section{Pre-Registration Record and Deviations}
 \label{app:prereg}
@@ -936,7 +990,7 @@ Non-detection vs.\ equality, correctness, global joint & for the controls equali
   \item The gate's operating characteristics were computed in advance: P(pass $\mid$ valid, power $0.3$) $=\numOCvThreeGate$.
   \item A timing smoke with a different seed preceded the single run and is not reported.
   \end{itemize}
-\item \textbf{Equal-training-CPU run} (\cref{app:r8}) was registered in full before it started: allowed stages, input and code hashes, the R7 seeds reused unchanged, the third test set and its digest, the $60$\,s process-CPU stop rule with warm-up, solver levels $128$/$512$, the estimand, both Holm families, stop conditions and caps; the outcome label applies the replicate rule unchanged. A single run; nothing was selected by outcome. [[R8_DEVIATIONS]]
+\item \textbf{Equal-training-CPU run} (\cref{app:r8}) was registered in full before it started: allowed stages, input and code hashes, the R7 seeds reused unchanged, the third test set and its digest, the $60$\,s process-CPU stop rule with warm-up, solver levels $128$/$512$, the estimand, both Holm families, stop conditions and caps; the outcome label applies the replicate rule unchanged. A single run; nothing was selected by outcome. Deviations: none; the registered command ran once at the registered commit with matching code hashes, the test-set digest was verified, and all eight arms reached the budget with finite losses. No dev-loss undertraining diagnostic is defined for a CPU-budget stop, so none is reported.
 \item \textbf{Exploratory analyses.} The re-analysis in \cref{app:reanalysis,app:znull} and the closed-form curves in \cref{fig:numerics} were computed after the v1 results were seen.
 \end{itemize}
 

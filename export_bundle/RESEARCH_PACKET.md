@@ -867,3 +867,105 @@ code hashes matching registration: status COMPLETE, 1494.3 CPU-s process,
   superiority of shared training; a pure "neural distribution error"
   attribution; any statement about real multimodal generators or about a
   population of training runs.
+
+## 15. Equal-training-CPU rerun of the four fit-pairs (round 8, 2026-10-11)
+
+Registered in full before the run (`configs/auto_run_r8.json`, commit
+db6957f): the R7 architectures, masks, loss, Adam 1e-3, batch 256, training
+rows and standardization; the R7 integer seeds for initialization, minibatch
+stream and dev-loss noise, reused unchanged; retraining from step 0 with a
+stop after the first full update at which the arm's process-CPU time
+(`time.process_time()`, one single-thread process) reached 60.0 s —
+independent ensemble as a whole (four networks, balanced round-robin),
+shared network as a whole; a 20-update throwaway warm-up per arm type,
+identical for both arms and not charged; final iterate only; a third test
+set of 200 examples (`test_r8`, digest `ad92d8ba…`, x-overlap 0 with the
+pilot and R7 test sets) shared by the four pairs; keyed draws without the
+step count so 128 and 512 share initial noise; Test P at 128 only; two Holm
+families; Θ₁₂₈ with a normal interval over per-example replicate means and a
+cluster bootstrap (2000) over examples; caps 5400 CPU-s / 7200 wall-s /
+1 thread. Pre-run: estimator check on stored R7 samples (no defect; §15.3).
+
+### 15.1 Results (test set r8; 128 steps unless stated; ×10⁻³, standardised)
+
+- **Run:** COMPLETE at db6957f (clean; code hashes matched; pid 586):
+  1646.1 CPU-s process, 1657.1 charged, 1656 s wall. Every arm used 60.00
+  CPU-s (overshoot ≤ 0.003 s). Updates: independent 32,709 / 32,824 /
+  32,331 / 32,301 (≈ 8.1k per network), shared 23,730 / 23,535 / 23,259 /
+  23,058. Pattern exposure balanced for the independent arm (±1) and
+  uniform-random for the shared arm (5,716–6,028 per pattern). Losses finite;
+  no non-finite samples; min distinct intermediates 63–64 of 64.
+- **Target family (Holm over 8):** independent R1 0.005 (0.04), R2 0.015
+  (0.075), R3 0.015 (0.075), R4 0.005 (0.04); shared R1 0.005 (0.04), R2
+  0.295 (0.59), R3 0.505 (0.59), R4 0.015 (0.075). Flagged: independent R1,
+  R4; shared R1.
+- **Joint family (Holm over 8, secondary):** independent R1 0.005 (0.04),
+  R2 0.055 (0.15), R3 0.010 (0.06), R4 0.005 (0.04); shared R1 0.015
+  (0.075), R2 0.885, R3 0.050 (0.15), R4 0.020 (0.08). Flagged: independent
+  R1, R4; shared none.
+- **Gap estimates Δ̂_T:** independent 15.15 [9.02, 21.29], 4.60 [0.25,
+  8.95], 4.63 [−0.74, 10.00], 10.17 [4.84, 15.50]; shared 6.00 [1.11,
+  10.90], 1.39 [−3.69, 6.46], 0.11 [−3.62, 3.84], 4.19 [0.59, 7.79].
+- **Primary effect:** d̄_r(128) = −9.15 [−17.21, −1.09], −3.21 [−9.37,
+  2.94], −4.52 [−11.13, 2.09], −5.97 [−12.57, 0.63]; Θ̂₁₂₈ = −5.71 [−9.09,
+  −2.34]; bootstrap [−9.19, −2.54]; no reversal. **Label (R7 rule):
+  MIXED_REPLICATION** (same sign in all four; three pointwise CIs include 0).
+- **Joint level:** d̄ᴶ_r = −15.86, −3.52, −2.40, −5.50; Θ̂ᴶ₁₂₈ = −6.82
+  [−9.04, −4.59]; no reversal.
+- **Solver (512 − 128, paired):** target gap differences 0.00, −0.07, 0.01,
+  −0.07, +0.19 [0.09, 0.29] (R3 independent, flagged), 0.02, −0.06, 0.02;
+  one of eight flagged; Θ̂₅₁₂ = −5.78 [−9.17, −2.38]. Joint level: three of
+  eight flagged, |diff| ≤ 0.05. Direct-branch distance differences −0.18 to
+  +0.39.
+- **Quality:** direct ED_U to truth — independent 13.28, 3.80, 6.73, 6.36;
+  shared 7.05, 4.23, 3.69, 3.53. Sequential — independent 11.48, 5.69, 4.50,
+  2.59; shared 5.95, 4.99, 3.53, 5.66. sd ratios (direct) 0.95–1.04.
+- **Cost:** training 60.0 CPU-s per arm by construction; test sampling at
+  128: independent ≈ 10 (target) + 11 (joint) CPU-s, shared ≈ 18 + 20 CPU-s
+  per arm; permutation tests 1.2–1.5 (target) and 5.8–7.1 (joint) CPU-s.
+
+### 15.2 What this does and does not establish
+
+- Establishes, on this probe, for these fits and this hardware: with equal
+  process-CPU training time the shared network's target gap is smaller on
+  average (same sign in all four pairs, detectable in one); the independent
+  arm is flagged in two of four after correction (raw p ≤ 0.015 in all
+  four); the shared arm is flagged at the target level in one pair and at
+  the joint level in none after correction; the R7 accuracy disadvantage of
+  the shared direct branch does not recur; step-count effects are at most
+  0.19 ×10⁻³ at the target level.
+- Does not establish: joint coherence of the shared network; a population
+  effect over training runs; equal-FLOP or equal-wall-time comparability
+  (OS-level process-CPU matching only); any causal reading of the R7→R8
+  change (different test sets; more updates for both arms; design seen
+  before registration); anything about real multimodal generators.
+- Comparison with R7 is descriptive: Θ̂₁₂₈ −9.70 → −5.71; reversal yes → no;
+  independent flagged 3/4 → 2/4; shared target 0/4 → 1/4; shared joint
+  2/4 → 0/4. Nothing from R7 was re-scored.
+
+### 15.3 Estimator check (pre-run; `results/estimator_check/r8_ed_u_check.json`)
+
+Prompted by the negative interval of the R2 shared direct branch in R7
+(−3.37 ×10⁻³ [−6.29, −0.45]). On four fixed examples (0, 50, 100, 150;
+chosen by position) of all eight R7 arms at 128 steps, a brute-force double
+sum with within-sample denominators M(M−1) and the diagonal excluded, the
+closed-form cross and truth terms and the standardization were recomputed
+from the stored samples: max |diff| 4.4e-8 against the recorded values; the
+per-example values reproduce the recorded block interval exactly; direct
+and sequential keys differ; a fresh y per z sample. No estimator or leakage
+defect was found. 140 of 200 per-example values are negative; the interval
+is an unconstrained normal approximation and no negative population
+distance is claimed. The manuscript now states this (sec. 4.2; app. K).
+
+### 15.4 Delivery and records
+
+v5 delivered first (`deliverables/P5_v5_67b9e62.pdf`, sha256 `588b9ba5…`).
+Manuscript v6 adds the R8 paragraph in sec. 5.6, appendix L (design,
+results, reading, three tables), the estimator statement, a decision-table
+row, pre-registration and compute/reproducibility entries; the abstract and
+the R7 body text keep MIXED_REPLICATION. Built with
+`pdflatex -interaction=nonstopmode -halt-on-error -no-shell-escape`
+(+ bibtex; four passes); 23 pages; conclusion ends on page 8; all pages
+rasterized with PyMuPDF and viewed. Deliverables for v6 are listed in
+`deliverables/P5_delivery.json`.
+

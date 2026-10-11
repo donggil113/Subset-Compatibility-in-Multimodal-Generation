@@ -756,7 +756,7 @@ def write_fm_r8_assets():
     n += macro("numReightTargetRawSh", ", ".join(f"{fam['raw_p'][f'{rep}|SHARED_CONDITIONAL_FM']:.3f}" for rep in reps))
     for arm, short, lab in arms:
         ups = [tr[f"{rep}|{arm}"]["updates"] for rep in reps]
-        n += macro(f"numReight{short}Updates", f"{min(ups)}\\text{{ to }}{max(ups)}")
+        n += macro(f"numReight{short}Updates", f"{min(ups):,}\\text{{ to }}{max(ups):,}".replace(",", "{,}"))
         qd = [s["blocks"][f"{rep}|{arm}|target|{prim}"]["q_direct_truth_ed_u"]["mean"] for rep in reps]
         qs = [s["blocks"][f"{rep}|{arm}|target|{prim}"]["q_seq_truth_ed_u"]["mean"] for rep in reps]
         n += macro(f"numReight{short}QdRange", f"{1e3 * min(qd):.1f}\\text{{ to }}{1e3 * max(qd):.1f}")
@@ -764,6 +764,13 @@ def write_fm_r8_assets():
         n += macro(f"numReight{short}SolverFlags", str(sum(1 for rep in reps if an["solver_sensitivity"][f"{rep}|{arm}|target"][f"{sens}_minus_{prim}"]["SOLVER_SENSITIVE"])))
         ov = [tr[f"{rep}|{arm}"]["overshoot_seconds"] for rep in reps]
         n += macro(f"numReight{short}OvershootMax", f"{max(ov):.3f}")
+    n += macro("numReightJointRawInd", ", ".join(f"{famj['raw_p'][f'{rep}|INDEPENDENT_CONDITIONAL_FM']:.3f}" for rep in reps))
+    n += macro("numReightJointRawSh", ", ".join(f"{famj['raw_p'][f'{rep}|SHARED_CONDITIONAL_FM']:.3f}" for rep in reps))
+    jflags = [an["solver_sensitivity"][f"{rep}|{arm}|joint"][f"{sens}_minus_{prim}"] for rep in reps for arm, _, _ in arms]
+    n += macro("numReightJointSolverFlags", str(sum(1 for e in jflags if e["SOLVER_SENSITIVE"])))
+    n += macro("numReightJointSolverMaxAbs", f"{1e3 * max(abs(e['gap_ED_U']['mean']) for e in jflags):.2f}")
+    ind_ups = [tr[f"{rep}|INDEPENDENT_CONDITIONAL_FM"]["updates"] for rep in reps]
+    n += macro("numReightIndUpdatesPerNet", f"{min(ind_ups) // 4:,}\\text{{ to }}{max(ind_ups) // 4:,}".replace(",", "{,}"))
     n += macro("numReightCPU", f"{man['budget']['cpu_seconds_this_process']:.0f}")
     n += macro("numReightBudgetCPU", f"{man['budget']['cpu_seconds_total_incl_before']:.0f}")
     n += macro("numReightWall", f"{man['budget']['wall_seconds']:.0f}")

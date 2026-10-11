@@ -1,8 +1,72 @@
 # STATUS — P5: Do Any-to-Any Generators Define a Coherent Joint Distribution?
 
-Last update: 2026-10-05 (round 7: four fixed training replicates with
-solver sensitivity 128/256/512 on a new test set; manuscript v5). Rounds 3–6
-are kept below; rounds 1–2 are unchanged.
+Last update: 2026-10-11 (round 8: v5 PDF delivered; estimator check;
+one registered equal-training-CPU rerun of the four fit-pairs; manuscript
+v6 with the rerun as a supplementary result). Rounds 3–7 are kept below;
+rounds 1–2 are unchanged.
+
+## Summary (round 8)
+
+| Item | Status |
+|---|---|
+| Approval applied | User-delivered round-8 block: deliver the current PDF first; bounded autonomous execution (registered config, hash-skipped stages, immediate-stop list); reuse of the existing CPU torch venv and TeX Live (no installs this round); research compute 1 thread, 5400 CPU-s / 7200 wall-s; no new seeds, thresholds, tests or arms. |
+| v5 delivery | `deliverables/P5_v5_67b9e62.pdf` (byte-identical to `paper/main.pdf` at 67b9e62; sha256 `588b9ba5…`; 418,382 B; 21 pages; body ends p. 8), `deliverables/P5_source.zip`, `deliverables/P5_delivery.json` (commit bbd6a15). |
+| Estimator check (pre-run) | Fixed examples 0/50/100/150 × 8 R7 arms, brute-force ED_U with M(M−1) denominators and diagonal excluded, closed-form cross/truth terms, standardization, CI units, stream keys: **no estimator or leakage defect** (max |diff| 4.4e-8). The R2 shared negative interval is an unconstrained normal approximation; no negative population distance is claimed (now stated in the manuscript, sec. 4.2 and app. K). `results/estimator_check/r8_ed_u_check.json`. |
+| Registration | `configs/auto_run_r8.json` committed before the run (db6957f): run_id R8-P5-CPU-BUDGET; R7 seeds reused unchanged; 60.0 process-CPU-s per arm with equal uncharged warm-up; stop at a full update boundary; new test set `test_r8` (digest `ad92d8ba…`, 200 examples, x-overlap 0 with the pilot and R7 test sets); Euler 128 primary / 512 sensitivity; Test P at 128 only; two Holm families; estimand Θ₁₂₈; caps; stop and not-stop conditions. |
+| Run | **COMPLETE**, single run at db6957f (clean tree; code hashes matched registration; pid 586; 1 thread): 1646.1 CPU-s process (1657.1 charged incl. 11.0 before), 1656 s wall; **1657 / 5400 CPU-s, 1656 / 7200 wall-s**. All 8 arms EVALUABLE; no non-finite losses or samples. Each arm used 60.00 CPU-s (overshoot ≤ 0.003 s); updates: independent 32,301–32,824 (8,075–8,206 per network), shared 23,058–23,730; warm-up 1.35 s / 0.05 s not charged. |
+| Target family (8 tests at 128, Holm) | Independent flagged in **R1, R4** (Holm 0.04; raw 0.005), R2/R3 raw 0.015 (Holm 0.075). Shared flagged in **R1** (Holm 0.04; raw 0.005); R4 raw 0.015 (Holm 0.075); R2 0.295; R3 0.505. |
+| Joint family (8 tests at 128, Holm, secondary) | Independent flagged in R1, R4 (Holm 0.04), R3 0.06, R2 0.15. Shared flagged in **none** (raw 0.015, 0.885, 0.050, 0.020; Holm ≥ 0.075). |
+| Primary effect Θ₁₂₈ | **−5.71 ×10⁻³ [−9.09, −2.34]** (normal over examples; cluster bootstrap [−9.19, −2.54]), conditional on the four fits. Per replicate d̄_r(128): R1 −9.15 [−17.21, −1.09], R2 −3.21 [−9.37, 2.94], R3 −4.52 [−11.13, 2.09], R4 −5.97 [−12.57, 0.63]. Range −9.15 to −3.21; no sign reversal. |
+| Pre-registered outcome label (R7 rule, unchanged) | **MIXED_REPLICATION**: all four replicate means share the sign of Θ, but three of four pointwise CIs include 0 (only R1 excludes it). Not a population effect. |
+| Joint-level Θ | −6.82 ×10⁻³ [−9.04, −4.59]; per replicate −15.86, −3.52, −2.40, −5.50; no reversal. |
+| Solver sensitivity (512 vs 128, paired) | Target level: flagged in **1 of 8** arms (R3 independent, +0.19 [0.09, 0.29] ×10⁻³); Θ₅₁₂ = −5.78 [−9.17, −2.38]. Joint level: 3 of 8 flagged (|diff| ≤ 0.05 ×10⁻³). NUMERICS_NOT_SEPARATED kept for the flagged arms at that level; agreement elsewhere is not an ODE-limit proof. |
+| Quality (direct / sequential ED_U to truth, ×10⁻³) | Independent: direct 3.8–13.3 (R1 13.3), sequential 2.6–11.5. Shared: direct 3.5–7.0, sequential 3.5–6.0. The R7 pattern "shared direct branch worse" does **not** recur at equal CPU. |
+| Comparison with R7 (descriptive only; different test sets; equal updates vs equal process CPU) | Θ₁₂₈ −9.70 → −5.71; reversal yes → no; independent flagged 3/4 → 2/4 after Holm (raw ≤ 0.015 in all four); shared flagged at the target 0/4 → 1/4; shared joint flagged 2/4 → 0/4; shared direct-branch disadvantage not reproduced. Not a causal or equal-everything comparison; process-CPU matching is not FLOP matching. |
+| Manuscript | **v6** (`paper/main.tex`, `paper/main.pdf`): R7 MIXED_REPLICATION kept in abstract/body; R8 as a supplementary paragraph (sec. 5.6) and appendix L with three tables; estimator statement; 23 pages; the conclusion's last sentence is on page 8 (right column, 77 pt from the page bottom, measured with `\pdfsavepos`); built with `-halt-on-error -no-shell-escape`; overfull 0; undefined 0; **all 23 pages rasterized with PyMuPDF at 100 dpi and viewed** (see `paper/build_log_summary.json`). SUBMISSION_READY = false; TEMPLATE_YEAR 2026 / TARGET_YEAR 2027. |
+| Kept | All earlier verdicts; R7 MIXED_REPLICATION; pilot as DEVELOPMENT_NEURAL_PILOT; calib v3 PASS (not a neural PASS); EH1 FAIL; nothing re-scored; no p-value, CI or label of an earlier round changed. Method validity/novelty UNVERIFIED. |
+
+Reading (conditional on this probe, these fits and this hardware):
+
+- At equal process-CPU training time the shared arm's smaller target gap
+  keeps its sign in all four fit-pairs, but the per-pair contrasts are
+  detectable in one pair only; the average over the four fits is
+  −5.71 ×10⁻³ against −9.70 ×10⁻³ at equal update counts.
+- The independent arm, which completed about 8,100 updates per network here
+  (5,000 in R7), is flagged in two of four after Holm correction with raw
+  p ≤ 0.015 in all four; the shared arm is flagged in R1 at both levels'
+  raw p but only at the target level after correction.
+- The accuracy trade-off of R7 (shared direct branch worse) does not recur:
+  shared direct branches 3.5–7.0 vs independent 3.8–13.3 ×10⁻³.
+- Sharing still does not define a joint; the joint endpoint of the shared
+  arm is simply not flagged after correction here (raw 0.015 and 0.020 in
+  R1 and R4).
+- p-values are not scores; 4 × 200 values are not 800 independent
+  observations; comparisons across rounds are descriptive.
+
+Details: RESEARCH_PACKET §15; raw under `results/raw/p5_syn_learn_01_fm_r8/`
+(derived labels in `derived_labels.json`, written by
+`scripts/derive_labels_r8.py`).
+
+## Compute (round 8)
+
+- Research budget (1 thread): estimator check 3.2 + fixtures 2.5 + smoke 5.3
+  + run 1646.1 = **1657.1 CPU-s of 5400**; wall 1656 s of 7200 for the run.
+  No installs. Children CPU 0.005 s. No duplicate processes (one pid).
+- PDF builds (about 13 s per four-pass build) and the PyMuPDF renders are
+  under the separate review/build limit; ledger rows are approximate.
+- Ledger: `results/compute_ledger.csv`.
+
+## Next decision (one)
+
+None is started automatically. With both a matched-update and a matched-CPU
+replication giving MIXED_REPLICATION on one probe, the open choice for a
+human is whether to report the two runs as they are or to stop at the
+coherent controls and the pilot; no further seeds, probes, losses or
+compute-matching schemes are planned.
+
+---
+
+# History: round 7 (kept)
 
 ## Summary (round 7)
 

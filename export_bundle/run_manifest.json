@@ -1,6 +1,6 @@
 {
  "project": "P5: Do Any-to-Any Generators Define a Coherent Joint Distribution?",
- "updated": "2026-10-05 (round 7)",
+ "updated": "2026-10-11 (round 8)",
  "environment": {
   "python": "3.11.15",
   "platform": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
@@ -379,6 +379,134 @@
     }
    },
    "role": "reported (single registered run; four fit-pairs; test set disjoint from the pilot)"
+  },
+  {
+   "run_id": "p5_syn_learn_01_fm_r8",
+   "experiment_id": "R8-P5-CPU-BUDGET",
+   "raw_dir": "results/raw/p5_syn_learn_01_fm_r8",
+   "config_path": "configs/auto_run_r8.json",
+   "config_sha256": "c42bd7f8892edbb80ba819750338a4325d2423465bb9395ec4e650074a78f3a3",
+   "git_commit_at_run": "db6957f4503c3c6011a5c4ea1e273dc61b046b2f",
+   "git_worktree_dirty_at_run": false,
+   "code_hashes_match_registration": true,
+   "started_utc": "2026-10-11T02:56:37Z",
+   "finished_utc": "2026-10-11T03:24:13Z",
+   "pid": 586,
+   "cpu_seconds_process": 1646.1,
+   "cpu_seconds_budget_total": 1657.1,
+   "wall_seconds": 1656.1,
+   "children_cpu_seconds": 0.005195999999999999,
+   "caps": {
+    "cpu_seconds": 5400,
+    "wall_seconds": 7200,
+    "threads": 1,
+    "ram_gib": 16,
+    "includes": [
+     "estimator check",
+     "fixtures",
+     "smoke",
+     "8 fits",
+     "evaluation",
+     "permutation",
+     "bootstrap"
+    ]
+   },
+   "processes": 1,
+   "threads": 1,
+   "torch": "2.14.1+cpu",
+   "status": "COMPLETE",
+   "replicates_complete": [
+    "R1",
+    "R2",
+    "R3",
+    "R4"
+   ],
+   "training_rule": "60.0 process-CPU-s per arm; stop at a full update boundary; warm-up 20 updates uncharged; final iterate",
+   "updates": {
+    "R1|INDEPENDENT_CONDITIONAL_FM": 32709,
+    "R1|SHARED_CONDITIONAL_FM": 23730,
+    "R2|INDEPENDENT_CONDITIONAL_FM": 32824,
+    "R2|SHARED_CONDITIONAL_FM": 23535,
+    "R3|INDEPENDENT_CONDITIONAL_FM": 32331,
+    "R3|SHARED_CONDITIONAL_FM": 23259,
+    "R4|INDEPENDENT_CONDITIONAL_FM": 32301,
+    "R4|SHARED_CONDITIONAL_FM": 23058
+   },
+   "overshoot_seconds": {
+    "R1|INDEPENDENT_CONDITIONAL_FM": 0.0011146440000047164,
+    "R1|SHARED_CONDITIONAL_FM": 0.0022746689999948444,
+    "R2|INDEPENDENT_CONDITIONAL_FM": 0.001500102999997921,
+    "R2|SHARED_CONDITIONAL_FM": 0.0027220039999917844,
+    "R3|INDEPENDENT_CONDITIONAL_FM": 0.0021504380000010315,
+    "R3|SHARED_CONDITIONAL_FM": 0.0018622910000090087,
+    "R4|INDEPENDENT_CONDITIONAL_FM": 0.0019898859999898377,
+    "R4|SHARED_CONDITIONAL_FM": 0.0018686239999965437
+   },
+   "test_set": {
+    "branch_key": "test_r8",
+    "n": 200,
+    "rows_sha256": "ad92d8bad222479afc4557bb50e73549072653aec66f767d120976b430945890",
+    "x_overlap_with_pilot_test": 0,
+    "x_overlap_with_r7_test": 0,
+    "disjoint": true,
+    "rows_file": "results/raw/p5_syn_learn_01_fm_r8/test_examples.json"
+   },
+   "outcome_label": "MIXED_REPLICATION",
+   "Theta_128_x1e3": {
+    "mean": -5.715,
+    "lo": -9.086,
+    "hi": -2.343,
+    "bootstrap": [
+     -9.188,
+     -2.545
+    ]
+   },
+   "per_replicate_d128_x1e3": {
+    "R1": -9.152,
+    "R2": -3.213,
+    "R3": -4.522,
+    "R4": -5.971
+   },
+   "checkpoints": {
+    "R1|INDEPENDENT_CONDITIONAL_FM": {
+     "path": "p5_syn_learn_01_fm_r8/checkpoints/R1_INDEPENDENT_CONDITIONAL_FM.pt",
+     "sha256": null
+    },
+    "R1|SHARED_CONDITIONAL_FM": {
+     "path": "p5_syn_learn_01_fm_r8/checkpoints/R1_SHARED_CONDITIONAL_FM.pt",
+     "sha256": null
+    },
+    "R2|INDEPENDENT_CONDITIONAL_FM": {
+     "path": "p5_syn_learn_01_fm_r8/checkpoints/R2_INDEPENDENT_CONDITIONAL_FM.pt",
+     "sha256": null
+    },
+    "R2|SHARED_CONDITIONAL_FM": {
+     "path": "p5_syn_learn_01_fm_r8/checkpoints/R2_SHARED_CONDITIONAL_FM.pt",
+     "sha256": null
+    },
+    "R3|INDEPENDENT_CONDITIONAL_FM": {
+     "path": "p5_syn_learn_01_fm_r8/checkpoints/R3_INDEPENDENT_CONDITIONAL_FM.pt",
+     "sha256": null
+    },
+    "R3|SHARED_CONDITIONAL_FM": {
+     "path": "p5_syn_learn_01_fm_r8/checkpoints/R3_SHARED_CONDITIONAL_FM.pt",
+     "sha256": null
+    },
+    "R4|INDEPENDENT_CONDITIONAL_FM": {
+     "path": "p5_syn_learn_01_fm_r8/checkpoints/R4_INDEPENDENT_CONDITIONAL_FM.pt",
+     "sha256": null
+    },
+    "R4|SHARED_CONDITIONAL_FM": {
+     "path": "p5_syn_learn_01_fm_r8/checkpoints/R4_SHARED_CONDITIONAL_FM.pt",
+     "sha256": null
+    }
+   },
+   "evidence_sha256": {
+    "summary.json": "6ed42a6f84c2b03554aec79af126e8de513ef810d05b86a8bb1d77d916cf1f9e",
+    "training.json": "a0480edca7b11636ae079c0338dbdf94cd2cbaa7d3645c8c9edffb9f777330df",
+    "manifest.json": "2b2d60a637b88083538202d9d4ca47f990fe5e8684d9cbb95951c38eea9552d5",
+    "derived_labels.json": "61e652475ace6e047aa51cfc610fc07c7e1679e9f438a0d1f754cf42737ea94f"
+   }
   }
  ],
  "verdicts_first_run": {
@@ -440,11 +568,11 @@
   "template_year": 2026,
   "style": "official ICML 2026 (anonymous review), not vendored",
   "submission_ready": false,
-  "compile_status": "see paper/build_log_summary.json (round 7 build)",
+  "compile_status": "see paper/build_log_summary.json (round 8 build, -no-shell-escape)",
   "static_check": "scripts/check_tex.py",
   "claims": "paper/claims.csv",
-  "version": "v5 (four training replicates with solver sensitivity)",
-  "page_fit_8": "v5: 21 pages total; the conclusion ends in the right column of page 8 (336.5 pt from the bottom, measured with \\pdfsavepos; the last line of page 8 is slack); visual check PERFORMED with PyMuPDF 1.28.2 (pages 1, 7, 8, 9, 15, 18, 19, 20 viewed) - see paper/build_log_summary.json",
+  "version": "v6 (round 8: equal-training-CPU rerun as a supplementary result; estimator statement)",
+  "page_fit_8": "v6: 23 pages total; the conclusion ends in the right column of page 8 (77.2 pt from the page bottom, measured with \\pdfsavepos); visual check PERFORMED with PyMuPDF 1.28.2 on all 23 pages - see paper/build_log_summary.json",
   "export_bundle": "export_bundle/ (source + compiled paper/main.pdf and build_log_summary.json; checkpoints and env records; style fetched by export_bundle/fetch_style.sh with SHA-256 check)",
   "pdf": "paper/main.pdf"
  },
@@ -507,5 +635,19 @@
   "quality": "direct ED_U to truth: independent 2.4-4.6e-3, shared 2.8-9.7e-3; sequential: independent 2.2-14.5e-3, shared 4.5-13.0e-3; pilot mirror pattern not uniform",
   "scope": "single probe; four initializations; not equal-compute; no real data; validity/novelty UNVERIFIED; pilot kept as DEVELOPMENT_NEURAL_PILOT; nothing re-scored",
   "kept": "all earlier verdicts"
+ },
+ "verdicts_round8": {
+  "v5_delivery": "deliverables/P5_v5_67b9e62.pdf (sha256 588b9ba5\u2026) attached; identical to paper/main.pdf at 67b9e62",
+  "estimator_check": "no estimator or leakage defect (max |diff| 4.4e-8; block CI reproduced); R2 shared interval = unconstrained normal approximation; stated in the manuscript",
+  "status": "COMPLETE (single registered run at db6957f; clean; hashes matched; 1657/5400 CPU-s; 1656/7200 wall-s)",
+  "outcome_label": "MIXED_REPLICATION (R7 rule unchanged: same sign in all four, three of four pointwise CIs include 0)",
+  "Theta_128": "-5.71e-3 [-9.09, -2.34] (bootstrap [-9.19, -2.54]); per replicate -9.15, -3.21, -4.52, -5.97; no reversal; conditional on the four fits",
+  "target_family": "independent flagged R1, R4 (Holm 0.04; raw <= 0.015 in all four); shared flagged R1 (Holm 0.04); R4 raw 0.015 (Holm 0.075); R2 0.295; R3 0.505",
+  "joint_family": "independent flagged R1, R4 (Holm 0.04); shared flagged none (raw 0.015/0.885/0.050/0.020)",
+  "solver": "512 vs 128: 1 of 8 target arms flagged (R3 independent +0.19e-3); 3 of 8 joint arms flagged (|diff| <= 0.05e-3); Theta_512 -5.78e-3; NUMERICS_NOT_SEPARATED kept where flagged",
+  "quality": "direct ED_U to truth: independent 3.8-13.3e-3, shared 3.5-7.0e-3; sequential: independent 2.6-11.5e-3, shared 3.5-6.0e-3; the R7 shared-direct disadvantage does not recur",
+  "comparison_with_R7": "descriptive only: Theta -9.70 -> -5.71e-3; reversal yes -> no; independent flagged 3/4 -> 2/4; shared target 0/4 -> 1/4; shared joint 2/4 -> 0/4; different test sets; both arms trained longer; process-CPU matching, not FLOPs",
+  "scope": "single probe; four initializations; one compute-matching scheme; no real data; validity/novelty UNVERIFIED; nothing re-scored",
+  "kept": "all earlier verdicts; R7 MIXED_REPLICATION in abstract/body"
  }
 }
