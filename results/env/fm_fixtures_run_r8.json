@@ -1,0 +1,21 @@
+{
+ "tests_run": 19,
+ "failures": [],
+ "errors": [],
+ "skipped": [
+  "test_blocker_message: torch present"
+ ],
+ "cpu_seconds": 2.456,
+ "wall_seconds": 9.584,
+ "children_cpu": 0.0,
+ "torch": "2.14.1+cpu",
+ "hashes": {
+  "src/p5compat/fm_adapter.py": "59139710313780b27782c2c8782cfb970be764ac41f97c6c26a8478ca663fc68",
+  "src/p5compat/syn_learn_fm_r7.py": "ce2120d7091e1c64e748345f46421956a5ee1eee5a3c5e1dcb42657f82a12fa3",
+  "src/p5compat/syn_learn_fm_r8.py": "609e204b1e163e2d4f463bb8118bd07dcbec468dba983a6402e9aa2fe6197a9f",
+  "tests/test_fm_adapter.py": "54c0bbc04fb0eb0c425d880aa18944fe98f66562ddc61a997add88a1a1990602",
+  "tests/test_fm_r7.py": "edd29c677c300f435d78cce26535f3bb849a3f1f99c0a69d1b79645925abaef3",
+  "tests/test_fm_r8.py": "431e7673c8662459210c0d9a1e4f20e1429a4a9dd598ff54380db39f12f9f36a"
+ },
+ "note": "R8 pre-run: adapter fixtures (incl. check_every regression), keyed-randomness fixtures, CPU-budget trainer fixtures"
+}

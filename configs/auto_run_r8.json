@@ -1,0 +1,205 @@
+{
+  "run_id": "R8-P5-CPU-BUDGET",
+  "experiment_id": "P5-SYN-LEARN-01-R8",
+  "registered_utc": "2026-10-11T02:55:15Z",
+  "status": "REGISTERED_NOT_RUN",
+  "split_tag": "test_r8",
+  "question": "does the measured compatibility/quality trade-off between independently trained conditionals and one shared conditional network remain when the two arms get the same process-CPU training budget (R7 matched update counts, not CPU)? Not a test of joint coherence of the shared network.",
+  "allowed_stages": [
+    "estimator_check (done before registration)",
+    "fixtures",
+    "smoke",
+    "train",
+    "test",
+    "analysis",
+    "assets_and_manuscript (operator)",
+    "pdf_build_and_inspection (operator)",
+    "delivery (operator)"
+  ],
+  "inputs": {
+    "base_config": {
+      "path": "configs/p5_syn_learn_01.json",
+      "sha256": "89a9c877a7c6bca779e18ef48a951935a8691ea4bb614b9d7360c957e6677294"
+    },
+    "r7_config": {
+      "path": "configs/p5_syn_learn_01_fm_replicates_r7.json",
+      "sha256": "13d45e986b4e6686fd94f9c3ed29de5e957801f9c84b21d24cb98b24c1f1607e"
+    },
+    "estimator_check": {
+      "path": "results/estimator_check/r8_ed_u_check.json",
+      "sha256": "41c1b19ebff5a3590b92a2c410ba706db7e506a55aae3f5646bc5f4f892bcc45",
+      "verdict": "NO ESTIMATOR OR LEAKAGE DEFECT FOUND: denominators n(n-1)/m(m-1) with the diagon"
+    },
+    "code_hashes": {
+      "src/p5compat/fm_adapter.py": "59139710313780b27782c2c8782cfb970be764ac41f97c6c26a8478ca663fc68",
+      "src/p5compat/syn_learn_fm.py": "3a1c8beb718070c2512cea48e77d9ad698e3bef057d48ee22f6753a6fdcb0cc9",
+      "src/p5compat/syn_learn_fm_r7.py": "ce2120d7091e1c64e748345f46421956a5ee1eee5a3c5e1dcb42657f82a12fa3",
+      "src/p5compat/syn_learn_fm_r8.py": "609e204b1e163e2d4f463bb8118bd07dcbec468dba983a6402e9aa2fe6197a9f",
+      "src/p5compat/gmm.py": "f1bd04593a12b2db2413bb2d9d98b9bc7d67542862bc9e82764bb1f9bf44ff87",
+      "src/p5compat/permutation.py": "fc0bad2ead47613a300f563bf4387faa761052072b9eae47eea6b0899442cdfa",
+      "src/p5compat/metrics.py": "6ec57f30fd90ffe141c2528bba6d96077971052fc2cb524106af51bdbc92cf84",
+      "src/p5compat/seeds.py": "20154c453bad12ef5e690b4b9648451aa265a7637c7f5e13ab5d2934f5a37907",
+      "src/p5compat/stats.py": "6885bbc8823fbdec7249f8b1f7bc313edb9bce14eb4eddaa24dd706ff668b7cf",
+      "scripts/run_syn_learn_fm_r8.py": "ec4278fd1bf7fa3215ceab765a1f5a23d10bade45659224bc85e4ad5e209117c",
+      "tests/test_fm_adapter.py": "54c0bbc04fb0eb0c425d880aa18944fe98f66562ddc61a997add88a1a1990602",
+      "tests/test_fm_r7.py": "edd29c677c300f435d78cce26535f3bb849a3f1f99c0a69d1b79645925abaef3",
+      "tests/test_fm_r8.py": "431e7673c8662459210c0d9a1e4f20e1429a4a9dd598ff54380db39f12f9f36a"
+    },
+    "torch_env": "results/env/torch_env.json"
+  },
+  "replicate_ids": [
+    "R1",
+    "R2",
+    "R3",
+    "R4"
+  ],
+  "replicates": {
+    "R1": {
+      "INDEPENDENT_CONDITIONAL_FM": {
+        "model_init": 7101,
+        "train_stream": 7111,
+        "dev_loss_noise": 7121
+      },
+      "SHARED_CONDITIONAL_FM": {
+        "model_init": 7102,
+        "train_stream": 7112,
+        "dev_loss_noise": 7122
+      }
+    },
+    "R2": {
+      "INDEPENDENT_CONDITIONAL_FM": {
+        "model_init": 7201,
+        "train_stream": 7211,
+        "dev_loss_noise": 7221
+      },
+      "SHARED_CONDITIONAL_FM": {
+        "model_init": 7202,
+        "train_stream": 7212,
+        "dev_loss_noise": 7222
+      }
+    },
+    "R3": {
+      "INDEPENDENT_CONDITIONAL_FM": {
+        "model_init": 7301,
+        "train_stream": 7311,
+        "dev_loss_noise": 7321
+      },
+      "SHARED_CONDITIONAL_FM": {
+        "model_init": 7302,
+        "train_stream": 7312,
+        "dev_loss_noise": 7322
+      }
+    },
+    "R4": {
+      "INDEPENDENT_CONDITIONAL_FM": {
+        "model_init": 7401,
+        "train_stream": 7411,
+        "dev_loss_noise": 7421
+      },
+      "SHARED_CONDITIONAL_FM": {
+        "model_init": 7402,
+        "train_stream": 7412,
+        "dev_loss_noise": 7422
+      }
+    }
+  },
+  "seeds_note": "initialization, minibatch-stream and dev-loss-noise seeds are the R7 integers, reused unchanged; only the stopping rule differs (CPU budget instead of 20000 updates)",
+  "training": {
+    "cpu_budget_seconds_per_arm": 60.0,
+    "unit": "process CPU seconds of this single-thread process measured with time.process_time(), per arm: the whole independent ensemble (4 networks, balanced round-robin) and the whole shared network",
+    "stop": "after the first full update at which the arm's CPU use >= 60.0 s (overshoot recorded); final iterate only; no checkpoint selection",
+    "warmup": "20 updates on a throwaway model of the same class (seed 999) before each arm type; identical for both arms; not charged to the arm budget; recorded",
+    "max_updates_guard": 200000,
+    "matching": "approximate OS-level CPU matching, not exact FLOP matching",
+    "fixed_as_before": [
+      "architecture and role masks",
+      "loss",
+      "Adam lr 1e-3",
+      "batch 256",
+      "training rows",
+      "standardisation"
+    ]
+  },
+  "data": {
+    "train": "unchanged",
+    "dev": "unchanged rows; used only for the end-of-training held-out loss diagnostic"
+  },
+  "test_set": {
+    "branch_key": "test_r8",
+    "n": 200,
+    "rows_sha256": "ad92d8bad222479afc4557bb50e73549072653aec66f767d120976b430945890",
+    "x_overlap_with_pilot_test": 0,
+    "x_overlap_with_r7_test": 0,
+    "disjoint": true,
+    "rows_file": "results/raw/p5_syn_learn_01_fm_r8/test_examples.json"
+  },
+  "rng": "seed_v2 hash over {experiment, joint, split='test_r8', replicate, arm, pattern, example, branch, sample_id, purpose}; step count excluded so 128/512 share initial noise; direct and sequential on disjoint streams; fresh y per z sample",
+  "solver": {
+    "primary": 128,
+    "sensitivity": [
+      512
+    ],
+    "integrator": "Euler",
+    "cfg": "off",
+    "base": "N(0, I)",
+    "rule": "fixed before the run; no permutation test at 512; nothing selected by outcome"
+  },
+  "evaluation": {
+    "N": 200,
+    "M": 64,
+    "B": 199,
+    "n_boot": 2000,
+    "test": "Test P at 128 (mean ED_V, upper tail)",
+    "primary_endpoint": "Theta_128 = mean_i mean_r [ED_U(shared)_ri - ED_U(independent)_ri] at the target level; cluster bootstrap over examples carrying all pairs/arms/solvers; per-replicate contrasts and range shown; 4 x 200 not pooled",
+    "families": {
+      "target": "8 target tests at 128, Holm",
+      "joint": "8 joint tests at 128, Holm, separate secondary"
+    },
+    "quality": "direct and sequential sample ED_U to the true conditional, sd ratios, mean shifts; cost: updates reached, exposure, parameters, CPU and wall",
+    "no_ranking_by_p": true,
+    "no_clipping": true,
+    "comparison_with_R7": "descriptive only (different test sets; design seen before); not an independent causal or equal-everything comparison"
+  },
+  "stop_conditions": [
+    "leakage or split mismatch",
+    "test-set digest mismatch",
+    "non-finite losses or samples (arm labelled INCONCLUSIVE; run continues)",
+    "resource caps",
+    "data-loss risk"
+  ],
+  "not_stop_conditions": [
+    "null, mixed or unfavourable results",
+    "p > 0.05",
+    "intervals containing 0",
+    "MIXED_REPLICATION"
+  ],
+  "bug_policy": "an engineering bug keeps the original result as INVALID with its scope; one minimal fix and one re-run of the affected stage at most; protocol/estimand changes stop the run",
+  "caps": {
+    "cpu_seconds": 5400,
+    "wall_seconds": 7200,
+    "threads": 1,
+    "ram_gib": 16,
+    "includes": [
+      "estimator check",
+      "fixtures",
+      "smoke",
+      "8 fits",
+      "evaluation",
+      "permutation",
+      "bootstrap"
+    ]
+  },
+  "evidence_hashes_completed": {
+    "estimator_check": "41c1b19ebff5a3590b92a2c410ba706db7e506a55aae3f5646bc5f4f892bcc45"
+  },
+  "next_command": "OMP_NUM_THREADS=1 .venv-p5/bin/python scripts/run_syn_learn_fm_r8.py --cpu-spent-before <seconds>",
+  "forbidden": [
+    "new loss/model/mixture/dataset",
+    "extra seeds",
+    "threshold changes",
+    "test replacement",
+    "removing arms",
+    "GPU",
+    "downloads"
+  ]
+}
